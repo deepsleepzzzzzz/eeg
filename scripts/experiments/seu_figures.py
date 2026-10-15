@@ -16,11 +16,14 @@ def paper_arch(method: str) -> str:
 
 def paper_title(task: str, condition: str, method: str) -> str:
     pretty = {"bearing": "Bearing", "gear": "Gear"}.get(task, task)
-    return f"{pretty} {str(condition).replace('_', '-')} {paper_arch(method).upper()}"
+    label = {"transition_none_cnn": "CNN", "transition_gcn": "GCN"}.get(method, method.replace("_", " ").upper())
+    return f"{pretty} {str(condition).replace('_', '-')} {label}"
 
 
-def paper_stem(task: str, condition: str, method: str) -> str:
-    return f"{task}_{paper_arch(method)}_{condition}"
+def paper_stem(task: str, condition: str, method: str, seed: int = 42) -> str:
+    tag = {"transition_none_cnn": "cnn", "transition_gcn": "gcn"}.get(method, method)
+    suffix = "" if int(seed) == 42 else f"_seed{int(seed)}"
+    return f"{task}_{tag}_{condition}{suffix}"
 
 
 def collect_embeddings(model, loader, device) -> tuple[np.ndarray, np.ndarray]:

@@ -247,12 +247,10 @@ python scripts/experiments/train_seu.py --config config/seu_bearing_cnn.yaml --s
 
 本节只记录 `EEG.zip` 较早快照的缺陷复现，不是上述改进版的分类性能实验。新增测试入口为 `scripts/experiments/test_package_review.py`。脚本将包内源码和配置提取到临时目录，强制从该目录导入模块，用固定种子合成五类、每类 8000 行八通道数据；窗长与步长均为 80。所有临时文件在退出时清理，不修改压缩包、真实数据、模型权重和论文图，也不读取真实测试集。
 
-运行命令（仓库根目录）：
+原包缺陷复现命令（仓库根目录，显式选择历史复现模式）：
 
 ```powershell
-.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py
-# 也可显式指定被审查的压缩包
-.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py --archive EEG.zip
+.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py --mode reproduce --target package --archive EEG.zip
 ```
 
 测试假设是三个问题在包内版本中存在。若假设成立，应出现下表中的异常；缓存强制重建、不同架构及不同工况的图名作为对照。三个用例执行结束后停止，不进行训练或修复。
@@ -270,4 +268,34 @@ python scripts/experiments/train_seu.py --config config/seu_bearing_cnn.yaml --s
 - `scripts/experiments/build_seu_dataset.py`：`9836b90ab083b75dc64cc6be2ad176f7d44e8d1430f9d38fbac672aa3f783437`
 - `scripts/experiments/seu_figures.py`：`914eb393d407b9ce41d82b57e218a96f5c88f35d027f763670c6126d5041e512`
 
-本次仅新增复现脚本和本节记录；生产代码未修复，三个问题均仍存在于被测压缩包。未验证修复后的行为、从原始信号完整重建结果或对分类准确率的实际影响。
+上述为修复前记录，三个问题仍存在于保留的原始压缩包中。后续分支修复结果见下一节。
+
+### 修复回归与再次审查
+
+本分支已修复缓存校验、划分指纹及图文件覆盖。具体行为和旧缓存迁移要求统一维护在 `doc/method.md` 的「缓存一致性与论文图命名」中；配置表的旧协议值也改为引用该方法文档，避免与当前正式配置矛盾。
+
+```powershell
+# 默认验证当前分支源码；不依赖原压缩包存在
+.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py
+# 将本次修复文件覆盖到原包的临时源码副本，再验证
+.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py --target package --archive EEG.zip
+```
+
+包内兼容测试只覆盖 `data/seu_cache.py` 和构建、训练、重新出图、图命名四个脚本，使用原包其余依赖及配置。临时构建器将拟合函数导入适配为原包的等宽分档函数，保留原包分档算法。该模式不改写或重新打包 `EEG.zip`。
+
+验收标准是：配置或缓存内容变化必须在加载训练数组前被拒绝；显式重建后可以训练；实际样本集合变化必须改变划分指纹；不同方法/种子的图必须共存；权重与新缓存不对应时必须拒绝出图。
+
+| 回归用例 | 验证内容 |
+|---|---|
+| 配置失配 | 相同配置正常复用；70/15/15 改为 70/20/10 时构建和训练均拒绝；强制重建后验证窗数由 75 变为 100 |
+| 样本身份 | 相同输入重建指纹稳定；截断窗口、改变划分、修改等长原始文件内容均改变指纹 |
+| 图名隔离 | 四种方法、两个种子、两种图共 16 个不同路径；默认基线名兼容 |
+| 配置边界 | 更改表示或原始数据目录时拒绝；只改分类器、注意力、学习率时缓存仍可复用 |
+| 完整性与测试集封闭 | 拒绝旧元数据、缺失及被修改的验证数组；默认训练校验不读 test，构建复用时检查 test 文件完整性 |
+| 重建中断 | 模拟编码失败，确认旧完成标记已撤销，混合数组不能作为完整缓存复用 |
+| 训练与出图集成 | 合成数据上 CNN 与自注意力 CNN 各训练一轮，验证权重/指标记录身份及真实复制路径；原始数据变化重建后，旧权重被出图入口拒绝 |
+| 协议校验 | 拒绝比例和不为 1 的配置；重叠窗的元数据正确记为重叠 |
+
+再次审查覆盖缓存构建/复用、训练入口、权重与数据对应、图名调用点和中断路径，补上了原始数据目录变化及多种子图覆盖的边界检查。测试使用临时合成数据；集成测试真实执行训练和文件复制，绘图函数替换为标记文件，因此未验证图像视觉效果、完整真实数据重建或准确率变化。
+
+结果：当前分支回归 8/8 通过；原包加修复覆盖层回归 8/8 通过；保留原包的历史模式仍能复现 3/3 个缺陷。修复范围内的再次审查未发现未解决的阻断问题。最初对工作区另外指出的 GCN 步数错配及 `tune_seu.py` 问题不属于本次三个包内缺陷的修复范围。
