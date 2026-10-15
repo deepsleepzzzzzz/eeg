@@ -245,12 +245,12 @@ python scripts/experiments/train_seu.py --config config/seu_bearing_cnn.yaml --s
 
 ## EEG.zip 包内审查问题复现（2026-10-15）
 
-本节只记录 `EEG.zip` 较早快照的缺陷复现，不是上述改进版的分类性能实验。新增测试入口为 `scripts/experiments/test_package_review.py`。脚本将包内源码和配置提取到临时目录，强制从该目录导入模块，用固定种子合成五类、每类 8000 行八通道数据；窗长与步长均为 80。所有临时文件在退出时清理，不修改压缩包、真实数据、模型权重和论文图，也不读取真实测试集。
+本节只记录原 `EEG.zip` 较早快照的缺陷复现，不是上述改进版的分类性能实验。磁盘清理后，原包源码及本节使用的 SEU 审查证据保留在 `EEG_review_snapshot.zip`，空间清理记录见 `datas/README.md`。新增测试入口为 `scripts/experiments/test_package_review.py`。脚本将包内源码和配置提取到临时目录，强制从该目录导入模块，用固定种子合成五类、每类 8000 行八通道数据；窗长与步长均为 80。所有临时文件在退出时清理，不修改压缩包、真实数据、模型权重和论文图，也不读取真实测试集。
 
 原包缺陷复现命令（仓库根目录，显式选择历史复现模式）：
 
 ```powershell
-.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py --mode reproduce --target package --archive EEG.zip
+.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py --mode reproduce --target package --archive EEG_review_snapshot.zip
 ```
 
 测试假设是三个问题在包内版本中存在。若假设成立，应出现下表中的异常；缓存强制重建、不同架构及不同工况的图名作为对照。三个用例执行结束后停止，不进行训练或修复。
@@ -268,7 +268,7 @@ python scripts/experiments/train_seu.py --config config/seu_bearing_cnn.yaml --s
 - `scripts/experiments/build_seu_dataset.py`：`9836b90ab083b75dc64cc6be2ad176f7d44e8d1430f9d38fbac672aa3f783437`
 - `scripts/experiments/seu_figures.py`：`914eb393d407b9ce41d82b57e218a96f5c88f35d027f763670c6126d5041e512`
 
-上述为修复前记录，三个问题仍存在于保留的原始压缩包中。后续分支修复结果见下一节。
+上述为修复前记录，三个问题仍存在于保留的小快照源码中。后续分支修复结果见下一节。
 
 ### 修复回归与再次审查
 
@@ -278,10 +278,10 @@ python scripts/experiments/train_seu.py --config config/seu_bearing_cnn.yaml --s
 # 默认验证当前分支源码；不依赖原压缩包存在
 .\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py
 # 将本次修复文件覆盖到原包的临时源码副本，再验证
-.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py --target package --archive EEG.zip
+.\.venv\Scripts\python.exe -B scripts/experiments/test_package_review.py --target package --archive EEG_review_snapshot.zip
 ```
 
-包内兼容测试只覆盖 `data/seu_cache.py` 和构建、训练、重新出图、图命名四个脚本，使用原包其余依赖及配置。临时构建器将拟合函数导入适配为原包的等宽分档函数，保留原包分档算法。该模式不改写或重新打包 `EEG.zip`。
+包内兼容测试只覆盖 `data/seu_cache.py` 和构建、训练、重新出图、图命名四个脚本，使用快照中保留的原包其余依赖及配置。临时构建器将拟合函数导入适配为原包的等宽分档函数，保留原包分档算法。该测试模式不改写压缩包。未指定 `--archive` 时优先使用小快照，缺少小快照时兼容使用 `EEG.zip`。
 
 验收标准是：配置或缓存内容变化必须在加载训练数组前被拒绝；显式重建后可以训练；实际样本集合变化必须改变划分指纹；不同方法/种子的图必须共存；权重与新缓存不对应时必须拒绝出图。
 

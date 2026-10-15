@@ -313,7 +313,11 @@ def run_regression_worker() -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--archive", type=Path, default=Path(__file__).resolve().parents[2] / "EEG.zip")
+    checkout = Path(__file__).resolve().parents[2]
+    default_archive = checkout / "EEG_review_snapshot.zip"
+    if not default_archive.exists():
+        default_archive = checkout / "EEG.zip"
+    parser.add_argument("--archive", type=Path, default=default_archive)
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--target", choices=("checkout", "package"), default="checkout")
     parser.add_argument("--mode", choices=("verify", "reproduce"), default="verify")
@@ -327,7 +331,6 @@ def main() -> int:
     # embedded old projects, data arrays and checkpoints.
     with tempfile.TemporaryDirectory(prefix="eeg_package_review_") as temp:
         root = Path(temp).resolve()
-        checkout = Path(__file__).resolve().parents[2]
         if args.target == "checkout":
             for folder in ("models", "representation", "scripts", "data", "experiments", "utils", "config"):
                 for path in (checkout / folder).rglob("*"):
