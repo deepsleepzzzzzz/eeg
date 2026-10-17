@@ -69,3 +69,4 @@
 | 2026-10-17 19:43 | abstract_capacity | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_abstract_capacity_20261017.py` | 工作区当前内容 | 摘要'同一网络容量'与'1/139 参数量'自相矛盾（27,685 vs 32,485 vs 3.85M）；量化档数'饱和曲线'改为'饱和趋势结合消融' |
 | 2026-10-17 19:53 | abstract_trim | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_abstract_trim_20261017.md` | 工作区当前内容 | 摘要按同类论文模板瘦身（数字从约10个减到核心5个，两条主线分开） |
 | 2026-10-17 19:53 | abstract_trim | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_abstract_trim_20261017.py` | 工作区当前内容 | 摘要按同类论文模板瘦身（数字从约10个减到核心5个，两条主线分开） |
+| 2026-10-17 20:04 | keywords_trim | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_keywords_trim_20261017.md` | 工作区当前内容 | 关键词 7→5（去掉齿轮箱/轴承）；清掉摘要后重复的分隔线 |
