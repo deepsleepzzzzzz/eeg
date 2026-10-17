@@ -2,12 +2,12 @@
 
 起因（2026-10-17 用户问"现在论文的数据对吗"）：表里的数字早有逐格核对
 （test_paper_integrity / test_paper_noise_tables），但正文里还散着几十个数字——
-滞后 / 档数 / 窗长消融、t-SNE 的工况漂移、TV 值、效率比、跨工况……此前**没有任何机器核对**。
+滞后 / 档数 / 窗长消融、工况漂移（1080 维）、TV 值、效率比、跨工况……此前**没有任何机器核对**。
 
 本次逐条复算，发现并修正 2 处：
   * 跨工况"本文为 51.1%"其实是 **CNN 单模型**（GCN 为 41.7%）→ 正文已补全两个模型；
   * 结论"相差 0.2–0.4 个百分点"实际为 0.18–0.32 → 已改为 0.2–0.3。
-其余数字（滞后维数、滞后取样、档数、窗长配对 t、图 13 的 8 个数字、TV、t-SNE、
+其余数字（滞后维数、滞后取样、档数、窗长配对 t、效率图的 8 个数字、TV、
 效率比、表 9 的 −12/−16 行、表 5 的两列）全部复现。
 
 本文件把它们固定住：以后任何改动导致这些数字漂移，都会在这里失败。
@@ -258,38 +258,30 @@ def test_tv_values_in_text():
     check("轴承 TV 最小（内圈）", 0.049, min(got["bearing"]), tol=0.002)
 
 
-def test_tsne_drift_numbers(paper):
-    """图 8 的工况漂移/类内散布：齿轮 53.2 / 8.2（6.5 倍）、轴承 39.1 / 4.6（8.5 倍）。
+def test_feature_drift_numbers(paper):
+    """§4.3 的工况漂移：原始 1080 维空间里 漂移/类内散布 = 2.1（齿轮）/ 2.2（轴承）倍。
 
-    与画图脚本同一套设定：验证集特征、StandardScaler、perplexity=50、random_state=42。
+    2026-10-17：t-SNE 图移到补充材料后，正文不再使用 t-SNE 坐标里的 53.2/8.2/6.5，
+    改为在原始 1080 维空间中直接计算（LDA / t-SNE 都会压缩或扭曲工况差异）。
+    同时要求正文提到"补充材料图 S1"，保证"透明性补充"没有被悄悄删掉。
     """
-    from sklearn.manifold import TSNE
-    from sklearn.preprocessing import StandardScaler
-
     from config.protocol import dataset_dir
     proto = _proto()
-    want = {"gear": (53.2, 8.2, 6.5), "bearing": (39.1, 4.6, 8.5)}
-    for task, (wd, ws, wr) in want.items():
-        feats, labels, conds = [], [], []
-        for cond in ("20_0", "30_2"):
-            d = dataset_dir(proto, task, cond)
-            X = np.load(d / "X_val.npy").astype(np.float32)
-            y = np.load(d / "y_val.npy").astype(np.int64)
-            feats.append(X.reshape(len(X), -1))
-            labels.append(y)
-            conds.append(np.full(len(y), 0 if cond == "20_0" else 1))
-        Xf, yf, cf = np.concatenate(feats), np.concatenate(labels), np.concatenate(conds)
-        Z = TSNE(n_components=2, perplexity=50, init="pca", learning_rate="auto",
-                 random_state=42, max_iter=1500).fit_transform(StandardScaler().fit_transform(Xf))
-        shifts = [float(np.linalg.norm(Z[(yf == ci) & (cf == 1)].mean(axis=0)
-                                      - Z[(yf == ci) & (cf == 0)].mean(axis=0))) for ci in range(5)]
-        spread = [float(np.linalg.norm(Z[m] - Z[m].mean(axis=0), axis=1).mean())
-                  for ci in range(5) for m in [(yf == ci) & (cf == 0), (yf == ci) & (cf == 1)] if m.sum() > 1]
-        d, s = float(np.mean(shifts)), float(np.mean(spread))
-        check(f"{task} 工况漂移均值", wd, d, tol=0.05)
-        check(f"{task} 类内散布均值", ws, s, tol=0.05)
-        check(f"{task} 漂移/散布 倍数", wr, d / s, tol=0.05)
-    in_paper(paper, "工况漂移约为类内散布的 6.5 / 8.5 倍")
+    for task, ratio_want in (("gear", 2.1), ("bearing", 2.2)):
+        drift, spread = [], []
+        for ci in range(5):
+            mus = {}
+            for cond in ("20_0", "30_2"):
+                d = dataset_dir(proto, task, cond)
+                y = np.load(d / "y_val.npy")
+                X = np.load(d / "X_val.npy").reshape(len(y), -1).astype(np.float64)
+                P = X[y == ci]
+                mus[cond] = P.mean(axis=0)
+                spread.append(float(np.linalg.norm(P - mus[cond], axis=1).mean()))
+            drift.append(float(np.linalg.norm(mus["20_0"] - mus["30_2"])))
+        check(f"{task} 漂移/散布 比值", ratio_want,
+              float(np.mean(drift) / np.mean(spread)), tol=0.1)
+    in_paper(paper, "2.1（齿轮）/ 2.2（轴承）倍", "补充材料图 S1")
 
 
 # --------------------------------------------------------------------------- #

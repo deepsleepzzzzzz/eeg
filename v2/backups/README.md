@@ -51,3 +51,6 @@
 | 2026-10-17 14:08 | lda_projection | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_lda_projection_20261017.py` | 工作区当前内容 | 图 8 改为 LDA 二维投影（同一 1080 维特征，训练集拟合），替换 t-SNE |
 | 2026-10-17 14:20 | revert_to_initial_tsne | `reports/fig_feature_lda.png` | `backups/fig_feature_lda.backup_before_revert_to_initial_tsne_20261017.png` | 工作区当前内容 | 回退图 8 到最初的 t-SNE 散点版前的现状备份（LDA 版） |
 | 2026-10-17 14:20 | revert_to_initial_tsne | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_revert_to_initial_tsne_20261017.md` | 工作区当前内容 | 回退图 8 到最初的 t-SNE 散点版前的现状备份（LDA 版） |
+| 2026-10-17 17:47 | drop_tsne_main | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_drop_tsne_main_20261017.md` | 工作区当前内容 | 图 8 t-SNE 移入补充材料；效率散点图 13→8；§4.3 改用混淆矩阵/LDA/1080维漂移 |
+| 2026-10-17 17:47 | drop_tsne_main | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_drop_tsne_main_20261017.py` | 工作区当前内容 | 图 8 t-SNE 移入补充材料；效率散点图 13→8；§4.3 改用混淆矩阵/LDA/1080维漂移 |
+| 2026-10-17 17:47 | drop_tsne_main | `tests/test_paper_integrity.py` | `backups/test_paper_integrity.backup_before_drop_tsne_main_20261017.py` | 工作区当前内容 | 图 8 t-SNE 移入补充材料；效率散点图 13→8；§4.3 改用混淆矩阵/LDA/1080维漂移 |
