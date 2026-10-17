@@ -78,3 +78,4 @@
 | 2026-10-17 21:37 | transition_diff_only | `src/reporting/make_paper_figures.py` | `backups/make_paper_figures.backup_before_transition_diff_only_20261017.py` | 工作区当前内容 | 图 10 只保留'相对类均值差异'，删掉上排原始矩阵 |
 | 2026-10-17 21:37 | transition_diff_only | `tests/test_figure_caption_consistency.py` | `backups/test_figure_caption_consistency.backup_before_transition_diff_only_20261017.py` | 工作区当前内容 | 图 10 只保留'相对类均值差异'，删掉上排原始矩阵 |
 | 2026-10-17 21:37 | transition_diff_only | `tests/test_paper_tests_are_effective.py` | `backups/test_paper_tests_are_effective.backup_before_transition_diff_only_20261017.py` | 工作区当前内容 | 图 10 只保留'相对类均值差异'，删掉上排原始矩阵 |
+| 2026-10-17 22:13 | caliber_wording | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_caliber_wording_20261017.md` | 工作区当前内容 | §5.1 按文献通行写法重写（AWGN+多SNR），并正式定义'参考功率口径（简称口径）' |
