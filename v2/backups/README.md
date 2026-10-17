@@ -57,3 +57,6 @@
 | 2026-10-17 18:05 | add_learned_tsne | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_add_learned_tsne_20261017.md` | 工作区当前内容 | 新增学习特征 t-SNE 为图 8，原 8-12 顺延为 9-13 |
 | 2026-10-17 18:10 | embed_runs_ledger | `artifacts/README.md` | `backups/README.backup_before_embed_runs_ledger_20261017.md` | 工作区当前内容 | 登记 artifacts/embed_runs（图 8 学习特征 t-SNE 用的 2 个重训 CNN） |
 | 2026-10-17 18:20 | class_naming | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_class_naming_20261017.md` | 工作区当前内容 | 类别命名表述改为文献通行写法；修正'图10/11行/列标签'为子图标题+状态A-F |
+| 2026-10-17 18:33 | paper_style_cleanup | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_paper_style_cleanup_20261017.md` | 工作区当前内容 | 删掉草稿标注/文件路径与代码库名，修正表8/9口径表述 |
+| 2026-10-17 18:35 | wording_polish | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_wording_polish_20261017.md` | 工作区当前内容 | 把工程口吻的'协议'改为'划分/设置'；seed 42 改中文 |
+| 2026-10-17 18:36 | fig3_note | `reports/fig_fault_modes.png` | `backups/fig_fault_modes.backup_before_fig3_note_20261017.png` | 工作区当前内容 | 图 3 底部注释自相矛盾（非实物照片 vs 实物照片取自…），改为准确表述 |

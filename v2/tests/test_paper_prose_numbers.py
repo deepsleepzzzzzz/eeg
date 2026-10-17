@@ -342,4 +342,4 @@ def test_learned_feature_tsne_matches_source(paper):
     check("齿轮 验证精度", 99.87, gear["val_acc"], tol=0.02)
     check("轴承 验证精度", 100.00, bear["val_acc"], tol=0.01)
     assert gear["embedding_dim"] == 64 and bear["embedding_dim"] == 64
-    in_paper(paper, "CNN 倒数第二层特征（64 维）", "嵌入空间轮廓系数：0.69 / 0.79", "seed 42")
+    in_paper(paper, "CNN 倒数第二层特征（64 维）", "嵌入空间轮廓系数：0.69 / 0.79", "随机种子 42")
