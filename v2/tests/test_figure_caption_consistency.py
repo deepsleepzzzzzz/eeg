@@ -45,16 +45,17 @@ def test_figure10_and_s2_caption_matches_transition_meta(paper):
     # 图的真实参数
     assert meta["channel_index"] == 0 and meta["channel"] == "x"
     assert meta["lag_index"] == 2, "图 10 用的是第 3 个滞后（0-based index 2）"
-    assert meta["normalization"] == "row", "图 10/S2 是行归一化后的条件转移概率"
-    assert abs(float(meta["vmax"]) - 0.55) < 1e-9
-    assert meta.get("difference_row") is True, "图 10 的下排是相对类均值的差异图"
-    assert abs(float(meta["vmax_diff"]) - 0.1454) < 0.01
-    assert meta["main_conditions"] == ["gear/20_0"]
-    assert len(meta["full_conditions"]) == 4 and meta["classes"] == 5
+    assert meta["normalization"] == "row", "差异图基于行归一化的条件转移概率"
+    assert meta["main"]["kind"] == "difference_from_class_mean", "图 10 画的是相对类均值的差异"
+    assert abs(float(meta["main"]["vmax"]) - 0.1454) < 0.01
+    assert meta["main"]["conditions"] == ["gear/20_0"] and meta["main"]["classes"] == 5
+    assert meta["full"]["kind"] == "row_normalized"
+    assert abs(float(meta["full"]["vmax"]) - 0.55) < 1e-9
+    assert len(meta["full"]["conditions"]) == 4 and meta["full"]["classes"] == 5
 
     c10 = caption(paper, "10")
-    for token in ("齿轮 20-0", "第 3 个滞后", "行归一化", "验证集", "色标 0–0.55", "图 S2",
-                  "上排", "下排", "相对类均值"):
+    for token in ("齿轮 20-0", "第 3 个滞后", "行归一化", "验证集", "相对类均值",
+                  "红=高于类均值", "蓝=低于类均值", "图 S2"):
         assert token in c10, f"图 10 题注缺少『{token}』：{c10}"
 
     cs2 = caption(paper, "S2")

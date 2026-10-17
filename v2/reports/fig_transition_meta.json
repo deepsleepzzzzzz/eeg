@@ -3,17 +3,23 @@
   "channel": "x",
   "lag_index": 2,
   "normalization": "row",
-  "vmax": 0.55,
-  "difference_row": true,
-  "vmax_diff": 0.1454,
-  "main_conditions": [
-    "gear/20_0"
-  ],
-  "classes": 5,
-  "full_conditions": [
-    "gear/20_0",
-    "gear/30_2",
-    "bearing/20_0",
-    "bearing/30_2"
-  ]
+  "main": {
+    "kind": "difference_from_class_mean",
+    "vmax": 0.1454,
+    "conditions": [
+      "gear/20_0"
+    ],
+    "classes": 5
+  },
+  "full": {
+    "kind": "row_normalized",
+    "vmax": 0.55,
+    "conditions": [
+      "gear/20_0",
+      "gear/30_2",
+      "bearing/20_0",
+      "bearing/30_2"
+    ],
+    "classes": 5
+  }
 }

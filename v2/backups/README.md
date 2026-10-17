@@ -74,3 +74,7 @@
 | 2026-10-17 21:27 | transition_diffrow | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_transition_diffrow_20261017.md` | 工作区当前内容 | 图 10 增加下排'相对类均值差异'，图注/正文/测试同步 |
 | 2026-10-17 21:27 | transition_diffrow | `tests/test_figure_caption_consistency.py` | `backups/test_figure_caption_consistency.backup_before_transition_diffrow_20261017.py` | 工作区当前内容 | 图 10 增加下排'相对类均值差异'，图注/正文/测试同步 |
 | 2026-10-17 21:27 | transition_diffrow | `tests/test_paper_tests_are_effective.py` | `backups/test_paper_tests_are_effective.backup_before_transition_diffrow_20261017.py` | 工作区当前内容 | 图 10 增加下排'相对类均值差异'，图注/正文/测试同步 |
+| 2026-10-17 21:37 | transition_diff_only | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_transition_diff_only_20261017.md` | 工作区当前内容 | 图 10 只保留'相对类均值差异'，删掉上排原始矩阵 |
+| 2026-10-17 21:37 | transition_diff_only | `src/reporting/make_paper_figures.py` | `backups/make_paper_figures.backup_before_transition_diff_only_20261017.py` | 工作区当前内容 | 图 10 只保留'相对类均值差异'，删掉上排原始矩阵 |
+| 2026-10-17 21:37 | transition_diff_only | `tests/test_figure_caption_consistency.py` | `backups/test_figure_caption_consistency.backup_before_transition_diff_only_20261017.py` | 工作区当前内容 | 图 10 只保留'相对类均值差异'，删掉上排原始矩阵 |
+| 2026-10-17 21:37 | transition_diff_only | `tests/test_paper_tests_are_effective.py` | `backups/test_paper_tests_are_effective.backup_before_transition_diff_only_20261017.py` | 工作区当前内容 | 图 10 只保留'相对类均值差异'，删掉上排原始矩阵 |
