@@ -1,4 +1,4 @@
-# Tests —— 124 项检查
+# Tests —— 125 项检查
 
 一条命令跑完（含审计与变异测试）：`python verify_all.py`（约 2.5 分钟）。
 只跑单元测试：`python -m pytest tests -q`（约 1 分钟，pre-commit 钩子跑的就是这条）。

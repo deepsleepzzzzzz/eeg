@@ -82,3 +82,5 @@
 | 2026-10-17 23:22 | fig13_twopanel | `src/reporting/make_noise_figure.py` | `backups/make_noise_figure.backup_before_fig13_twopanel_20261017.py` | 工作区当前内容 | 图 13 改为双面板：左=本文四工况，右=齿轮20-0与文献对比（DDGF 标注降噪器+反超箭头） |
 | 2026-10-17 23:22 | fig13_twopanel | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_fig13_twopanel_20261017.md` | 工作区当前内容 | 图 13 改为双面板：左=本文四工况，右=齿轮20-0与文献对比（DDGF 标注降噪器+反超箭头） |
 | 2026-10-17 23:22 | fig13_twopanel | `tests/test_figure_caption_consistency.py` | `backups/test_figure_caption_consistency.backup_before_fig13_twopanel_20261017.py` | 工作区当前内容 | 图 13 改为双面板：左=本文四工况，右=齿轮20-0与文献对比（DDGF 标注降噪器+反超箭头） |
+| 2026-10-18 02:56 | fig13_body_explain | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_fig13_body_explain_20261018.md` | 工作区当前内容 | 给图 13 补具体解读（0/−6 dB 略低于 DDGF-Net，−8 dB 接近，−10 dB 反超） |
+| 2026-10-18 02:56 | fig13_body_explain | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_fig13_body_explain_20261018.py` | 工作区当前内容 | 给图 13 补具体解读（0/−6 dB 略低于 DDGF-Net，−8 dB 接近，−10 dB 反超） |

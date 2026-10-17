@@ -410,3 +410,16 @@ def test_no_misleading_capacity_phrase(paper):
     "相近的网络容量（27,685 vs 32,485 参数）"。"""
     assert "同一网络容量" not in paper
     assert "相近的网络容量（本文 CNN 27,685 参数" in paper
+
+
+def test_figure13_body_numbers_match_tables(paper):
+    """§4.6 图 13 的正文解读必须与表 8（本文）和表 6（文献）一致。
+
+    2026-10-18：图 13 之前只有"基线决定相对高低"一句，没有具体解读；
+    补了 0/−6/−10 dB 三组数字后，用本测试钉住，防止这些数字与表脱节。
+    """
+    in_paper(paper,
+             "0 dB 处 95.6% vs 99.9%",
+             "−6 dB 处 86.1% vs 93.5%",
+             "−10 dB 处本文反而更高（84.4% vs 71.2%）",
+             "1/552")
