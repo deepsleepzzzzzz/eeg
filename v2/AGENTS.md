@@ -52,7 +52,7 @@ legacy/                                  历史版本结果（v1..v4）
 ## 三、改完代码的必做动作
 
 ```bash
-python verify_all.py        # 或等价的 pytest tests（122 项，约 1 分钟）
+python verify_all.py        # 或等价的 pytest tests（124 项，约 1 分钟）
 ```
 
 **然后在回复里写明结果**（通过了几项 / 有没有失败）。没跑就不能说"改好了"。

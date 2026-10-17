@@ -38,6 +38,7 @@ INTEGRITY = _load("test_paper_integrity")
 NOISE = _load("test_paper_noise_tables")
 PROSE = _load("test_paper_prose_numbers")
 FIGCONS = _load("test_figure_caption_consistency")
+FIGURES = _load("test_paper_figures")
 
 
 def _parse_tables(paper_text: str) -> dict:
@@ -163,3 +164,12 @@ def test_figure_caption_mutation_is_caught(monkeypatch, tmp_path, original):
                  mutated, mutated)
     _expect_pass(monkeypatch, FIGCONS, "test_figure10_and_s2_caption_matches_transition_meta",
                  original, original)
+
+
+def test_figure_explanation_mutation_is_caught(original):
+    """有图必有讲解：把图 4 的解释删成裸引用"图 4 见下"，测试必须失败。"""
+    mutated = original.replace("图 4 给出训练集上 I(k) 随 k 的变化（B=6）。可以看到",
+                               "图 4 见下。")
+    with pytest.raises(AssertionError):
+        FIGURES.test_every_figure_has_an_explanation(mutated.split("\n"))
+    FIGURES.test_every_figure_has_an_explanation(original.split("\n"))

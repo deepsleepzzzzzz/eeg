@@ -64,3 +64,34 @@ def test_every_table_caption_is_followed_by_a_table(lines):
             if not nxt or not nxt[0].lstrip().startswith("|"):
                 bad.append(f"第 {i + 1} 行：{l[:40]}")
     assert not bad, "表题后面没有表格：\n" + "\n".join(bad)
+
+def test_every_figure_has_an_explanation(lines):
+    """有图必有讲解：每张图都要在正文里有一段**实质解释**，而不是只被"见图 N"点名。
+
+    2026-10-17 用户问"有没有这种测试"。此前只有"图被引用"的检查，没有
+    "图被解释"的检查——一张图可以只出现"如图 8 所示"，正文里没有任何描述。
+
+    判定：正文（去掉题注/图片行）里存在一句提到"图 N"的话，且这句话
+    要么含解释性动词（给出/展示/显示/可以看到/对比/说明…），要么足够长（≥40 字）。
+    "如图 N 所示"这类纯引用不算。
+    """
+    text = "\n".join(lines)
+    body = "\n".join(l for l in lines
+                   if not l.startswith("!") and not l.strip().startswith("**图")
+                   and not l.strip().startswith("**表"))
+    fig_nums = sorted({int(m) for m in re.findall(r"\*\*图 (\d+)", text)})
+    verbs = ("给出", "展示", "显示", "可以看到", "可见", "表明", "说明", "对比",
+             "画出", "呈现", "标出", "列出", "总结", "描述", "示意", "汇总", "进一步")
+    missing = []
+    for n in fig_nums:
+        ok = False
+        for s in re.split(r"[。；\n]", body):
+            if f"图 {n}" not in s:
+                continue
+            if len(s.strip()) >= 40 or any(v in s for v in verbs):
+                ok = True
+                break
+        if not ok:
+            missing.append(n)
+    assert not missing, f"这些图在正文里只有引用、没有实质讲解：{missing}"
+
