@@ -160,43 +160,69 @@ def main() -> None:
         raise SystemExit("[FAIL] 没有找到可用的验证集指标")
 
     setup_font()
-    fig, ax = plt.subplots(figsize=(8.6, 5.2))
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(15.2, 5.6))
 
+    # ---- 左：本文四个任务-工况的抗噪曲线（无文献）
     for (task, cond), style in CURVE_STYLE.items():
         xs, ys = [], []
         for snr in [float(s) for s in SNR_TICKS]:
             v = model_mean(buckets, task, cond, snr)
             if v is not None:
-                xs.append(snr)
-                ys.append(100.0 * v)
+                xs.append(snr); ys.append(100.0 * v)
         clean = model_mean(buckets, task, cond, None)
         if clean is not None:
-            xs.append(CLEAN_X)
-            ys.append(100.0 * clean)
+            xs.append(CLEAN_X); ys.append(100.0 * clean)
         if xs:
-            label = f"本文 · {TASK_LABEL[task]} {cond.replace('_', '-')}（CNN/GCN 均值）"
-            ax.plot(xs, ys, label=label, **style)
-
+            axL.plot(xs, ys, label=f"本文 · {TASK_LABEL[task]} {cond.replace('_', '-')}", **style)
     for entry in LITERATURE:
-        ax.plot(
-            [pt[0] for pt in entry["points"]],
-            [pt[1] for pt in entry["points"]],
-            label=entry["label"],
-            **entry["style"],
-        )
+        if "轴承 30-2" in entry["label"]:
+            axL.plot([pt[0] for pt in entry["points"]], [pt[1] for pt in entry["points"]],
+                     label=entry["label"], **entry["style"])
+    axL.axvline(7.0, color="lightgray", linestyle=":", linewidth=1.0)
+    axL.set_xlabel("信噪比 SNR (dB)")
+    axL.set_ylabel("验证集准确率 (%)")
+    axL.set_title("本文在四个任务-工况的抗噪曲线", fontsize=12)
+    axL.set_xticks(SNR_TICKS + [CLEAN_X])
+    axL.set_xticklabels([str(s) for s in SNR_TICKS] + ["无噪声"])
+    axL.set_xlim(-11.5, 12.0); axL.set_ylim(30, 103)
+    axL.grid(alpha=0.3)
+    axL.legend(fontsize=8, loc="lower left", framealpha=0.9)
 
-    ax.axvline(7.0, color="lightgray", linestyle=":", linewidth=1.0)
-    ax.set_xlabel("信噪比 SNR (dB)")
-    ax.set_ylabel("验证集准确率 (%)")
-    ax.set_title("匹配加噪 AWGN 下的抗噪性能（SEU DDS，验证集）", fontsize=12)
-    ax.set_xticks(SNR_TICKS + [CLEAN_X])
-    ax.set_xticklabels([str(s) for s in SNR_TICKS] + ["无噪声"])
-    ax.set_xlim(-11.5, 12.0)
-    ax.set_ylim(30, 103)
-    ax.grid(alpha=0.3)
-    ax.legend(fontsize=8, loc="lower left", framealpha=0.9)
+    # ---- 右：齿轮 20-0 与文献基线对比
+    for (task, cond), style in CURVE_STYLE.items():
+        if (task, cond) != ("gear", "20_0"):
+            continue
+        xs, ys = [], []
+        for snr in [float(s) for s in SNR_TICKS]:
+            v = model_mean(buckets, task, cond, snr)
+            if v is not None:
+                xs.append(snr); ys.append(100.0 * v)
+        clean = model_mean(buckets, task, cond, None)
+        if clean is not None:
+            xs.append(CLEAN_X); ys.append(100.0 * clean)
+        if xs:
+            axR.plot(xs, ys, label="本文（齿轮 20-0，无降噪）", color="tab:blue", marker="o")
+    for entry in LITERATURE:
+        if "轴承 30-2" in entry["label"]:
+            continue
+        axR.plot([pt[0] for pt in entry["points"]], [pt[1] for pt in entry["points"]],
+                 label=entry["label"], **entry["style"])
+    # DDGF-Net 标注 + 反超箭头
+    axR.annotate("DDGF-Net：15.29M 参数\n含 8.49M 监督降噪器",
+                 xy=(-6, 93.5), xytext=(-2.0, 77),
+                 arrowprops=dict(arrowstyle="->", color="black", lw=1.0), fontsize=8)
+    axR.annotate("本文反超 13.2 点", xy=(-10, 84.4), xytext=(-8.6, 65),
+                 arrowprops=dict(arrowstyle="->", color="tab:blue", lw=1.0), fontsize=8)
+    axR.axvline(7.0, color="lightgray", linestyle=":", linewidth=1.0)
+    axR.set_xlabel("信噪比 SNR (dB)")
+    axR.set_title("齿轮 20-0：与文献基线对比", fontsize=12)
+    axR.set_xticks(SNR_TICKS + [CLEAN_X])
+    axR.set_xticklabels([str(s) for s in SNR_TICKS] + ["无噪声"])
+    axR.set_xlim(-11.5, 12.0); axR.set_ylim(30, 103)
+    axR.grid(alpha=0.3)
+    axR.legend(fontsize=8, loc="lower left", framealpha=0.9)
+
     fig.tight_layout()
-
     out = PROJECT_ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out, bbox_inches="tight")

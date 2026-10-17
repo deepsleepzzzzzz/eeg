@@ -80,7 +80,7 @@ def test_other_figure_captions_declare_key_attributes(paper):
         "7": ("混淆矩阵", "验证集", "5 个种子"),
         "9": ("参数量–精度", "3 个种子", "Pareto"),
         "12": ("参考功率口径", "验证集"),
-        "13": ("AWGN", "验证集"),
+        "13": ("AWGN", "验证集", "齿轮 20-0", "反超", "四个任务-工况"),
         "S1": ("t-SNE", "两种工况叠加"),
     }
     for label, tokens in required.items():
