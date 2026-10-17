@@ -127,40 +127,55 @@ def confusion_matrices() -> None:
 
 
 def transition_matrices() -> None:
-    """每个任务打印 5 类在某一滞后下的平均转移矩阵（可解释性用）。"""
+    """转移矩阵图（可解释性用）：
+
+    * 主文 `fig_transition.png`：只画**齿轮 20-0**的 5 类，按行归一化成条件转移概率 P(j|i)，
+      每行和为 1——与 §4.5 讨论的"自转移概率/行熵/行归一化距离"口径一致；
+    * 补充材料 `fig_transition_full.png`：四个任务-工况 x 5 类全量（同样行归一化）。
+      2026-10-17：原图把 20 个联合概率矩阵全铺在主文，既小又和正文的条件结构口径不一致。
+    """
     from config.protocol import load_protocol
     from data.seu_dds import class_names
 
     proto = load_protocol(find_main_protocol())
     lags = [int(x) for x in proto["representation"]["lags"]]
-    chans = proto["representation"]["channels"]
-    nch = len(chans)
     setup_font()
-    # 四个任务-工况各一行（导师要求：给出不同工况的转移矩阵，说明工况区别）
     conds = (("gear", "20_0"), ("gear", "30_2"), ("bearing", "20_0"), ("bearing", "30_2"))
-    fig, axes = plt.subplots(len(conds), 5, figsize=(16, 13.4))
-    lag_idx = min(2, len(lags) - 1)  # 取第 3 个滞后
-    for row, (task, cond) in enumerate(conds):
-        d = MAIN / "dataset" / task / cond
-        X = np.load(d / "X_val.npy")
-        y = np.load(d / "y_val.npy")
-        names = class_names(task)
-        for c in range(5):
-            # 通道 0 的第 lag_idx 个滞后矩阵
-            mat = X[y == c][:, 0 * len(lags) + lag_idx].mean(axis=0)
-            ax = axes[row, c]
-            ax.imshow(mat, cmap="viridis", vmin=0)
-            # 标题同时给中文与原始英文类名。本图两行分别是齿轮与轴承两套数据，
-            # 只写一种语言时，第二行的标题在视觉上会紧贴第一行底部，容易被读成
-            # “齿轮那一行标的是轴承类名”。中英并列 + 拉大行距即可消除歧义。
-            ax.set_title(f"{cn_name(task, names[c])}\n{names[c]}", fontsize=9, linespacing=1.5)
-            ax.set_xticks([])
-            ax.set_yticks([])
-        axes[row, 0].set_ylabel(f"{TASK_CN[task]}任务\n{cond.replace('_', '-')}", fontsize=11)
-    fig.suptitle("各类的平均状态转移矩阵（x 轴通道，第 3 个滞后；验证集）", fontsize=13)
-    fig.tight_layout(rect=(0, 0, 1, 0.93), h_pad=3.2)
-    fig.savefig(OUT / "fig_transition.png", bbox_inches="tight")
-    print("[ok] reports/fig_transition.png")
+    lag_idx = min(2, len(lags) - 1)  # 第 3 个滞后
+
+    def row_norm(m: np.ndarray) -> np.ndarray:
+        return m / np.maximum(m.sum(axis=1, keepdims=True), 1e-12)
+
+    def draw(conds_sel, figsize, fname, title):
+        fig, axes = plt.subplots(len(conds_sel), 5, figsize=figsize)
+        if len(conds_sel) == 1:
+            axes = np.asarray(axes).reshape(1, 5)
+        im = None
+        for row, (task, cond) in enumerate(conds_sel):
+            d = MAIN / "dataset" / task / cond
+            X = np.load(d / "X_val.npy")
+            y = np.load(d / "y_val.npy")
+            names = class_names(task)
+            for c in range(5):
+                mat = row_norm(X[y == c][:, 0 * len(lags) + lag_idx].mean(axis=0))
+                ax = axes[row, c]
+                im = ax.imshow(mat, cmap="viridis", vmin=0.0, vmax=0.55)
+                ax.set_title(f"{cn_name(task, names[c])}\n{names[c]}", fontsize=9, linespacing=1.5)
+                ax.set_xticks([]); ax.set_yticks([])
+            axes[row, 0].set_ylabel(f"{TASK_CN[task]}任务\n{cond.replace('_', '-')}", fontsize=11)
+        fig.suptitle(title, fontsize=13)
+        fig.tight_layout(rect=(0, 0, 0.93, 0.93), h_pad=3.2)
+        if im is not None:
+            cax = fig.add_axes([0.945, 0.15, 0.012, 0.7])
+            fig.colorbar(im, cax=cax, label="条件转移概率 P(j|i)（色标 0–0.55）")
+        fig.savefig(OUT / fname, bbox_inches="tight")
+        plt.close(fig)
+        print(f"[ok] reports/{fname}")
+
+    draw([("gear", "20_0")], (17.0, 4.4), "fig_transition.png",
+         "齿轮 20-0 各类的行归一化平均状态转移矩阵（x 通道，第 3 个滞后；验证集）")
+    draw(conds, (17.0, 13.6), "fig_transition_full.png",
+         "四个任务-工况下各类的行归一化平均状态转移矩阵（x 通道，第 3 个滞后；验证集）")
 
 
 def efficiency_scatter() -> None:

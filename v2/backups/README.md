@@ -70,3 +70,4 @@
 | 2026-10-17 19:53 | abstract_trim | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_abstract_trim_20261017.md` | 工作区当前内容 | 摘要按同类论文模板瘦身（数字从约10个减到核心5个，两条主线分开） |
 | 2026-10-17 19:53 | abstract_trim | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_abstract_trim_20261017.py` | 工作区当前内容 | 摘要按同类论文模板瘦身（数字从约10个减到核心5个，两条主线分开） |
 | 2026-10-17 20:04 | keywords_trim | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_keywords_trim_20261017.md` | 工作区当前内容 | 关键词 7→5（去掉齿轮箱/轴承）；清掉摘要后重复的分隔线 |
+| 2026-10-17 21:02 | transition_fig_subset | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_transition_fig_subset_20261017.md` | 工作区当前内容 | 图 10 改为齿轮20-0的行归一化矩阵（主文），全量进补充材料图 S2 |
