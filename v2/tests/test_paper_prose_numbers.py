@@ -402,3 +402,11 @@ def test_no_cross_caliber_comparison(paper):
     row = [r for r in _body(tabs["9"]) if r[0] == "齿轮 20-0" and r[1] == "−10"]
     assert row, "表 9 缺少 齿轮 20-0 / −10 dB 行"
     assert abs(_f(row[0][3]) - 70.46) < 0.01, f"表 9 全局列应为 70.46，实际 {row[0][3]}"
+
+
+def test_no_misleading_capacity_phrase(paper):
+    """"同一网络容量"会与"1/139 的参数量"自相矛盾（27,685 vs 32,485 vs 3.85M），
+    且与原始波形 1D-CNN 相比是"相近"而不是"同一"。2026-10-17 已改为
+    "相近的网络容量（27,685 vs 32,485 参数）"。"""
+    assert "同一网络容量" not in paper
+    assert "相近的网络容量（27,685 vs 32,485 参数）" in paper
