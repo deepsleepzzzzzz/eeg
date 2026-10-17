@@ -95,7 +95,7 @@ def test_table8_noise_accuracy_is_reproducible(label, task, cond):
     if scan is None:
         pytest.skip(f"{label} 的加噪 run 尚未补齐（重跑未完成）；完成后本测试会自动执行")
     tab = _paper_tables()["8"]
-    row_map = {r[0]: r for r in _body(tab[1:])}
+    row_map = {r[0]: r for r in _body(tab)}   # _body 自己会去掉表头；此前写成 tab[1:] 会把“干净”行也删掉
     for row_label, tag in ROWS:
         if row_label not in row_map:
             continue

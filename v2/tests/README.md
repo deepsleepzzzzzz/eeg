@@ -1,4 +1,4 @@
-# Tests —— 106 项检查
+# Tests —— 116 项检查
 
 一条命令跑完（含审计与变异测试）：`python verify_all.py`（约 2.5 分钟）。
 只跑单元测试：`python -m pytest tests -q`（约 1 分钟，pre-commit 钩子跑的就是这条）。
@@ -18,6 +18,9 @@
 - `test_paper_figures.py` —— 图 13 的参数量与来源
 - `test_paper_prose_numbers.py` —— 正文里不在表里的数字（消融 / t-SNE 漂移 / TV / 效率比 /
   跨工况 / 表 5 的两列网络数字）逐条复算；2026-10-17 由此抓出并修正 2 处表述
+- `test_paper_tests_are_effective.py` —— **对论文测试本身做变异测试**：注入 8 类已知错误，
+  逐条验证对应测试必须失败、原文必须通过（2026-10-17 由此发现表 8 测试的"双重去头"bug：
+  "干净"行此前从未被核对）
 - `test_registry_scans.py` —— `registry_scans.csv` 与 artifacts 磁盘一致、无残缺 run
 - `test_artifacts_ledger.py` —— 每个 artifacts 目录都在台账里；非 v5 协议目录必须有标注
 - `test_provenance.py` / `test_audits.py` —— 数据溯源与审计脚本本身的守卫
