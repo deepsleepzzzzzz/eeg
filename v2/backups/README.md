@@ -61,3 +61,5 @@
 | 2026-10-17 18:35 | wording_polish | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_wording_polish_20261017.md` | 工作区当前内容 | 把工程口吻的'协议'改为'划分/设置'；seed 42 改中文 |
 | 2026-10-17 18:36 | fig3_note | `reports/fig_fault_modes.png` | `backups/fig_fault_modes.backup_before_fig3_note_20261017.png` | 工作区当前内容 | 图 3 底部注释自相矛盾（非实物照片 vs 实物照片取自…），改为准确表述 |
 | 2026-10-17 18:51 | transition_claim_fix | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_transition_claim_fix_20261017.md` | 工作区当前内容 | 图 10 的定性描述与数据不符：等频分位使边缘分布均匀，改为按条件转移结构描述（自转移/行熵/Frobenius 距离） |
+| 2026-10-17 19:05 | param_vs_flops | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_param_vs_flops_20261017.md` | 工作区当前内容 | 修正摘要/结论把'参数量 1/139'写成'算量 1/139'，以及'最强基线 ResNet1D'（实为参数最大；低 SNR 最强是 raw_cnn） |
+| 2026-10-17 19:05 | param_vs_flops | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_param_vs_flops_20261017.py` | 工作区当前内容 | 修正摘要/结论把'参数量 1/139'写成'算量 1/139'，以及'最强基线 ResNet1D'（实为参数最大；低 SNR 最强是 raw_cnn） |

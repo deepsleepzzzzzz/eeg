@@ -142,7 +142,11 @@ def test_efficiency_text_numbers(paper):
     check("ResNet1D / 本文 CNN", 139, eff_all["resnet1d"]["params"] / eff_all["cnn"]["params"], tol=0.6)
     check("DDGF-Net 15.29M / 本文 CNN", 552, 15_290_000 / eff_all["cnn"]["params"], tol=2)
     check("输入规模倍数", 5.7, 6144 / 1080, tol=0.05)
-    in_paper(paper, "1/139", "1/552", "0.0277 M", "0.0325 M", "5.7 倍")
+    check("ResNet1D / 本文 CNN FLOPs", 732, eff_all["resnet1d"]["flops"] / eff_all["cnn"]["flops"], tol=2)
+    check("raw_cnn / 本文 CNN FLOPs", 42, eff_all["raw_cnn"]["flops"] / eff_all["cnn"]["flops"], tol=0.5)
+    in_paper(paper, "1/139", "1/552", "0.0277 M", "0.0325 M", "5.7 倍",
+             "FLOPs 约为其 1/732", "同组参数量最大的基线 ResNet1D", "约 42 倍的 FLOPs 下降")
+    assert "1/139 的算量" not in paper, "1/139 是参数量比，不是算量（FLOPs 比是 1/732）"
 
 
 # --------------------------------------------------------------------------- #
