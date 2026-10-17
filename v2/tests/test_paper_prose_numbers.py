@@ -343,3 +343,38 @@ def test_learned_feature_tsne_matches_source(paper):
     check("轴承 验证精度", 100.00, bear["val_acc"], tol=0.01)
     assert gear["embedding_dim"] == 64 and bear["embedding_dim"] == 64
     in_paper(paper, "CNN 倒数第二层特征（64 维）", "嵌入空间轮廓系数：0.69 / 0.79", "随机种子 42")
+
+
+def test_transition_structure_numbers(paper):
+    """§4.5 图 10 的条件转移结构数字：齿轮自转移 0.25–0.33、缺齿–齿面磨损距离 0.10、
+    轴承外圈自转移 0.35 / 行熵 1.46。
+
+    2026-10-17：原句"健康集中在低状态区、缺齿向右下偏移"与等频分位设计矛盾
+    （等频分位把每一类的边缘状态分布强制成近似均匀，质量不可能集中在低状态）。
+    已改为按行归一化的条件结构描述，本测试把新数字钉住。
+    """
+    from config.protocol import dataset_dir
+    proto = _proto()
+
+    def matrices(task, cond):
+        d = dataset_dir(proto, task, cond)
+        X = np.load(d / "X_val.npy")
+        y = np.load(d / "y_val.npy")
+        out = []
+        for ci in range(5):
+            M = X[y == ci][:, 2].mean(axis=0)          # 通道 0、第 3 个滞后（与图 10 一致）
+            out.append(M / np.maximum(M.sum(axis=1, keepdims=True), 1e-12))
+        return out
+
+    gear = matrices("gear", "20_0")
+    diag = [float(np.mean(np.diag(P))) for P in gear]
+    assert abs(min(diag) - 0.245) < 0.01 and abs(max(diag) - 0.333) < 0.01, diag
+    dist = float(np.linalg.norm(gear[2] - gear[4]))   # Miss=2, Surface=4
+    check("缺齿 vs 齿面磨损 转移矩阵距离", 0.10, dist, tol=0.02)
+
+    outer = matrices("bearing", "20_0")[3]            # health, ball, inner, outer, comb
+    self_outer = float(np.mean(np.diag(outer)))
+    ent = float(np.mean([-(r[r > 0] * np.log(r[r > 0])).sum() for r in outer]))
+    check("轴承外圈 自转移", 0.35, self_outer, tol=0.01)
+    check("轴承外圈 行熵", 1.46, ent, tol=0.02)
+    in_paper(paper, "0.25–0.33", "Frobenius 距离 0.10", "自转移概率最高（0.35）", "行熵最低（1.46")

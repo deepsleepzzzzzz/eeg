@@ -60,3 +60,4 @@
 | 2026-10-17 18:33 | paper_style_cleanup | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_paper_style_cleanup_20261017.md` | 工作区当前内容 | 删掉草稿标注/文件路径与代码库名，修正表8/9口径表述 |
 | 2026-10-17 18:35 | wording_polish | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_wording_polish_20261017.md` | 工作区当前内容 | 把工程口吻的'协议'改为'划分/设置'；seed 42 改中文 |
 | 2026-10-17 18:36 | fig3_note | `reports/fig_fault_modes.png` | `backups/fig_fault_modes.backup_before_fig3_note_20261017.png` | 工作区当前内容 | 图 3 底部注释自相矛盾（非实物照片 vs 实物照片取自…），改为准确表述 |
+| 2026-10-17 18:51 | transition_claim_fix | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_transition_claim_fix_20261017.md` | 工作区当前内容 | 图 10 的定性描述与数据不符：等频分位使边缘分布均匀，改为按条件转移结构描述（自转移/行熵/Frobenius 距离） |
