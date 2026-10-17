@@ -4,6 +4,8 @@
   "lag_index": 2,
   "normalization": "row",
   "vmax": 0.55,
+  "difference_row": true,
+  "vmax_diff": 0.1454,
   "main_conditions": [
     "gear/20_0"
   ],

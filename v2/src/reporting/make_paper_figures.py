@@ -172,8 +172,33 @@ def transition_matrices() -> None:
         plt.close(fig)
         print(f"[ok] reports/{fname}")
 
-    draw([("gear", "20_0")], (17.0, 4.4), "fig_transition.png",
-         "齿轮 20-0 各类的行归一化平均状态转移矩阵（x 通道，第 3 个滞后；验证集）")
+    # ---- 主图：上排 = 行归一化矩阵，下排 = 相对类均值的差异（突出类间结构）
+    d = MAIN / "dataset" / "gear" / "20_0"
+    X = np.load(d / "X_val.npy")
+    y = np.load(d / "y_val.npy")
+    names_g = class_names("gear")
+    P = np.asarray([row_norm(X[y == c][:, 0 * len(lags) + lag_idx].mean(axis=0)) for c in range(5)])
+    D = P - P.mean(axis=0)
+    vdiff = float(np.abs(D).max())
+    fig, axes = plt.subplots(2, 5, figsize=(17.0, 7.8))
+    im1 = im2 = None
+    for c in range(5):
+        ax = axes[0, c]
+        im1 = ax.imshow(P[c], cmap="viridis", vmin=0.0, vmax=0.55)
+        ax.set_title(f"{cn_name('gear', names_g[c])}\n{names_g[c]}", fontsize=9, linespacing=1.5)
+        ax.set_xticks([]); ax.set_yticks([])
+        ax = axes[1, c]
+        im2 = ax.imshow(D[c], cmap="RdBu_r", vmin=-vdiff, vmax=vdiff)
+        ax.set_xticks([]); ax.set_yticks([])
+    axes[0, 0].set_ylabel("行归一化\nP(j|i)", fontsize=10)
+    axes[1, 0].set_ylabel("相对类均值\nΔP(j|i)", fontsize=10)
+    fig.suptitle("齿轮 20-0：各类的行归一化平均转移矩阵（上）与相对类均值的差异（下）", fontsize=13)
+    fig.tight_layout(rect=(0, 0, 0.93, 0.93), h_pad=2.0)
+    cax1 = fig.add_axes([0.945, 0.53, 0.011, 0.33]); fig.colorbar(im1, cax=cax1, label="P(j|i)（0–0.55）")
+    cax2 = fig.add_axes([0.945, 0.10, 0.011, 0.33]); fig.colorbar(im2, cax=cax2, label="ΔP(j|i)")
+    fig.savefig(OUT / "fig_transition.png", bbox_inches="tight")
+    plt.close(fig)
+    print("[ok] reports/fig_transition.png（上：矩阵；下：差异）")
     draw(conds, (17.0, 13.6), "fig_transition_full.png",
          "四个任务-工况下各类的行归一化平均状态转移矩阵（x 通道，第 3 个滞后；验证集）")
 
@@ -182,6 +207,7 @@ def transition_matrices() -> None:
         json.dumps({
             "channel_index": 0, "channel": "x", "lag_index": lag_idx,
             "normalization": "row", "vmax": 0.55,
+            "difference_row": True, "vmax_diff": round(vdiff, 4),
             "main_conditions": ["gear/20_0"], "classes": 5,
             "full_conditions": [f"{t}/{c}" for t, c in conds],
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
