@@ -63,3 +63,5 @@
 | 2026-10-17 18:51 | transition_claim_fix | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_transition_claim_fix_20261017.md` | 工作区当前内容 | 图 10 的定性描述与数据不符：等频分位使边缘分布均匀，改为按条件转移结构描述（自转移/行熵/Frobenius 距离） |
 | 2026-10-17 19:05 | param_vs_flops | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_param_vs_flops_20261017.md` | 工作区当前内容 | 修正摘要/结论把'参数量 1/139'写成'算量 1/139'，以及'最强基线 ResNet1D'（实为参数最大；低 SNR 最强是 raw_cnn） |
 | 2026-10-17 19:05 | param_vs_flops | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_param_vs_flops_20261017.py` | 工作区当前内容 | 修正摘要/结论把'参数量 1/139'写成'算量 1/139'，以及'最强基线 ResNet1D'（实为参数最大；低 SNR 最强是 raw_cnn） |
+| 2026-10-17 19:30 | caliber_consistency | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_caliber_consistency_20261017.md` | 工作区当前内容 | 删掉摘要/§5.4/结论里跨口径的'与文献同水平'；68.95（CNN单模型）统一为 70.5（CNN/GCN 均值）；'同一网络容量'改'相近' |
+| 2026-10-17 19:30 | caliber_consistency | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_caliber_consistency_20261017.py` | 工作区当前内容 | 删掉摘要/§5.4/结论里跨口径的'与文献同水平'；68.95（CNN单模型）统一为 70.5（CNN/GCN 均值）；'同一网络容量'改'相近' |

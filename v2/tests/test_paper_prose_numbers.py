@@ -382,3 +382,23 @@ def test_transition_structure_numbers(paper):
     check("轴承外圈 自转移", 0.35, self_outer, tol=0.01)
     check("轴承外圈 行熵", 1.46, ent, tol=0.02)
     in_paper(paper, "0.25–0.33", "Frobenius 距离 0.10", "自转移概率最高（0.35）", "行熵最低（1.46")
+
+
+def test_no_cross_caliber_comparison(paper):
+    """§5 的核心论点是"不同参考功率口径不可横比"，因此：
+
+    * 不能出现"与文献报告值同水平"这类**跨口径**比较（文献值多为逐窗口径，
+      而本文该处是全局口径）；
+    * 齿轮 20-0、全局 −10 dB 的正文数字必须与表 9 一致（70.46 → 70.5），
+      不能混用 CNN 单模型的 68.95。
+
+    2026-10-17：摘要/§5.4/结论三处都出现过"与文献报告值同水平"，且结论用的是
+    CNN 单模型 68.95、表 9 是 CNN/GCN 均值 70.46——已统一修正。
+    """
+    assert "同水平" not in paper and "同一水平" not in paper, "不允许跨口径的『同水平』比较"
+    assert "68.95" not in paper, "68.95 是 CNN 单模型值，正文应统一用 CNN/GCN 均值 70.5"
+    assert "70.5%" in paper
+    tabs = _tables(paper)
+    row = [r for r in _body(tabs["9"]) if r[0] == "齿轮 20-0" and r[1] == "−10"]
+    assert row, "表 9 缺少 齿轮 20-0 / −10 dB 行"
+    assert abs(_f(row[0][3]) - 70.46) < 0.01, f"表 9 全局列应为 70.46，实际 {row[0][3]}"
