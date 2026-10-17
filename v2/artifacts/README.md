@@ -30,6 +30,8 @@
 | `variant_scan_prefilter/` | 前置滤波**选型对照** —— 结论：负收益，v5 声明 `prefilter: none` | **v4**（对照，不是主协议结果） |
 | `cross_condition/` | 跨工况迁移 20-0 → 30-2（§5.5 第（2）条） | v5 |
 | `tuning/` | 调参中间记录（**历史协议 v1/v2/v3**），不直接引用 | v1–v3 |
+| `embed_runs/` | **图 8 学习特征 t-SNE** 用的 2 个重训 CNN（齿轮/轴承 20-0，seed 42）；含 best_state.pt（*.pt 不入库）与 metrics.json | v5 |
+
 
 **两个 v4 目录的使用注意**：它们的协议字段是 `main_70_15_15_v4`（逐窗 z-score）。
 内部所有对照臂用同一协议，结论（全局归一化更好、前置滤波无收益）成立；

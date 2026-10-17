@@ -14,6 +14,8 @@ gear_resnet1d_20_0to30_2_seed44,cross_condition,resnet1d,main_70_15_15_v5,gear,2
 gear_wdcnn_20_0to30_2_seed42,cross_condition,wdcnn,main_70_15_15_v5,gear,20_0,wdcnn,42,19,0.573684,0.520987,0.023210,0.478845,49,1.56e-05,artifacts/cross_condition/wdcnn/gear_wdcnn_20_0to30_2_seed42/metrics.json,done
 gear_wdcnn_20_0to30_2_seed43,cross_condition,wdcnn,main_70_15_15_v5,gear,20_0,wdcnn,43,5,0.490789,0.349803,0.019096,0.649932,35,6.25e-05,artifacts/cross_condition/wdcnn/gear_wdcnn_20_0to30_2_seed43/metrics.json,done
 gear_wdcnn_20_0to30_2_seed44,cross_condition,wdcnn,main_70_15_15_v5,gear,20_0,wdcnn,44,3,0.603947,0.379474,0.048443,0.619883,33,6.25e-05,artifacts/cross_condition/wdcnn/gear_wdcnn_20_0to30_2_seed44/metrics.json,done
+bearing_cnn_20_0_seed42,embed_runs,,main_70_15_15_v5,bearing,20_0,cnn,42,2,1.000000,1.000000,0.000000,-0.003273,32,0.0005,artifacts/embed_runs/bearing_cnn_20_0_seed42/metrics.json,done
+gear_cnn_20_0_seed42,embed_runs,,main_70_15_15_v5,gear,20_0,cnn,42,17,0.998684,0.997500,0.000709,0.002430,47,0.000125,artifacts/embed_runs/gear_cnn_20_0_seed42/metrics.json,done
 probe_gear_cnn_7ch,probe_channels_7,,probe_channels_7,gear,30_2,cnn,42,15,1.000000,0.999846,0.000366,0.000154,45,0.000125,artifacts/probe_channels_7/probe_gear_cnn_7ch/metrics.json,done
 synthetic_cnn,synthetic_audit,,synthetic_audit,bearing,20_0,cnn,42,1,0.262500,,,,,,artifacts/synthetic_audit/synthetic_cnn/metrics.json,done
 synthetic_gcn,synthetic_audit,,synthetic_audit,bearing,20_0,gcn,42,1,0.262500,,,,,,artifacts/synthetic_audit/synthetic_gcn/metrics.json,done

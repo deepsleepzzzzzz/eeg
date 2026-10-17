@@ -54,3 +54,5 @@
 | 2026-10-17 17:47 | drop_tsne_main | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_drop_tsne_main_20261017.md` | 工作区当前内容 | 图 8 t-SNE 移入补充材料；效率散点图 13→8；§4.3 改用混淆矩阵/LDA/1080维漂移 |
 | 2026-10-17 17:47 | drop_tsne_main | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_drop_tsne_main_20261017.py` | 工作区当前内容 | 图 8 t-SNE 移入补充材料；效率散点图 13→8；§4.3 改用混淆矩阵/LDA/1080维漂移 |
 | 2026-10-17 17:47 | drop_tsne_main | `tests/test_paper_integrity.py` | `backups/test_paper_integrity.backup_before_drop_tsne_main_20261017.py` | 工作区当前内容 | 图 8 t-SNE 移入补充材料；效率散点图 13→8；§4.3 改用混淆矩阵/LDA/1080维漂移 |
+| 2026-10-17 18:05 | add_learned_tsne | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_add_learned_tsne_20261017.md` | 工作区当前内容 | 新增学习特征 t-SNE 为图 8，原 8-12 顺延为 9-13 |
+| 2026-10-17 18:10 | embed_runs_ledger | `artifacts/README.md` | `backups/README.backup_before_embed_runs_ledger_20261017.md` | 工作区当前内容 | 登记 artifacts/embed_runs（图 8 学习特征 t-SNE 用的 2 个重训 CNN） |

@@ -326,3 +326,20 @@ def test_clean_condition_gap_text(paper):
         assert 0.15 <= g <= 0.35, f"齿轮任务干净条件差距 {g:.2f} 不在论文写的 0.2–0.3 附近"
     in_paper(paper, "100.00% vs 本文 99.6%–99.8%", "齿轮任务相差 0.2–0.3 个百分点",
              "轴承任务两者同为 100.00%")
+
+
+def test_learned_feature_tsne_matches_source(paper):
+    """图 8 的学习特征 t-SNE：轮廓系数 0.69/0.79、验证精度 99.87/100.00 必须与 feature_tsne.json 一致。
+
+    这张图由 src/analysis/tsne_embedding.py 生成（读 train.py --save-model 落盘的 best_state.pt，
+    提取 CNN 的 embed() 后做 t-SNE）。数字写进论文后不能与源文件脱节。
+    """
+    j = json.loads((PROJECT_ROOT / "reports/feature_tsne.json").read_text(encoding="utf-8"))
+    gear = j["gear_cnn_20_0_seed42"]
+    bear = j["bearing_cnn_20_0_seed42"]
+    check("齿轮 嵌入轮廓系数", 0.69, gear["silhouette_embedding"], tol=0.01)
+    check("轴承 嵌入轮廓系数", 0.79, bear["silhouette_embedding"], tol=0.01)
+    check("齿轮 验证精度", 99.87, gear["val_acc"], tol=0.02)
+    check("轴承 验证精度", 100.00, bear["val_acc"], tol=0.01)
+    assert gear["embedding_dim"] == 64 and bear["embedding_dim"] == 64
+    in_paper(paper, "CNN 倒数第二层特征（64 维）", "嵌入空间轮廓系数：0.69 / 0.79", "seed 42")

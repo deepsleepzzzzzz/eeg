@@ -80,7 +80,7 @@ def build_scheduler(cfg, optimizer):
 
 def train_one(experiment_cfg: dict, protocol_cfg: dict, evaluate_test: bool, confirm_test: bool,
               epochs_override: int | None = None, limit_train: int | None = None, output_root=None,
-              device: str | None = None):
+              device: str | None = None, save_model: bool = False):
     if evaluate_test and not confirm_test:
         raise RuntimeError("test evaluation requires --confirm-test")
 
@@ -203,6 +203,12 @@ def train_one(experiment_cfg: dict, protocol_cfg: dict, evaluate_test: bool, con
             break
 
     model.load_state_dict(best["state"])
+    if save_model:
+        # 可选：把最佳权重落盘，供 t-SNE 等分析脚本提取 embed()（默认关闭，不影响已有结果）
+        torch.save({"state": best["state"], "experiment_id": experiment_id,
+                    "protocol": protocol_name, "task": task, "condition": condition,
+                    "model": model_name, "seed": seed}, run_dir / "best_state.pt")
+        print(f"saved state {run_dir / 'best_state.pt'}")
     best_val_loss, best_val_acc, y_true, y_pred = evaluate(model, val_loader, device, criterion, predictions=True)
     best["val_acc"] = float(best_val_acc)
     val_metrics = compute_metrics(y_true, y_pred, n_classes=len(names))
@@ -277,6 +283,8 @@ def parse_args():
     p.add_argument("--confirm-test", action="store_true")
     p.add_argument("--epochs", type=int, default=None)
     p.add_argument("--limit-train", type=int, default=None)
+    p.add_argument("--output-root", default=None, help="把结果写到指定目录（默认 artifacts/<协议名>/）")
+    p.add_argument("--save-model", action="store_true", help="保存最佳权重 best_state.pt（供 t-SNE 分析）")
     return p.parse_args()
 
 
@@ -284,7 +292,8 @@ def main():
     args = parse_args()
     experiment_cfg = load_yaml(Path(args.experiment))
     protocol_cfg = load_yaml(Path(args.protocol))
-    train_one(experiment_cfg, protocol_cfg, args.evaluate_test, args.confirm_test, args.epochs, args.limit_train)
+    train_one(experiment_cfg, protocol_cfg, args.evaluate_test, args.confirm_test, args.epochs,
+              args.limit_train, output_root=args.output_root, save_model=args.save_model)
 
 
 if __name__ == "__main__":

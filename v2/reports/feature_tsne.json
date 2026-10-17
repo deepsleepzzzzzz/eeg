@@ -1,0 +1,20 @@
+{
+  "gear_cnn_20_0_seed42": {
+    "task": "gear",
+    "condition": "20_0",
+    "model": "cnn",
+    "seed": 42,
+    "val_acc": 99.86842105263159,
+    "silhouette_embedding": 0.6892009377479553,
+    "embedding_dim": 64
+  },
+  "bearing_cnn_20_0_seed42": {
+    "task": "bearing",
+    "condition": "20_0",
+    "model": "cnn",
+    "seed": 42,
+    "val_acc": 100.0,
+    "silhouette_embedding": 0.7899968028068542,
+    "embedding_dim": 64
+  }
+}
