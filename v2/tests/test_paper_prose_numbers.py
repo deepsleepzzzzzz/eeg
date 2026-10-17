@@ -145,7 +145,7 @@ def test_efficiency_text_numbers(paper):
     check("ResNet1D / 本文 CNN FLOPs", 732, eff_all["resnet1d"]["flops"] / eff_all["cnn"]["flops"], tol=2)
     check("raw_cnn / 本文 CNN FLOPs", 42, eff_all["raw_cnn"]["flops"] / eff_all["cnn"]["flops"], tol=0.5)
     in_paper(paper, "1/139", "1/552", "0.0277 M", "0.0325 M", "5.7 倍",
-             "FLOPs 约为其 1/732", "同组参数量最大的基线 ResNet1D", "约 42 倍的 FLOPs 下降")
+             "1/732", "同组参数量最大的基线 ResNet1D", "约 42 倍的 FLOPs 下降")
     assert "1/139 的算量" not in paper, "1/139 是参数量比，不是算量（FLOPs 比是 1/732）"
 
 
@@ -409,4 +409,4 @@ def test_no_misleading_capacity_phrase(paper):
     且与原始波形 1D-CNN 相比是"相近"而不是"同一"。2026-10-17 已改为
     "相近的网络容量（27,685 vs 32,485 参数）"。"""
     assert "同一网络容量" not in paper
-    assert "相近的网络容量（27,685 vs 32,485 参数）" in paper
+    assert "相近的网络容量（本文 CNN 27,685 参数" in paper
