@@ -52,7 +52,7 @@ legacy/                                  历史版本结果（v1..v4）
 ## 三、改完代码的必做动作
 
 ```bash
-python verify_all.py        # 或等价的 pytest tests（118 项，约 1 分钟）
+python verify_all.py        # 或等价的 pytest tests（122 项，约 1 分钟）
 ```
 
 **然后在回复里写明结果**（通过了几项 / 有没有失败）。没跑就不能说"改好了"。
@@ -111,6 +111,7 @@ python verify_all.py
 | artifacts 台账漏登记 | `variant_scan_energy` 等 4 个目录从未写进 `artifacts/README.md`；两名录用了 v4 协议却没标注 | `tests/test_artifacts_ledger.py`（2 项） |
 | 扫描实验没有总账 | 1300+ 个 run 散在 15 个目录里，"跑完没有"只能靠人记 | `registry_scans.csv` + `src/reporting/make_registry_scans.py` + `tests/test_registry_scans.py`（3 项） |
 | 测试本身写错 | 表 8 的测试先 `tab[1:]` 再 `_body()`，把"干净"行也当表头删掉——该行从未被核对 | `tests/test_paper_tests_are_effective.py`（对论文测试做变异测试，8 项） |
+| 图文不适配 | 题注写"第 3 个滞后/1σ/行归一化"，图里画的却是别的参数；旧测试只查结构不查内容 | `tests/test_figure_caption_consistency.py`（3 项，题注 ↔ 绘图参数台账） |
 | 论文里"形式检查"冒充真检查 | 表 9 的纯能量列只断言 `0 < x <= 100`，任何数字都能过 | `tests/test_paper_noise_tables.py::test_table9_energy_classifier_matches_energy_only_csv` |
 
 ## 七、跑批之后的完成判据（踩过三次）

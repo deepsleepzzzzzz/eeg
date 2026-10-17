@@ -177,6 +177,16 @@ def transition_matrices() -> None:
     draw(conds, (17.0, 13.6), "fig_transition_full.png",
          "四个任务-工况下各类的行归一化平均状态转移矩阵（x 通道，第 3 个滞后；验证集）")
 
+    # 图的"参数台账"：题注与图必须对得上（tests/test_figure_caption_consistency.py 会核对）
+    (OUT / "fig_transition_meta.json").write_text(
+        json.dumps({
+            "channel_index": 0, "channel": "x", "lag_index": lag_idx,
+            "normalization": "row", "vmax": 0.55,
+            "main_conditions": ["gear/20_0"], "classes": 5,
+            "full_conditions": [f"{t}/{c}" for t, c in conds],
+        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("[ok] reports/fig_transition_meta.json")
+
 
 def efficiency_scatter() -> None:
     """参数量–精度散点（同协议自跑）：轻量化主张的"一张图"版本。

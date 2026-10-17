@@ -1,0 +1,17 @@
+{
+  "channel_index": 0,
+  "channel": "x",
+  "lag_index": 2,
+  "normalization": "row",
+  "vmax": 0.55,
+  "main_conditions": [
+    "gear/20_0"
+  ],
+  "classes": 5,
+  "full_conditions": [
+    "gear/20_0",
+    "gear/30_2",
+    "bearing/20_0",
+    "bearing/30_2"
+  ]
+}

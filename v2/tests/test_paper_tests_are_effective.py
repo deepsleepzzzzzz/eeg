@@ -37,6 +37,7 @@ def _load(name: str):
 INTEGRITY = _load("test_paper_integrity")
 NOISE = _load("test_paper_noise_tables")
 PROSE = _load("test_paper_prose_numbers")
+FIGCONS = _load("test_figure_caption_consistency")
 
 
 def _parse_tables(paper_text: str) -> dict:
@@ -151,3 +152,14 @@ def test_figure_numbering_mutation_is_caught(monkeypatch, tmp_path, original):
                  mutated, mutated, _parse_tables(mutated))
     _expect_pass(monkeypatch, INTEGRITY, "test_figure_and_table_numbers_are_contiguous",
                  original, original, _parse_tables(original))
+
+
+def test_figure_caption_mutation_is_caught(monkeypatch, tmp_path, original):
+    """图文适配测试必须能抓到"题注与图不符"：把图 10 的"第 3 个滞后"改成"第 2 个"。"""
+    mutated = _mutate(original,
+                     "**图 10  齿轮 20-0 各类的行归一化平均状态转移矩阵（x 通道，第 3 个滞后，验证集）**",
+                     "**图 10  齿轮 20-0 各类的行归一化平均状态转移矩阵（x 通道，第 2 个滞后，验证集）**")
+    _expect_fail(monkeypatch, tmp_path, FIGCONS, "test_figure10_and_s2_caption_matches_transition_meta",
+                 mutated, mutated)
+    _expect_pass(monkeypatch, FIGCONS, "test_figure10_and_s2_caption_matches_transition_meta",
+                 original, original)

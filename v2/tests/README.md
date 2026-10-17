@@ -1,4 +1,4 @@
-# Tests —— 118 项检查
+# Tests —— 122 项检查
 
 一条命令跑完（含审计与变异测试）：`python verify_all.py`（约 2.5 分钟）。
 只跑单元测试：`python -m pytest tests -q`（约 1 分钟，pre-commit 钩子跑的就是这条）。
@@ -16,6 +16,8 @@
 - `test_paper_integrity.py` —— 图表编号/引用/参考文献自洽；表 1–7 与图 13 逐格核对
 - `test_paper_noise_tables.py` —— 表 8 / 表 9 逐格核对（表 9 纯能量列追到 `reports/energy_only_*.csv`）
 - `test_paper_figures.py` —— 图 13 的参数量与来源
+- `test_figure_caption_consistency.py` —— **图文适配**：题注写的参数（通道/滞后/归一化/色标/
+  种子数/验证集）必须与绘图函数写出的参数台账一致（2026-10-17 由此抓出图 12 题注漏写"验证集"）
 - `test_paper_prose_numbers.py` —— 正文里不在表里的数字（消融 / t-SNE 漂移 / TV / 效率比 /
   跨工况 / 表 5 的两列网络数字）逐条复算；2026-10-17 由此抓出并修正 2 处表述
 - `test_paper_tests_are_effective.py` —— **对论文测试本身做变异测试**：注入 8 类已知错误，
