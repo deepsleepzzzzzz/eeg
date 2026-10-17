@@ -1,0 +1,9 @@
+experiment_id: bearing_20_0_snr_minus4
+protocol: noise_matched
+comparison_group: noise_matched
+task: bearing
+condition: 20_0
+model: cnn
+seed: 42
+noise:
+  snr_db: -4

@@ -1,0 +1,7 @@
+experiment_id: probe_gear_cnn_7ch
+protocol: probe_channels_7
+comparison_group: probe_channels
+task: gear
+condition: 30_2
+model: cnn
+seed: 42

@@ -1,0 +1,148 @@
+# ============================================================================
+# 主协议 v5 = v4 + 改成"训练集固定尺度归一化"
+#
+# 动机：逐窗 z-score 会把"振动强弱"这一幅值信息抹掉，而它恰恰最抗噪。
+#      -4 dB 时噪声主导窗内标准差 → 信号被压小、噪声被放大。
+# 改成用【全部训练窗】统计一组固定的 per-channel 均值/标准差后：
+#   难度     逐窗z-score   训练集固定μσ    差
+#   干净       99.91%        99.74%      -0.18
+#     4 dB     96.32%        96.75%      +0.44
+#     0 dB     85.53%        89.65%      +4.12
+#    -4 dB     66.23%        78.29%     +12.06
+# 代价：零（只是换一组归一化常数，不增加计算/参数/延迟）
+# 另：前置滤波（FIR/小波/移动平均）在两种归一化下【都是负收益】，已排除。
+# ============================================================================
+# ============================================================================
+# 主协议 v4 = v2（三通道 行星齿轮箱 xyz） + 表示层调优
+#
+# 与 v2 唯一的区别：窗长 1600->2048，滞后 1-7 -> 1-10
+# 依据：表示层扫描（变体 x 2 模型 x 5 seed，GPU，验证集）
+#   滞后:  1(-19.6) -> 4(-1.9) -> 7(基线) -> 10(+0.87) -> 13/20 饱和
+#   窗长:  1024(-2.0) -> 1600(基线) -> 2048(+0.9) -> 3200(峰值更高但更抖) -> 4800/6400(变差)
+#   档数:  6(最好) -> 8(-0.5) -> 10(-1.0) -> 12(-1.5)
+# 5 seed 确认（gear/30-2）：
+#   CNN 98.71 -> 99.87 (best) / 98.19 -> 99.33 (平台)
+#   GCN 98.85 -> 99.66 (best) / 98.33 -> 99.36 (平台)
+# v1/v2/v3 结果各自保留，作为历史。
+# ============================================================================
+# ============================================================================
+# 主协议 v2
+#
+# 与 v1 (main_70_15_15.yaml) 的唯一区别：训练过程
+#   v1: 常数学习率，train.py 只记录 val_acc
+#   v2: 增加 ReduceLROnPlateau 学习率衰减，并记录 train/val 双方指标
+#
+# 数据划分/窗口/预处理与 v1 完全相同；
+# 但符号化尺度 bug 已于本次修复，表示内容因此改变，
+# 所以 v2 使用自己独立的数据缓存（artifacts/main_70_15_15_v2/dataset/），
+# 不再复用 v1 的缓存（那份是 bug 版本）。
+# v1 结果仍保留在 artifacts/main_70_15_15/ 下，作为历史记录。
+# ============================================================================
+name: main_70_15_15_v5
+version: v5
+status: main
+
+paths:
+  raw_root: data/seu
+  artifact_root: artifacts
+  sealed_test_root: artifacts/sealed_test
+
+dataset:
+  name: seu_dds
+  tasks: [gear, bearing]
+  conditions: [20_0, 30_2]
+  num_classes: 5
+  file_length: 1048560
+  # 显式声明使用的 CSV 列号（0-based）。行星齿轮箱 x/y/z = 第 1/2/3 列。
+  # 此前靠 protocol.py 的 DEFAULT_CHANNEL_INDICES 兜底 —— 违反硬规则第 1 条：
+  # 一旦默认值被改动，所有结果会静默改变（与噪声口径是同一类问题）。
+  channel_indices: [1, 2, 3]
+
+split:
+  kind: time_contiguous
+  shuffle: false
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  train_interval: "[0, 733992)"
+  val_interval: "[733992, 891276)"
+  test_interval: "[891276, 1048560)"
+  windows_per_class:
+    train: 715
+    val: 152
+    test: 152
+  totals:
+    train: 3575
+    val: 760
+    test: 760
+
+window:
+  length: 2048
+  stride: 1024
+  overlap: 0.5
+  cross_split_window_overlap: forbidden
+
+preprocessing:
+  normalize: train_global_zscore
+  # 符号化前的轻量滤波：none / moving_average / fir_bandpass / wavelet
+  # 实测（两种归一化下）前置滤波都是负收益，故显式声明为 none，避免静默默认。
+  prefilter: none
+  bins: 6
+  bin_edges: equal_frequency_quantile
+  bin_scope: fit_on_train_only
+
+representation:
+  channels: [x, y, z]
+  lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  transition: joint_probability
+  transition_weight: probability
+  transition_multichannel: stack
+  include_self_transition: true
+  input_shape: [30, 6, 6]
+  # 以下两项此前靠 method_cfg 的默认值兜底，现显式声明（均为"关闭"）
+  attention: none
+  state_stats: none
+
+models:
+  cnn:
+    conv_channels: [32, 64]
+    kernel_size: 3
+    pool_size: 2
+    fc_hidden: []
+  gcn:
+    layers: 2
+    hidden: 32
+    layout: relational
+    gcn_steps: 10
+    gcn_pool: flat
+    gcn_attention: false
+
+training:
+  optimizer: adam
+  lr: 0.0005
+  weight_decay: 0.0001
+  dropout: 0.2
+  batch_size: 32
+  epochs: 200
+  early_stop_patience: 30
+  monitor: val_accuracy
+  stop_on: val_acc
+  # 此前靠 train_cfg 默认值兜底，现显式声明
+  label_smoothing: 0.0
+  deterministic: true
+  num_workers: 0
+  seeds: [42, 43, 44, 45, 46]
+  # ---- v2 新增：学习率衰减 ----
+  lr_scheduler:
+    name: reduce_on_plateau
+    monitor: val_loss
+    mode: min
+    factor: 0.5
+    patience: 8
+    min_lr: 1.0e-6
+
+evaluation:
+  metrics: [accuracy, macro_f1, balanced_accuracy]
+  test_access: sealed_once
+
+

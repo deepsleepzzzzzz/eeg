@@ -1,0 +1,9 @@
+# 补齐"本文模型 × 齿轮 20-0"的加噪结果（此前的 run 被变体扫描覆盖丢失）
+# 用途：报告/图里的"同协议自跑基线"需要本文模型在齿轮 20-0 的两种噪声口径下都有原始 run。
+#   snrm6 : 逐窗参考口径 −6 dB
+#   gsnrm10: 全局参考口径 −10 dB
+# 与 noise_v5.yaml / noise_global_v5.yaml 的定义完全一致，只合并到一个 out-name 下，
+# 避免多次 --only 分次跑触发 archive_foreign_variants（那会把上一次的变体挪进 _archived）。
+variants:
+  snrm6:   {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -6,  noise.splits: "train,val", noise.seed: 0}
+  gsnrm10: {noise.enabled: true, noise.reference: global,     noise.type: awgn, noise.snr_db: -10, noise.splits: "train,val", noise.seed: 0}

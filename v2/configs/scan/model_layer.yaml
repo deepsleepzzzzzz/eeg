@@ -1,0 +1,20 @@
+# 模型 / 训练层变体
+# 基准协议由脚本自动解析 configs/protocols/ 下 status: main 的那个，不写死
+variants:
+  base: {}
+  attn_se:        {representation.attention: se}
+  attn_self:      {representation.attention: self}
+  attn_additive:  {representation.attention: additive}
+  stats_occ:      {representation.state_stats: occupancy}
+  gcn_attn:       {models.gcn.gcn_attention: true}
+  gcn_indep:      {models.gcn.layout: independent}
+  gcn_pool_mean:  {models.gcn.gcn_pool: mean}
+  gcn_h64:        {models.gcn.hidden: 64}
+  gcn_l3:         {models.gcn.layers: 3}
+  cnn_3layer:     {models.cnn.conv_channels: [32, 64, 128]}
+  cnn_small:      {models.cnn.conv_channels: [16, 32]}
+  cnn_fc:         {models.cnn.fc_hidden: [64]}
+  mc_mean:        {representation.transition_multichannel: mean}
+  ls005:          {training.label_smoothing: 0.05}
+  wd1e3:          {training.weight_decay: 0.001}
+  drop04:         {training.dropout: 0.4}

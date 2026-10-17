@@ -1,0 +1,7 @@
+experiment_id: synthetic_cnn
+protocol: synthetic_audit
+comparison_group: synthetic_audit
+task: bearing
+condition: 20_0
+model: cnn
+seed: 42

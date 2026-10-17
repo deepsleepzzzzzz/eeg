@@ -1,0 +1,8 @@
+experiment_id: new_testbed_bearing
+protocol: external_new_record
+comparison_group: external_validation
+dataset: external_independent_record
+task: bearing
+model: cnn
+tuning: none
+notes: frozen model evaluated once on independent record

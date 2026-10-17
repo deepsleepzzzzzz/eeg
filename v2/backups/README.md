@@ -1,0 +1,53 @@
+# 交付物修改备份台账
+
+由 `src/utils/backup_file.py` 自动记录。**改交付物之前先备份**（见 AGENTS.md 第九节）。
+
+| 时间 | tag | 源文件 | 备份文件 | 来源 | 说明 |
+|---|---|---|---|---|---|
+| 2026-10-16 08:30 | claimfix | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_claimfix_20261016.md` | git a52f3a1 | 2465d77改动前版本 |
+| 2026-10-16 08:30 | claimfix | `reports/paper_draft_v2.md` | `backups/paper_draft_v2.backup_before_claimfix_20261016.md` | git a52f3a1 | 2465d77改动前版本 |
+| 2026-10-16 08:36 | golden_readme | `artifacts/golden/README.md` | `backups/README.backup_before_golden_readme_20261016.md` | 工作区当前内容 | golden说明改写前 |
+| 2026-10-16 08:42 | artifacts_readme | `artifacts/README.md` | `backups/README.backup_before_artifacts_readme_20261016.md` | 工作区当前内容 | artifacts目录台账改写前 |
+| 2026-10-16 08:51 | legacy_artifacts_readmes | `artifacts/README.md` | `backups/README.backup_before_legacy_artifacts_readmes_20261016.md` | 工作区当前内容 | 归档整理前 |
+| 2026-10-16 08:51 | legacy_artifacts_readmes | `legacy/README.md` | `backups/README.backup_before_legacy_artifacts_readmes_20261016-2.md` | 工作区当前内容 | 归档整理前 |
+| 2026-10-16 12:01 | teacher_figs | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_teacher_figs_20261016.md` | git HEAD | 插导师图前版本 |
+| 2026-10-16 12:20 | fault_photos | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_fault_photos_20261016.md` | 工作区当前内容 | 插图3实物照片前版本 |
+| 2026-10-16 12:31 | user_schematic | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_user_schematic_20261016.md` | 工作区当前内容 | 换用用户提供的机理示意图前版本 |
+| 2026-10-16 13:11 | drop_photo_fig | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_drop_photo_fig_20261016.md` | 工作区当前内容 | 去掉图3(a)实物照片前版本 |
+| 2026-10-16 13:22 | tsne_reword | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_tsne_reword_20261016.md` | git HEAD | 改tSNE段之前版本 |
+| 2026-10-16 13:33 | align_intro | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_align_intro_20261016.md` | 工作区当前内容 | 引言重心对齐前版本 |
+| 2026-10-16 17:51 | energy_negative | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_energy_negative_20261016.md` | 工作区当前内容 | 写入幅值补充阴性结果前版本 |
+| 2026-10-16 17:56 | slim_energy_note | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_slim_energy_note_20261016.md` | 工作区当前内容 | 压缩幅值对照段并去图13前版本 |
+| 2026-10-16 18:11 | add_eff_fig | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_add_eff_fig_20261016.md` | 工作区当前内容 | 加图13效率散点+标题前版本 |
+| 2026-10-16 18:20 | positive_framing | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_positive_framing_20261016.md` | 工作区当前内容 | 摘要结论改正面表述前版本 |
+| 2026-10-16 18:27 | tone_fix | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_tone_fix_20261016.md` | 工作区当前内容 | 正文语气统一前版本 |
+| 2026-10-16 18:37 | slim_55 | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_slim_55_20261016.md` | 工作区当前内容 | 按主流粒度收紧5.5前版本 |
+| 2026-10-16 18:41 | tsne_p50 | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_tsne_p50_20261016.md` | 工作区当前内容 | tSNE换参数并加注前版本 |
+| 2026-10-16 18:50 | tsne_num_fix | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_tsne_num_fix_20261016.md` | 工作区当前内容 | 修tSNE数字与跨工况数字前版本 |
+| 2026-10-16 18:58 | tsne_text_align | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_tsne_text_align_20261016.md` | 工作区当前内容 | 图8配文与图对齐前版本 |
+| 2026-10-16 19:15 | paper_fix_from_tests | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_paper_fix_from_tests_20261016.md` | 工作区当前内容 | 按测试结果修表引用与图13参数前版本 |
+| 2026-10-16 19:58 | fix_table6_0db | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_fix_table6_0db_20261016.md` | 工作区当前内容 | 统一表6的0dB口径前版本 |
+| 2026-10-16 22:43 | framework_consistency | `README.md` | `backups/README.backup_before_framework_consistency_20261016.md` | 工作区当前内容 | - |
+| 2026-10-16 22:43 | framework_consistency | `CHECKLIST.md` | `backups/CHECKLIST.backup_before_framework_consistency_20261016.md` | 工作区当前内容 | - |
+| 2026-10-16 22:43 | framework_consistency | `claims_evidence.md` | `backups/claims_evidence.backup_before_framework_consistency_20261016.md` | 工作区当前内容 | - |
+| 2026-10-16 22:43 | framework_consistency | `README.md` | `backups/README.backup_before_framework_consistency_20261016-2.md` | git HEAD | 框架一致性核查：改写前的原始 README（HEAD 版本） |
+| 2026-10-17 00:16 | ledger_fix_v4flag | `artifacts/README.md` | `backups/README.backup_before_ledger_fix_v4flag_20261017.md` | 工作区当前内容 | 核查发现 normtest2/prefilter 实为 v4 协议 + 四个扫描目录未登记 |
+| 2026-10-17 00:38 | drop_math_dollar | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_drop_math_dollar_20261017.md` | 工作区当前内容 | 去掉论文里的 LaTeX 数学定界符 $ |
+| 2026-10-17 00:38 | drop_math_dollar | `reports/paper_draft_v2.md` | `backups/paper_draft_v2.backup_before_drop_math_dollar_20261017.md` | 工作区当前内容 | 去掉论文里的 LaTeX 数学定界符 $ |
+| 2026-10-17 03:27 | prose_numbers_fix | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_prose_numbers_fix_20261017.md` | 工作区当前内容 | 核查正文散落数字：跨工况 51.1% 实为 CNN 单模型；0.2-0.4 实际 0.2-0.3 |
+| 2026-10-17 03:27 | prose_numbers_fix | `reports/paper_draft_v2.md` | `backups/paper_draft_v2.backup_before_prose_numbers_fix_20261017.md` | 工作区当前内容 | 核查正文散落数字：跨工况 51.1% 实为 CNN 单模型；0.2-0.4 实际 0.2-0.3 |
+| 2026-10-17 03:33 | prose_numbers_fix2 | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_prose_numbers_fix2_20261017.md` | 工作区当前内容 | 把'差异 < 0.05'改为'差异仅 0.05'；干净条件差距按任务写清（齿轮 0.2–0.3，轴承同为 100.00） |
+| 2026-10-17 03:33 | prose_numbers_fix2 | `reports/paper_draft_v2.md` | `backups/paper_draft_v2.backup_before_prose_numbers_fix2_20261017.md` | 工作区当前内容 | 把'差异 < 0.05'改为'差异仅 0.05'；干净条件差距按任务写清（齿轮 0.2–0.3，轴承同为 100.00） |
+| 2026-10-17 13:20 | indicator_notation | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_indicator_notation_20261017.md` | 工作区当前内容 | 式(3)的指示函数 1[...] 改为 I[...] 并补定义，避免被误读为数字1 |
+| 2026-10-17 13:20 | indicator_notation | `reports/paper_draft_v2.md` | `backups/paper_draft_v2.backup_before_indicator_notation_20261017.md` | 工作区当前内容 | 式(3)的指示函数 1[...] 改为 I[...] 并补定义，避免被误读为数字1 |
+| 2026-10-17 13:30 | overlap_terminology | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_overlap_terminology_20261017.md` | 工作区当前内容 | 缺齿/齿面磨损属于类间重叠（原写类内重叠），且不把重叠直接断言为信息损失 |
+| 2026-10-17 13:30 | overlap_terminology | `reports/paper_draft_v2.md` | `backups/paper_draft_v2.backup_before_overlap_terminology_20261017.md` | 工作区当前内容 | 缺齿/齿面磨损属于类间重叠（原写类内重叠），且不把重叠直接断言为信息损失 |
+| 2026-10-17 13:45 | tsne_redraw | `reports/fig_tsne.png` | `backups/fig_tsne.backup_before_tsne_redraw_20261017.png` | 工作区当前内容 | 图 8 改画法：类心+1.5σ椭圆+漂移箭头（同一份 t-SNE，不改参数） |
+| 2026-10-17 13:45 | tsne_redraw | `src/reporting/make_teacher_figures.py` | `backups/make_teacher_figures.backup_before_tsne_redraw_20261017.py` | 工作区当前内容 | 图 8 改画法：类心+1.5σ椭圆+漂移箭头（同一份 t-SNE，不改参数） |
+| 2026-10-17 13:45 | tsne_redraw | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_tsne_redraw_20261017.md` | 工作区当前内容 | 图 8 改画法：类心+1.5σ椭圆+漂移箭头（同一份 t-SNE，不改参数） |
+| 2026-10-17 14:08 | lda_projection | `reports/fig_tsne.png` | `backups/fig_tsne.backup_before_lda_projection_20261017.png` | 工作区当前内容 | 图 8 改为 LDA 二维投影（同一 1080 维特征，训练集拟合），替换 t-SNE |
+| 2026-10-17 14:08 | lda_projection | `src/reporting/make_teacher_figures.py` | `backups/make_teacher_figures.backup_before_lda_projection_20261017.py` | 工作区当前内容 | 图 8 改为 LDA 二维投影（同一 1080 维特征，训练集拟合），替换 t-SNE |
+| 2026-10-17 14:08 | lda_projection | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_lda_projection_20261017.md` | 工作区当前内容 | 图 8 改为 LDA 二维投影（同一 1080 维特征，训练集拟合），替换 t-SNE |
+| 2026-10-17 14:08 | lda_projection | `tests/test_paper_prose_numbers.py` | `backups/test_paper_prose_numbers.backup_before_lda_projection_20261017.py` | 工作区当前内容 | 图 8 改为 LDA 二维投影（同一 1080 维特征，训练集拟合），替换 t-SNE |
+| 2026-10-17 14:20 | revert_to_initial_tsne | `reports/fig_feature_lda.png` | `backups/fig_feature_lda.backup_before_revert_to_initial_tsne_20261017.png` | 工作区当前内容 | 回退图 8 到最初的 t-SNE 散点版前的现状备份（LDA 版） |
+| 2026-10-17 14:20 | revert_to_initial_tsne | `reports/论文初稿_v1.md` | `backups/论文初稿_v1.backup_before_revert_to_initial_tsne_20261017.md` | 工作区当前内容 | 回退图 8 到最初的 t-SNE 散点版前的现状备份（LDA 版） |

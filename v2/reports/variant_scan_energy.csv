@@ -1,0 +1,7 @@
+variant,model,seed,best_val_acc,plateau_acc,plateau_std,epochs_run,overrides
+rms3,cnn,43,0.9960526315789474,0.9928947368421053,0.0022941573387056323,51,"{""representation.energy_stats"": ""rms""}"
+state3,cnn,43,0.9960526315789474,0.9936842105263158,0.006831976308287992,56,"{""representation.energy_stats"": ""state""}"
+state3,cnn,44,0.9973684210526316,0.9926315789473683,0.006571047889044089,63,"{""representation.energy_stats"": ""state""}"
+state3,cnn,42,0.9973684210526316,0.985657894736842,0.01714519630195837,64,"{""representation.energy_stats"": ""state""}"
+rms3,cnn,42,0.9973684210526316,0.992828947368421,0.004716238083690199,67,"{""representation.energy_stats"": ""rms""}"
+rms3,cnn,44,0.9973684210526316,0.9936184210526315,0.0007529949435697032,81,"{""representation.energy_stats"": ""rms""}"

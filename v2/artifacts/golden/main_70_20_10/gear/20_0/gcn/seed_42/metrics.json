@@ -1,0 +1,132 @@
+{
+  "task": "gear",
+  "condition": "20_0",
+  "seed": 42,
+  "protocol": "seu_time_split",
+  "method": "transition_gcn",
+  "epoch_samples": 1600,
+  "window_stride": 800,
+  "split_seed": 42,
+  "split_sample_id_fingerprint": "95822144564aef9d4c9d6923b843830f01e75ef6ac25d18c2b396fc27e9dd8ba",
+  "best_epoch": 74,
+  "epochs_ran": 104,
+  "best_val_acc": 0.993103448275862,
+  "best_val_loss": 0.027560295879474433,
+  "test_evaluated": true,
+  "input_shape": [
+    21,
+    6,
+    6
+  ],
+  "class_names": [
+    "Health",
+    "Chipped",
+    "Miss",
+    "Root",
+    "Surface"
+  ],
+  "train_class_counts": {
+    "Health": 916,
+    "Chipped": 916,
+    "Miss": 916,
+    "Root": 916,
+    "Surface": 916
+  },
+  "val_class_counts": {
+    "Health": 261,
+    "Chipped": 261,
+    "Miss": 261,
+    "Root": 261,
+    "Surface": 261
+  },
+  "val_acc": 0.993103448275862,
+  "val_balanced_acc": 0.993103448275862,
+  "val_macro_f1": 0.993100492627309,
+  "val_confusion_matrix": [
+    [
+      261,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      261,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      259,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      259,
+      2
+    ],
+    [
+      0,
+      0,
+      2,
+      3,
+      256
+    ]
+  ],
+  "test_loss": 0.008594605887293046,
+  "test_acc_once": 0.9984615384615385,
+  "test_evaluated_after_freeze": true,
+  "test_acc": 0.9984615384615385,
+  "test_balanced_acc": 0.9984615384615385,
+  "test_macro_f1": 0.998461515702895,
+  "test_confusion_matrix": [
+    [
+      130,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      130,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      130,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      129,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      130
+    ]
+  ],
+  "test_class_counts": {
+    "Health": 130,
+    "Chipped": 130,
+    "Miss": 130,
+    "Root": 130,
+    "Surface": 130
+  }
+}

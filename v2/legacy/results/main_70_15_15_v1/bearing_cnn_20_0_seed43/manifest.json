@@ -1,0 +1,13 @@
+{
+  "experiment_id": "bearing_cnn_20_0_seed43",
+  "protocol": "main_70_15_15",
+  "task": "bearing",
+  "condition": "20_0",
+  "model": "cnn",
+  "seed": 43,
+  "dataset_meta": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\main_70_15_15\\dataset\\bearing\\20_0\\meta.json",
+  "split_hash": "70aa7f1e59c2eeb141b51bac115c497323b92279fd2e96208e8e41a8eda2e373",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9",
+  "metrics_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\main_70_15_15\\bearing_cnn_20_0_seed43\\metrics.json",
+  "test_access": "sealed"
+}

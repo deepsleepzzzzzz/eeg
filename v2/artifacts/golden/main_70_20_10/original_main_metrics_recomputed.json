@@ -1,0 +1,386 @@
+[
+  {
+    "task": "bearing",
+    "arch": "cnn",
+    "condition": "20_0",
+    "n": 650,
+    "correct": 649,
+    "accuracy": 0.9984615384615385,
+    "balanced_accuracy": 0.9984615384615385,
+    "macro_f1": 0.998461515702895,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        130,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        130,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        130,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        129
+      ]
+    ],
+    "prediction_sha256": "7e2db9b0a8cb0e0b2d1653923ccd662628393560f2f7d1c0eaef0fab6a97d29e"
+  },
+  {
+    "task": "bearing",
+    "arch": "cnn",
+    "condition": "30_2",
+    "n": 650,
+    "correct": 650,
+    "accuracy": 1.0,
+    "balanced_accuracy": 1.0,
+    "macro_f1": 1.0,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        130,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        130,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        130,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        130
+      ]
+    ],
+    "prediction_sha256": "40791dcb2186a018a5b0d220273b58e1d0bda491029714e8833a11a8463ba3b5"
+  },
+  {
+    "task": "bearing",
+    "arch": "gcn",
+    "condition": "20_0",
+    "n": 650,
+    "correct": 648,
+    "accuracy": 0.9969230769230769,
+    "balanced_accuracy": 0.9969230769230769,
+    "macro_f1": 0.9969228948458488,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        130,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        130,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        128,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        130
+      ]
+    ],
+    "prediction_sha256": "87cb9eda89402e8cc29f3cfd0eed17fa1f182c4d7e580af9b23eeb2995aee6f5"
+  },
+  {
+    "task": "bearing",
+    "arch": "gcn",
+    "condition": "30_2",
+    "n": 650,
+    "correct": 650,
+    "accuracy": 1.0,
+    "balanced_accuracy": 1.0,
+    "macro_f1": 1.0,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        130,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        130,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        130,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        130
+      ]
+    ],
+    "prediction_sha256": "40791dcb2186a018a5b0d220273b58e1d0bda491029714e8833a11a8463ba3b5"
+  },
+  {
+    "task": "gear",
+    "arch": "cnn",
+    "condition": "20_0",
+    "n": 650,
+    "correct": 648,
+    "accuracy": 0.9969230769230769,
+    "balanced_accuracy": 0.9969230769230769,
+    "macro_f1": 0.9969170453532923,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        130,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        130,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        130,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        1,
+        128
+      ]
+    ],
+    "prediction_sha256": "49824579b7875b458bab148abc36e3810d6fee66becdad6db01c2298c3179b94"
+  },
+  {
+    "task": "gear",
+    "arch": "cnn",
+    "condition": "30_2",
+    "n": 650,
+    "correct": 638,
+    "accuracy": 0.9815384615384616,
+    "balanced_accuracy": 0.9815384615384616,
+    "macro_f1": 0.9815253217390293,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        130,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        127,
+        0,
+        3
+      ],
+      [
+        1,
+        2,
+        0,
+        126,
+        1
+      ],
+      [
+        0,
+        0,
+        5,
+        0,
+        125
+      ]
+    ],
+    "prediction_sha256": "cce8bd667819ca7beda13a2eb330481abfb434d82e46c11c6e0cf30d906bf31a"
+  },
+  {
+    "task": "gear",
+    "arch": "gcn",
+    "condition": "20_0",
+    "n": 650,
+    "correct": 649,
+    "accuracy": 0.9984615384615385,
+    "balanced_accuracy": 0.9984615384615385,
+    "macro_f1": 0.998461515702895,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        130,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        130,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        129,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        130
+      ]
+    ],
+    "prediction_sha256": "5beb2271a9353fc9e03d00107aa1c3faeff5587d2dbb1a86297cabb60c9afbee"
+  },
+  {
+    "task": "gear",
+    "arch": "gcn",
+    "condition": "30_2",
+    "n": 650,
+    "correct": 636,
+    "accuracy": 0.9784615384615385,
+    "balanced_accuracy": 0.9784615384615385,
+    "macro_f1": 0.9784621537309104,
+    "confusion_matrix": [
+      [
+        130,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        128,
+        0,
+        1,
+        1
+      ],
+      [
+        0,
+        0,
+        124,
+        0,
+        6
+      ],
+      [
+        0,
+        3,
+        2,
+        125,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        129
+      ]
+    ],
+    "prediction_sha256": "f7428147df1a0eac9cb29a9c4533dc2d14885c10112d1787e84fc162d8057c6c"
+  }
+]

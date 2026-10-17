@@ -1,0 +1,20 @@
+# 【历史口径声明】noise.reference: per_window（同 noise_v5.yaml，见该文件注释）
+# 归一化方式判定性测试
+# 比较：逐窗 z-score（现状） vs 训练集固定尺度μσ
+# 并检验：换成固定尺度后，前置小波滤波是否重新变得有效
+variants:
+  base: {}
+  # ---- 干净信号 ----
+  clean_g:  {preprocessing.normalize: train_global_zscore}
+  # ---- 4 dB ----
+  snr4:       {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 4, noise.splits: "train,val", noise.seed: 0}
+  snr4_g:     {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 4, noise.splits: "train,val", noise.seed: 0, preprocessing.normalize: train_global_zscore}
+  snr4_g_wav: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 4, noise.splits: "train,val", noise.seed: 0, preprocessing.normalize: train_global_zscore, preprocessing.prefilter: wavelet}
+  # ---- 0 dB ----
+  snr0:       {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 0, noise.splits: "train,val", noise.seed: 0}
+  snr0_g:     {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 0, noise.splits: "train,val", noise.seed: 0, preprocessing.normalize: train_global_zscore}
+  snr0_g_wav: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 0, noise.splits: "train,val", noise.seed: 0, preprocessing.normalize: train_global_zscore, preprocessing.prefilter: wavelet}
+  # ---- -4 dB ----
+  snrm4:       {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0}
+  snrm4_g:     {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0, preprocessing.normalize: train_global_zscore}
+  snrm4_g_wav: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0, preprocessing.normalize: train_global_zscore, preprocessing.prefilter: wavelet}

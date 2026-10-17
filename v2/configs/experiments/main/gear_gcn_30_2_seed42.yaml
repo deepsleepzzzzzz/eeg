@@ -1,0 +1,7 @@
+experiment_id: gear_gcn_30_2_seed42
+protocol: main_70_15_15_v5
+comparison_group: main_clean_compare
+task: gear
+condition: 30_2
+model: gcn
+seed: 42

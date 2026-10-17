@@ -1,0 +1,2 @@
+tune_id,tag,task,condition,model,seed,params,best_epoch,val_acc,macro_f1,balanced_acc,plateau_acc,plateau_std,train_val_gap,epochs_run,final_lr,run_dir
+gear_gcn_302_v2repro_check_001,v2repro_check,gear,302,gcn,42,{},58,0.9866666666666667,0.9866715810146072,0.9866666666666667,0.9810256410256409,0.002139143960473255,0.004203616616280548,88,0.000125,D:\SEU_Fault_Diagnosis_v2\artifacts\tuning\v2repro_check\gear_gcn_302_v2repro_check_001

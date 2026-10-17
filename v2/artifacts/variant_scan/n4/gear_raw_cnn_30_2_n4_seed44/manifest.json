@@ -1,0 +1,21 @@
+{
+  "experiment_id": "gear_raw_cnn_30_2_n4_seed44",
+  "protocol": "main_70_15_15_v5",
+  "task": "gear",
+  "condition": "30_2",
+  "model": "raw_cnn",
+  "seed": 44,
+  "dataset_meta": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\var_97c21ffe14c5\\dataset\\gear\\30_2\\meta.json",
+  "split_hash": "6c27fb80612b2f3542b811b271035d54029901ba04dd7da2906448901a01a835",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9",
+  "metrics_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\variant_scan\\n4\\gear_raw_cnn_30_2_n4_seed44\\metrics.json",
+  "history_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\variant_scan\\n4\\gear_raw_cnn_30_2_n4_seed44\\history.json",
+  "lr_scheduler": {
+    "name": "reduce_on_plateau",
+    "monitor": "val_loss",
+    "factor": 0.5,
+    "patience": 8,
+    "min_lr": 1e-06
+  },
+  "test_access": "sealed"
+}

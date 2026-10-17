@@ -1,0 +1,12 @@
+# 恢复/复核表 8 的噪声结果：齿轮 20-0、轴承 20-0、轴承 30-2 的 run 当年被变体扫描覆盖丢失，
+# 只有齿轮 30-2 仍在 artifacts/variant_scan_noise_v5/ 下。这里用同一协议重跑，用于逐格核对表 8。
+# 口径：per_window（与表 8 声明一致）；变体名与 noise_v5.yaml 完全一致。
+variants:
+  base:   {}
+  snr10:  {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: 10,  noise.splits: "train,val", noise.seed: 0}
+  snr4:   {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: 4,   noise.splits: "train,val", noise.seed: 0}
+  snr0:   {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: 0,   noise.splits: "train,val", noise.seed: 0}
+  snrm4:  {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -4,  noise.splits: "train,val", noise.seed: 0}
+  snrm6:  {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -6,  noise.splits: "train,val", noise.seed: 0}
+  snrm8:  {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -8,  noise.splits: "train,val", noise.seed: 0}
+  snrm10: {noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -10, noise.splits: "train,val", noise.seed: 0}

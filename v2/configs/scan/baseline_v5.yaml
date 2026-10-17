@@ -1,0 +1,20 @@
+# 同协议自跑基线：原始波形 1D-CNN / WDCNN / ResNet1D
+# 除 representation（原始波形 vs 符号状态转移）外，划分/窗长/加噪/训练全部与主协议一致。
+#
+# 噪声口径：与文献（DDGF-Net / DSMC-ECA）一致用 per_window，以便同口径对比；
+#          该口径已知存在"窗能量"捷径（见 reports/table_noise_protocol.md）。
+models_def: &m
+  models.raw_cnn:   {arch: raw_cnn,   conv_channels: [32, 64, 128], kernel_size: 7, dropout: 0.2}
+  models.wdcnn:     {arch: wdcnn,     dropout: 0.2}
+  models.resnet1d:  {arch: resnet1d,  dropout: 0.2}
+
+variants:
+  clean: {<<: *m, representation.kind: raw}
+  n4:    {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: 4,   noise.splits: "train,val", noise.seed: 0}
+  n0:    {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: 0,   noise.splits: "train,val", noise.seed: 0}
+  nm4:   {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -4,  noise.splits: "train,val", noise.seed: 0}
+  nm6:   {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -6,  noise.splits: "train,val", noise.seed: 0}
+  nm10:  {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -10, noise.splits: "train,val", noise.seed: 0}
+  gnm4:  {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: global,      noise.type: awgn, noise.snr_db: -4,  noise.splits: "train,val", noise.seed: 0}
+  gnm6:  {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: global,      noise.type: awgn, noise.snr_db: -6,  noise.splits: "train,val", noise.seed: 0}
+  gnm10: {<<: *m, representation.kind: raw, noise.enabled: true, noise.reference: global,      noise.type: awgn, noise.snr_db: -10, noise.splits: "train,val", noise.seed: 0}

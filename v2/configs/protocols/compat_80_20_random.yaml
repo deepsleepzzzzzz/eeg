@@ -1,0 +1,39 @@
+name: compat_80_20_random
+version: v1
+status: compatibility
+
+dataset:
+  name: seu_dds
+  tasks: [gear, bearing]
+  conditions: [20_0, 30_2]
+  num_classes: 5
+
+split:
+  kind: random
+  shuffle: true
+  train_ratio: 0.80
+  test_ratio: 0.20
+  fixed_seed: true
+  repeat_times: 5
+
+window:
+  length: 1600
+  stride: 800
+  overlap: 0.5
+
+preprocessing:
+  normalize: per_window_per_channel_zscore
+  bins: 6
+  bin_edges: equal_frequency_quantile
+  bin_scope: train_only
+
+representation:
+  channels: [x, y, z]
+  lags: [1, 2, 3, 4, 5, 6, 7]
+  transition: joint_probability
+  include_self_transition: true
+  input_shape: [21, 6, 6]
+
+evaluation:
+  metrics: [accuracy, macro_f1, balanced_accuracy]
+  note: used only for literature-compatible comparison; not for main claims

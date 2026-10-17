@@ -1,0 +1,74 @@
+{
+  "experiment_id": "gear_gcn_30_2_snr0_seed44",
+  "protocol": "main_70_15_15_v4",
+  "task": "gear",
+  "condition": "30_2",
+  "model": "gcn",
+  "seed": 44,
+  "best_epoch": 93,
+  "best_val_acc": 0.8723684210526316,
+  "best_val_loss": 0.35299195930986715,
+  "val_metrics": {
+    "n": 760,
+    "correct": 663,
+    "accuracy": 0.8723684210526316,
+    "macro_f1": 0.8711352235489743,
+    "balanced_accuracy": 0.8723684210526317,
+    "confusion_matrix": [
+      [
+        152,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        143,
+        5,
+        2,
+        2
+      ],
+      [
+        0,
+        13,
+        117,
+        3,
+        19
+      ],
+      [
+        0,
+        4,
+        2,
+        138,
+        8
+      ],
+      [
+        0,
+        10,
+        21,
+        8,
+        113
+      ]
+    ]
+  },
+  "stability": {
+    "epochs_run": 123,
+    "last20_train_loss_mean": 0.19519903358983826,
+    "last20_train_acc_mean": 0.9268251748251748,
+    "last20_val_loss_mean": 0.34943769823361526,
+    "last20_val_acc_mean": 0.8676973684210527,
+    "last20_val_acc_std": 0.0009735953017729552,
+    "gap_train_minus_val_acc": 0.059127806404122074,
+    "final_lr": 1.953125e-06
+  },
+  "lr_scheduler": {
+    "name": "reduce_on_plateau",
+    "monitor": "val_loss",
+    "factor": 0.5,
+    "patience": 8,
+    "min_lr": 1e-06
+  },
+  "dataset_split_hash": "ec223db24bd5a8e03a837b04db34989f18651942b7213176317249ab38dbf271",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9"
+}

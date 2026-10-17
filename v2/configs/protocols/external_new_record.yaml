@@ -1,0 +1,12 @@
+name: external_new_record
+version: v1
+status: external_validation
+
+dataset:
+  name: external_independent_record
+  num_classes: 5
+
+evaluation:
+  metrics: [accuracy, macro_f1, balanced_accuracy]
+  tuning: none
+  test_access: sealed_once

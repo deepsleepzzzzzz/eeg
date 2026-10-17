@@ -1,0 +1,13 @@
+{
+  "experiment_id": "gear_gcn_302_gear_30_2_r1a_022",
+  "protocol": "main_70_15_15",
+  "task": "gear",
+  "condition": "30_2",
+  "model": "gcn",
+  "seed": 42,
+  "dataset_meta": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\main_70_15_15\\dataset\\gear\\30_2\\meta.json",
+  "split_hash": "8fbb54985f1a1d1836586d9421d12b7e4eae5db892d6437d8a982a9776947568",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9",
+  "metrics_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\tuning\\gear_30_2_r1a\\gear_gcn_302_gear_30_2_r1a_022\\metrics.json",
+  "test_access": "sealed"
+}

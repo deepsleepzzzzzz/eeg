@@ -1,0 +1,13 @@
+{
+  "experiment_id": "synthetic_gcn",
+  "protocol": "synthetic_audit",
+  "task": "bearing",
+  "condition": "20_0",
+  "model": "gcn",
+  "seed": 42,
+  "dataset_meta": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\synthetic_audit\\dataset\\bearing\\20_0\\meta.json",
+  "split_hash": "synthetic",
+  "dataset_hash": "synthetic",
+  "metrics_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\synthetic_audit\\synthetic_gcn\\metrics.json",
+  "test_access": "sealed"
+}

@@ -1,0 +1,17 @@
+name: noise_matched
+version: v1
+status: main_variant
+
+base_protocol: main_70_15_15
+noise:
+  # ⚠️ 本文件当前未被 build_dataset 读取（缺 enabled 字段），属历史残留配置。
+  #    若将来接线，必须同时显式声明 reference（per_window 有能量捷径，推荐 global）。
+  reference: per_window
+  type: awgn
+  snr_db: [40, 30, 20, 15, 10, 6, 2, 0, -2, -4, -6, -8, -10]
+  inject_stage: after_split_before_representation
+  retrain_per_snr: true
+  matched_validation: true
+
+evaluation:
+  test_access: sealed_once

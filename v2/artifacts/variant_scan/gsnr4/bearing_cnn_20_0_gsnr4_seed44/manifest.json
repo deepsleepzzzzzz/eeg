@@ -1,0 +1,21 @@
+{
+  "experiment_id": "bearing_cnn_20_0_gsnr4_seed44",
+  "protocol": "main_70_15_15_v5",
+  "task": "bearing",
+  "condition": "20_0",
+  "model": "cnn",
+  "seed": 44,
+  "dataset_meta": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\var_9251b8ae90a7\\dataset\\bearing\\20_0\\meta.json",
+  "split_hash": "b98480aeaabe36763d7e851de65a923bf9098a993a141b5ed8398f1326a4655a",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9",
+  "metrics_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\variant_scan\\gsnr4\\bearing_cnn_20_0_gsnr4_seed44\\metrics.json",
+  "history_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\variant_scan\\gsnr4\\bearing_cnn_20_0_gsnr4_seed44\\history.json",
+  "lr_scheduler": {
+    "name": "reduce_on_plateau",
+    "monitor": "val_loss",
+    "factor": 0.5,
+    "patience": 8,
+    "min_lr": 1e-06
+  },
+  "test_access": "sealed"
+}

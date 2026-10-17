@@ -1,0 +1,74 @@
+{
+  "experiment_id": "bearing_resnet1d_20_0_gnm10_seed43",
+  "protocol": "main_70_15_15_v5",
+  "task": "bearing",
+  "condition": "20_0",
+  "model": "resnet1d",
+  "seed": 43,
+  "best_epoch": 23,
+  "best_val_acc": 0.3605263157894737,
+  "best_val_loss": 2.871787076247366,
+  "val_metrics": {
+    "n": 760,
+    "correct": 274,
+    "accuracy": 0.3605263157894737,
+    "macro_f1": 0.3454625228574466,
+    "balanced_accuracy": 0.3605263157894737,
+    "confusion_matrix": [
+      [
+        45,
+        19,
+        39,
+        24,
+        25
+      ],
+      [
+        17,
+        43,
+        33,
+        38,
+        21
+      ],
+      [
+        17,
+        15,
+        105,
+        7,
+        8
+      ],
+      [
+        13,
+        32,
+        33,
+        50,
+        24
+      ],
+      [
+        20,
+        22,
+        40,
+        39,
+        31
+      ]
+    ]
+  },
+  "stability": {
+    "epochs_run": 53,
+    "last20_train_loss_mean": 0.0008129124167852326,
+    "last20_train_acc_mean": 1.0,
+    "last20_val_loss_mean": 2.752536255560423,
+    "last20_val_acc_mean": 0.35065789473684206,
+    "last20_val_acc_std": 0.0035183531466107657,
+    "gap_train_minus_val_acc": 0.6493421052631579,
+    "final_lr": 1.5625e-05
+  },
+  "lr_scheduler": {
+    "name": "reduce_on_plateau",
+    "monitor": "val_loss",
+    "factor": 0.5,
+    "patience": 8,
+    "min_lr": 1e-06
+  },
+  "dataset_split_hash": "b98480aeaabe36763d7e851de65a923bf9098a993a141b5ed8398f1326a4655a",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9"
+}

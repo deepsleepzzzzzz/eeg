@@ -1,0 +1,121 @@
+# ============================================================================
+# 主协议 v3 = v2 + 使用全部 8 个原始通道
+#
+# 动机: SEU DDS 官方提供 8 通道; v2 只用了行星齿轮箱 xyz 三通道,
+# 而齿轮故障位于平行(定轴)齿轮箱上 —— 相当于一直用离故障件最远的传感器。
+# 实测 (gear/30-2, seed42, CNN): 3 通道 0.9887 -> 8 通道 1.0000
+# 最近类中心 CV: 0.8400 -> 0.9987
+# 训练/测试段幅值比 0.990-1.014, 无记录级漂移。
+# v2 及更早结果保留在各自目录, 作为历史。
+# ============================================================================
+# ============================================================================
+# 主协议 v2
+#
+# 与 v1 (main_70_15_15.yaml) 的唯一区别：训练过程
+#   v1: 常数学习率，train.py 只记录 val_acc
+#   v2: 增加 ReduceLROnPlateau 学习率衰减，并记录 train/val 双方指标
+#
+# 数据划分/窗口/预处理与 v1 完全相同；
+# 但符号化尺度 bug 已于本次修复，表示内容因此改变，
+# 所以 v2 使用自己独立的数据缓存（artifacts/main_70_15_15_v2/dataset/），
+# 不再复用 v1 的缓存（那份是 bug 版本）。
+# v1 结果仍保留在 artifacts/main_70_15_15/ 下，作为历史记录。
+# ============================================================================
+name: main_70_15_15_v3
+version: v3
+status: superseded_by_v4
+
+paths:
+  raw_root: data/seu
+  artifact_root: artifacts
+  sealed_test_root: artifacts/sealed_test
+
+dataset:
+  name: seu_dds
+  tasks: [gear, bearing]
+  conditions: [20_0, 30_2]
+  num_classes: 5
+  # SEU DDS 官方提供 8 通道; 全部使用, 不做通道挑选
+  # 0=扭矩 1-3=行星齿轮箱 xyz 4-6=平行齿轮箱 xyz 7=电机振动
+  channel_indices: [0, 1, 2, 3, 4, 5, 6, 7]
+  file_length: 1048560
+
+split:
+  kind: time_contiguous
+  shuffle: false
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  train_interval: "[0, 733992)"
+  val_interval: "[733992, 891276)"
+  test_interval: "[891276, 1048560)"
+  windows_per_class:
+    train: 916
+    val: 195
+    test: 195
+  totals:
+    train: 4580
+    val: 975
+    test: 975
+
+window:
+  length: 1600
+  stride: 800
+  overlap: 0.5
+  cross_split_window_overlap: forbidden
+
+preprocessing:
+  normalize: per_window_per_channel_zscore
+  bins: 6
+  bin_edges: equal_frequency_quantile
+  bin_scope: fit_on_train_only
+
+representation:
+  channels: [torque, planet_x, planet_y, planet_z, parallel_x, parallel_y, parallel_z, motor]
+  lags: [1, 2, 3, 4, 5, 6, 7]
+  transition: joint_probability
+  transition_weight: probability
+  transition_multichannel: stack
+  include_self_transition: true
+  input_shape: [56, 6, 6]
+
+models:
+  cnn:
+    conv_channels: [32, 64]
+    kernel_size: 3
+    pool_size: 2
+    fc_hidden: []
+  gcn:
+    layers: 2
+    hidden: 32
+    layout: relational
+    gcn_steps: 7   # 与 representation.lags 的数量一致：一个滞后 = 一种关系
+    gcn_pool: flat
+    gcn_attention: false
+
+training:
+  optimizer: adam
+  lr: 0.0005
+  weight_decay: 0.0001
+  dropout: 0.2
+  batch_size: 32
+  epochs: 200
+  early_stop_patience: 30
+  monitor: val_accuracy
+  stop_on: val_acc
+  deterministic: true
+  num_workers: 0
+  seeds: [42, 43, 44, 45, 46]
+  # ---- v2 新增：学习率衰减 ----
+  lr_scheduler:
+    name: reduce_on_plateau
+    monitor: val_loss
+    mode: min
+    factor: 0.5
+    patience: 8
+    min_lr: 1.0e-6
+
+evaluation:
+  metrics: [accuracy, macro_f1, balanced_accuracy]
+  test_access: sealed_once
+

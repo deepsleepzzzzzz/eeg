@@ -1,0 +1,41 @@
+# Tests —— 106 项检查
+
+一条命令跑完（含审计与变异测试）：`python verify_all.py`（约 2.5 分钟）。
+只跑单元测试：`python -m pytest tests -q`（约 1 分钟，pre-commit 钩子跑的就是这条）。
+
+## 论文专用的五个核心测试
+
+- `test_split_invariants.py` —— 划分边界与窗数（参数一律从当前主协议读）
+- `test_no_leakage.py` —— 训练/验证/测试之间没有跨段窗重叠
+- `test_representation.py` —— 张量形状、行归一化、分位边界只用训练集拟合
+- `test_metrics.py` —— accuracy / macro F1 / balanced accuracy 的定义
+- `test_golden_regression.py` —— 存下来的预测能复现存下来的指标
+
+## 论文数字与台账守卫
+
+- `test_paper_integrity.py` —— 图表编号/引用/参考文献自洽；表 1–7 与图 13 逐格核对
+- `test_paper_noise_tables.py` —— 表 8 / 表 9 逐格核对（表 9 纯能量列追到 `reports/energy_only_*.csv`）
+- `test_paper_figures.py` —— 图 13 的参数量与来源
+- `test_paper_prose_numbers.py` —— 正文里不在表里的数字（消融 / t-SNE 漂移 / TV / 效率比 /
+  跨工况 / 表 5 的两列网络数字）逐条复算；2026-10-17 由此抓出并修正 2 处表述
+- `test_registry_scans.py` —— `registry_scans.csv` 与 artifacts 磁盘一致、无残缺 run
+- `test_artifacts_ledger.py` —— 每个 artifacts 目录都在台账里；非 v5 协议目录必须有标注
+- `test_provenance.py` / `test_audits.py` —— 数据溯源与审计脚本本身的守卫
+
+## 防陈旧 / 隔离
+
+- `test_no_stale_code.py` —— 审查代码不许写死旧协议名、旧窗长、假检查、绝对路径
+- `test_no_old_project_refs.py` —— 新项目自包含，不许引用旧项目
+- `test_verify_all_guard.py` —— `verify_all.py` 的结果格式化函数必须健壮
+- `test_src_compiles.py` —— `src/` 全部可编译
+
+## 协议驱动的加载器
+
+测试里的窗口/步长/窗数/划分一律从 `tests/_protocol.py`（自动解析 `status: main`）取，
+**不许写死 1600/800 或 916/195/195** 这类历史参数 —— 曾经因此让测试在协议升级后仍"全绿"。
+
+## 不用 pytest 也能跑
+
+```powershell
+D:\SEU_Fault_Diagnosis_v2\.venv\Scripts\python.exe D:\SEU_Fault_Diagnosis_v2\tests\run_all.py
+```

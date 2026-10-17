@@ -1,0 +1,16 @@
+[
+  {
+    "model": "cnn",
+    "params": 27685,
+    "flops": 954496,
+    "ms_per_sample": 0.33731000032275915,
+    "device": "cuda"
+  },
+  {
+    "model": "gcn",
+    "params": 54941,
+    "flops": 2017152,
+    "ms_per_sample": 1.957475499948487,
+    "device": "cuda"
+  }
+]

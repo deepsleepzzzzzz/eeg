@@ -1,0 +1,132 @@
+{
+  "task": "bearing",
+  "condition": "30_2",
+  "seed": 42,
+  "protocol": "seu_time_split",
+  "method": "transition_none_cnn",
+  "epoch_samples": 1600,
+  "window_stride": 800,
+  "split_seed": 42,
+  "split_sample_id_fingerprint": "e569dc9a365b902570d677a37b08bd82d8514c3f5787d6162884749a4f116764",
+  "best_epoch": 4,
+  "epochs_ran": 34,
+  "best_val_acc": 1.0,
+  "best_val_loss": 0.0050192096622543,
+  "test_evaluated": true,
+  "input_shape": [
+    21,
+    6,
+    6
+  ],
+  "class_names": [
+    "health",
+    "ball",
+    "inner",
+    "outer",
+    "comb"
+  ],
+  "train_class_counts": {
+    "health": 916,
+    "ball": 916,
+    "inner": 916,
+    "outer": 916,
+    "comb": 916
+  },
+  "val_class_counts": {
+    "health": 261,
+    "ball": 261,
+    "inner": 261,
+    "outer": 261,
+    "comb": 261
+  },
+  "val_acc": 1.0,
+  "val_balanced_acc": 1.0,
+  "val_macro_f1": 1.0,
+  "val_confusion_matrix": [
+    [
+      261,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      261,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      261,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      261,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      261
+    ]
+  ],
+  "test_loss": 0.004051152089377865,
+  "test_acc_once": 1.0,
+  "test_evaluated_after_freeze": true,
+  "test_acc": 1.0,
+  "test_balanced_acc": 1.0,
+  "test_macro_f1": 1.0,
+  "test_confusion_matrix": [
+    [
+      130,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      130,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      130,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      130,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      130
+    ]
+  ],
+  "test_class_counts": {
+    "health": 130,
+    "ball": 130,
+    "inner": 130,
+    "outer": 130,
+    "comb": 130
+  }
+}

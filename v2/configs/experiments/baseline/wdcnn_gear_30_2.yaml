@@ -1,0 +1,8 @@
+experiment_id: wdcnn_gear_30_2
+protocol: main_70_15_15_v5
+comparison_group: main_clean_compare
+task: gear
+condition: 30_2
+model: wdcnn
+seed_list: [42, 43, 44, 45, 46]
+notes: same split and preprocessing protocol as main

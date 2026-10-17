@@ -1,0 +1,18 @@
+{
+  "name": "dds",
+  "path": "gearbox/dds",
+  "sha": "32713187e667c1d0953ad3c91b70d8597d243902",
+  "size": 133,
+  "url": "https://api.github.com/repos/cathysiyu/Mechanical-datasets/contents/gearbox/dds?ref=master",
+  "html_url": "https://github.com/cathysiyu/Mechanical-datasets/blob/master/gearbox/dds",
+  "git_url": "https://api.github.com/repos/cathysiyu/Mechanical-datasets/git/blobs/32713187e667c1d0953ad3c91b70d8597d243902",
+  "download_url": "https://raw.githubusercontent.com/cathysiyu/Mechanical-datasets/master/gearbox/dds",
+  "type": "file",
+  "content": "ClRoZXNlIGRhdGEgYXJlIGFjcXVpcmVkIG9uIERyaXZldHJhaW4gRHluYW1p\nY3MgU2ltdWxhdG9yIChERFMpIGJ5IHJlc2VhcmNoIGdyb3VwIG9mIFBmLiBS\ndXFpYW5nIFlhbiwgClNvdXRoZWFzZXQgVW5pdmVyc2l0eSwgQ2hpbmEuCg==\n",
+  "encoding": "base64",
+  "_links": {
+    "self": "https://api.github.com/repos/cathysiyu/Mechanical-datasets/contents/gearbox/dds?ref=master",
+    "git": "https://api.github.com/repos/cathysiyu/Mechanical-datasets/git/blobs/32713187e667c1d0953ad3c91b70d8597d243902",
+    "html": "https://github.com/cathysiyu/Mechanical-datasets/blob/master/gearbox/dds"
+  }
+}

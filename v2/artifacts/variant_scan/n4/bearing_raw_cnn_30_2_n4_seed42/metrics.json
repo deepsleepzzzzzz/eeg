@@ -1,0 +1,74 @@
+{
+  "experiment_id": "bearing_raw_cnn_30_2_n4_seed42",
+  "protocol": "main_70_15_15_v5",
+  "task": "bearing",
+  "condition": "30_2",
+  "model": "raw_cnn",
+  "seed": 42,
+  "best_epoch": 3,
+  "best_val_acc": 1.0,
+  "best_val_loss": 0.026646683639601657,
+  "val_metrics": {
+    "n": 760,
+    "correct": 760,
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "balanced_accuracy": 1.0,
+    "confusion_matrix": [
+      [
+        152,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        152,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        152,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        152,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        152
+      ]
+    ]
+  },
+  "stability": {
+    "epochs_run": 33,
+    "last20_train_loss_mean": 0.011905079175098605,
+    "last20_train_acc_mean": 0.996797202797203,
+    "last20_val_loss_mean": 0.02586072914267118,
+    "last20_val_acc_mean": 0.9907236842105263,
+    "last20_val_acc_std": 0.023846211305547243,
+    "gap_train_minus_val_acc": 0.006073518586676707,
+    "final_lr": 0.00025
+  },
+  "lr_scheduler": {
+    "name": "reduce_on_plateau",
+    "monitor": "val_loss",
+    "factor": 0.5,
+    "patience": 8,
+    "min_lr": 1e-06
+  },
+  "dataset_split_hash": "9194b05c460f24bd0a1f08f1682af474089edd128086bafcfb7a5ba6a9a29ed7",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9"
+}

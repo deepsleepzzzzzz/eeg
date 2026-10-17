@@ -1,0 +1,18 @@
+# 【历史口径声明】noise.reference: per_window
+#   噪声功率按每个窗自己的功率缩放 -> 加噪窗能量 = 干净窗能量 × 常数，
+#   "窗能量"因此成为与表示无关的捷径，会系统性抬高抗噪性能
+#   （实测：齿轮 20-0 -10 dB 虚高 13.9 点，轴承 20-0 虚高 64.7 点）。
+#   本文件保留以复现历史结果；新实验请用 noise_global_*.yaml。
+# v5 的噪声鲁棒性曲线（AWGN，训练与验证同 SNR）
+# 基准协议 = 自动解析 status: main（当前为 v5）
+variants:
+  base:   {}
+  snr20:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 20,  noise.splits: "train,val", noise.seed: 0}
+  snr10:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 10,  noise.splits: "train,val", noise.seed: 0}
+  snr4:   {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 4,   noise.splits: "train,val", noise.seed: 0}
+  snr0:   {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 0,   noise.splits: "train,val", noise.seed: 0}
+  snrm2:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -2,  noise.splits: "train,val", noise.seed: 0}
+  snrm4:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4,  noise.splits: "train,val", noise.seed: 0}
+  snrm6:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -6,  noise.splits: "train,val", noise.seed: 0}
+  snrm8:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -8,  noise.splits: "train,val", noise.seed: 0}
+  snrm10: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -10, noise.splits: "train,val", noise.seed: 0}

@@ -1,0 +1,10 @@
+experiment_id: lag_1_gear_cnn_30_2
+protocol: main_70_15_15_v5
+comparison_group: lag_ablation
+task: gear
+condition: 30_2
+model: cnn
+seed: 42
+ablation:
+  factor: transition_lags
+  value: [1]

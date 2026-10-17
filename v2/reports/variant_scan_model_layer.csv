@@ -1,0 +1,2 @@
+variant,model,seed,best_val_acc,plateau_acc,plateau_std,epochs_run,overrides
+base,cnn,42,0.9887179487179487,0.9858461538461538,0.0019621668174060343,65,{}

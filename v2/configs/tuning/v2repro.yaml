@@ -1,0 +1,6 @@
+tag: v2repro_check
+task: gear
+condition: 30_2
+models: [gcn]
+seeds: [42]
+grid: {}

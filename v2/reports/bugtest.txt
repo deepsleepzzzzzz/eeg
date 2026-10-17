@@ -1,0 +1,67 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+___________________ test_global_edges_use_full_state_space ____________________
+
+    def test_global_edges_use_full_state_space():
+        """每类样本量很少时也不能只占用一两个状态。"""
+        rng = np.random.default_rng(0)
+        # 幅值刻意取小（与 SEU 原始信号同量级），但分布是宽带的
+        windows = [rng.standard_normal((3, 1600)) * 0.02 for _ in range(40)]
+        method = _fit(windows, _method_cfg(6))
+    
+        mat = build_state_transition(windows[0], method)
+        assert mat.shape == (21, 6, 6)
+    
+        occupancy = mat.sum(axis=1).sum(axis=0)  # 每个目的状态的占用
+        used = int((occupancy > 0).sum())
+>       assert used >= 5, (
+            f"6 档只用到 {used} 个状态，说明边界与数据不在同一尺度上"
+            f"（occupancy={np.round(occupancy, 4).tolist()}）"
+        )
+E       AssertionError: 6 档只用到 2 个状态，说明边界与数据不在同一尺度上（occupancy=[0.0, 0.0, 10.525699615478516, 10.474300384521484, 0.0, 0.0]）
+E       assert 2 >= 5
+
+tests\test_bin_edges_scale.py:49: AssertionError
+______________________ test_pipeline_is_scale_invariant _______________________
+
+    def test_pipeline_is_scale_invariant():
+        """整体放大信号不应改变表示（因为逐窗 z-score 会抵消尺度）。"""
+        rng = np.random.default_rng(1)
+        windows = [rng.standard_normal((3, 1600)) * 0.02 for _ in range(20)]
+        method = _fit(windows, _method_cfg(6))
+    
+        a = build_state_transition(windows[0], method)
+        b = build_state_transition(windows[0] * 1000.0, method)
+>       assert np.allclose(a, b, atol=1e-6), "表示随幅值尺度变化 —— 归一化没有生效"
+E       AssertionError: 表示随幅值尺度变化 —— 归一化没有生效
+E       assert False
+E        +  where False = <function allclose at 0x000002227FB152F0>(array([[[0.        , 0.        , 0.        , 0.        , 0.        ,\n         0.        ],\n        [0.        , 0.    ....        ],\n        [0.        , 0.        , 0.        , 0.        , 0.        ,\n         0.        ]]], dtype=float32), array([[[0.23639774, 0.00500313, 0.00375235, 0.00437774, 0.0068793 ,\n         0.23389618],\n        [0.00750469, 0.    ....00439422],\n        [0.21720025, 0.00564972, 0.00564972, 0.00188324, 0.00627746,\n         0.21908349]]], dtype=float32), atol=1e-06)
+E        +    where <function allclose at 0x000002227FB152F0> = np.allclose
+
+tests\test_bin_edges_scale.py:63: AssertionError
+_______________________ test_more_bins_add_information ________________________
+
+    def test_more_bins_add_information():
+        """提高分位档数必须带来新的信息，而不是原地重标号。"""
+        rng = np.random.default_rng(2)
+        windows = [rng.standard_normal((3, 1600)) * 0.02 for _ in range(30)]
+    
+        def occupancy(bins):
+            method = _fit(windows, _method_cfg(bins))
+            mat = build_state_transition(windows[0], method)
+            occ = mat.sum(axis=1).sum(axis=0)
+            return int((occ > 0).sum()), mat.shape
+    
+        used6, shape6 = occupancy(6)
+        used12, shape12 = occupancy(12)
+        assert shape6[-1] == 6 and shape12[-1] == 12
+>       assert used12 > used6, f"bins=12 只用到 {used12} 个状态，bins=6 用到 {used6} 个 —— 细化没有增加信息"
+E       AssertionError: bins=12 只用到 2 个状态，bins=6 用到 2 个 —— 细化没有增加信息
+E       assert 2 > 2
+
+tests\test_bin_edges_scale.py:80: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bin_edges_scale.py::test_global_edges_use_full_state_space
+FAILED tests/test_bin_edges_scale.py::test_pipeline_is_scale_invariant - Asse...
+FAILED tests/test_bin_edges_scale.py::test_more_bins_add_information - Assert...
+3 failed in 0.23s

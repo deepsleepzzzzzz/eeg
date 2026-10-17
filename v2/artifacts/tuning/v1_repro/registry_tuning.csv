@@ -1,0 +1,2 @@
+tune_id,tag,task,condition,model,seed,params,best_epoch,val_acc,macro_f1,balanced_acc,run_dir
+gear_cnn_302_v1_repro_001,v1_repro,gear,302,cnn,42,{},44,0.9569230769230769,0.9567083195894467,0.9569230769230771,D:\SEU_Fault_Diagnosis_v2\artifacts\tuning\v1_repro\gear_cnn_302_v1_repro_001

@@ -1,0 +1,10 @@
+# v5 全局尺度加噪（noise.reference: global）—— 严格口径
+# 与 noise_low_v5.yaml 的唯一区别：噪声地板由【训练集全部窗】的统一参考功率决定，
+# 不再按每个窗自己的功率缩放，从而消除"窗能量"这一非物理捷径。
+variants:
+  gsnrm4:  {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: -4,  noise.splits: "train,val", noise.seed: 0}
+  gsnrm6:  {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: -6,  noise.splits: "train,val", noise.seed: 0}
+  gsnrm8:  {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: -8,  noise.splits: "train,val", noise.seed: 0}
+  gsnrm10: {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: -10, noise.splits: "train,val", noise.seed: 0}
+  gsnrm12: {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: -12, noise.splits: "train,val", noise.seed: 0}
+  gsnrm16: {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: -16, noise.splits: "train,val", noise.seed: 0}

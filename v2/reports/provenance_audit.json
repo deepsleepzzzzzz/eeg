@@ -1,0 +1,983 @@
+{
+  "protocol": "main_70_15_15_v5",
+  "dataset_dir": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\main_70_15_15_v5\\dataset",
+  "results": [
+    {
+      "task": "gear",
+      "condition": "20_0",
+      "class_names": [
+        "Health",
+        "Chipped",
+        "Miss",
+        "Root",
+        "Surface"
+      ],
+      "source_files": {
+        "Health": {
+          "file": "Health_20_0.csv",
+          "size": 80323854,
+          "git_blob_sha1": "2eeda4ce45649972da0c5b01fe489cb504d8175c",
+          "blake2b_1MB": "3c37cdfe587c6980db7d81b39b1a963f"
+        },
+        "Chipped": {
+          "file": "Chipped_20_0.csv",
+          "size": 80055432,
+          "git_blob_sha1": "38cb396de0e0f32aa5d4786d982bcb499a4c77de",
+          "blake2b_1MB": "72d3521883bd4ff906e9aaa7a88a4b4f"
+        },
+        "Miss": {
+          "file": "Miss_20_0.csv",
+          "size": 80165741,
+          "git_blob_sha1": "4deca60a9be31ae64ad03b76565611c045287717",
+          "blake2b_1MB": "2b9f70060fc7d4426f40fac1afcbdf41"
+        },
+        "Root": {
+          "file": "Root_20_0.csv",
+          "size": 80220486,
+          "git_blob_sha1": "b1fec5e94366517495acdfe0f8ae702d86188112",
+          "blake2b_1MB": "efd472cbca421280f75c6ee32546a724"
+        },
+        "Surface": {
+          "file": "Surface_20_0.csv",
+          "size": 80115358,
+          "git_blob_sha1": "9bb7fb21beef7980b34183f812d82a6482de65d3",
+          "blake2b_1MB": "87c5edbdd6e3e5abb1053ebe38cf52c2"
+        }
+      },
+      "A_normalization": {
+        "recomputed_mean": [
+          0.000890993739483173,
+          0.0006470659198809002,
+          0.0011400703924005677
+        ],
+        "meta_mean": [
+          0.000890993739483173,
+          0.0006470659198809003,
+          0.0011400703924005682
+        ],
+        "recomputed_std": [
+          0.004616108464967837,
+          0.008400475693268206,
+          0.006560399931176775
+        ],
+        "meta_std": [
+          0.00461610846596784,
+          0.008400475694268206,
+          0.006560399932176776
+        ],
+        "pass": true
+      },
+      "B_bin_edges": {
+        "recomputed": [
+          [
+            -10.953164147505678,
+            -0.7976402130552684,
+            -0.3197484960946335,
+            0.007583500427360701,
+            0.331449373888897,
+            0.8056583350977954,
+            10.212932953871851
+          ],
+          [
+            -14.668224802867337,
+            -0.7506796222188132,
+            -0.2841584223371775,
+            0.00130160249470894,
+            0.2855712185491479,
+            0.7526876228195074,
+            14.608569628796259
+          ],
+          [
+            -15.216461105976233,
+            -0.8040775635235319,
+            -0.31675971193844776,
+            0.003952443124116224,
+            0.3191771278529101,
+            0.801464798298705,
+            19.89831884901315
+          ]
+        ],
+        "meta": [
+          [
+            -10.953164145132856,
+            -0.7976402128824729,
+            -0.31974849602536537,
+            0.007583500425717862,
+            0.331449373817094,
+            0.8056583349232629,
+            10.21293295165939
+          ],
+          [
+            -14.66822480112122,
+            -0.7506796221294516,
+            -0.284158422303351,
+            0.0013016024945539833,
+            0.28557121851515327,
+            0.7526876227299067,
+            14.608569627057241
+          ],
+          [
+            -15.216461103656792,
+            -0.8040775634009666,
+            -0.3167597118901642,
+            0.003952443123513688,
+            0.31917712780425794,
+            0.8014647981765379,
+            19.898318845980057
+          ]
+        ],
+        "pass": true
+      },
+      "C_end_to_end": {
+        "checked": [
+          {
+            "row": 0,
+            "class": "Health",
+            "window": 0,
+            "max_abs_diff": 6.3841320840918314e-09
+          },
+          {
+            "row": 151,
+            "class": "Health",
+            "window": 151,
+            "max_abs_diff": 7.11936279373937e-09
+          },
+          {
+            "row": 152,
+            "class": "Chipped",
+            "window": 0,
+            "max_abs_diff": 3.6851549450878096e-09
+          },
+          {
+            "row": 303,
+            "class": "Chipped",
+            "window": 151,
+            "max_abs_diff": 3.690678804235681e-09
+          },
+          {
+            "row": 304,
+            "class": "Miss",
+            "window": 0,
+            "max_abs_diff": 2.667941173539745e-09
+          },
+          {
+            "row": 455,
+            "class": "Miss",
+            "window": 151,
+            "max_abs_diff": 3.7161909105520863e-09
+          },
+          {
+            "row": 456,
+            "class": "Root",
+            "window": 0,
+            "max_abs_diff": 3.6997496177804123e-09
+          },
+          {
+            "row": 607,
+            "class": "Root",
+            "window": 151,
+            "max_abs_diff": 3.573944681867225e-09
+          },
+          {
+            "row": 608,
+            "class": "Surface",
+            "window": 0,
+            "max_abs_diff": 1.8580954552760431e-09
+          },
+          {
+            "row": 759,
+            "class": "Surface",
+            "window": 151,
+            "max_abs_diff": 3.2076863665242428e-09
+          }
+        ],
+        "worst_row": 151,
+        "max_abs_diff": 7.11936279373937e-09,
+        "pass": true
+      },
+      "D_cross_dataset_negative_control": {
+        "used_other_dataset": "bearing",
+        "max_rel_mean_diff": 1.1003093157052173,
+        "max_rel_std_diff": 1.9821574455382824,
+        "pass": true
+      },
+      "E_official_file_list": {
+        "rows": [
+          {
+            "path": "gearbox/gearset/Health_20_0.csv",
+            "expected": "2eeda4ce45649972da0c5b01fe489cb504d8175c",
+            "actual": "2eeda4ce45649972da0c5b01fe489cb504d8175c",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Chipped_20_0.csv",
+            "expected": "38cb396de0e0f32aa5d4786d982bcb499a4c77de",
+            "actual": "38cb396de0e0f32aa5d4786d982bcb499a4c77de",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Miss_20_0.csv",
+            "expected": "4deca60a9be31ae64ad03b76565611c045287717",
+            "actual": "4deca60a9be31ae64ad03b76565611c045287717",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Root_20_0.csv",
+            "expected": "b1fec5e94366517495acdfe0f8ae702d86188112",
+            "actual": "b1fec5e94366517495acdfe0f8ae702d86188112",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Surface_20_0.csv",
+            "expected": "9bb7fb21beef7980b34183f812d82a6482de65d3",
+            "actual": "9bb7fb21beef7980b34183f812d82a6482de65d3",
+            "match": true
+          }
+        ],
+        "pass": true
+      },
+      "F_split_hash": {
+        "recorded": "51dc4a4a521121d23d9308a772a98215584d094de3f7ed8fc12f14d68e3d6c2a",
+        "recomputed": "2d1ce5f38b94a03f8a896cdce73db0ec8de860113738ef046250e742ecd0d3f5",
+        "recomputed_with_legacy_label": "51dc4a4a521121d23d9308a772a98215584d094de3f7ed8fc12f14d68e3d6c2a",
+        "channel_indices_source_recorded": "default",
+        "note": "缓存由旧版代码建立（当时把 channel_indices 的来源记为 default）；指纹差异完全由这一个标签造成，通道取值本身与协议一致",
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "task": "gear",
+      "condition": "30_2",
+      "class_names": [
+        "Health",
+        "Chipped",
+        "Miss",
+        "Root",
+        "Surface"
+      ],
+      "source_files": {
+        "Health": {
+          "file": "Health_30_2.csv",
+          "size": 80317583,
+          "git_blob_sha1": "c5bfcf7f5519a72923cc2fe321ff8b14ad2f532d",
+          "blake2b_1MB": "07a7cb80a2a328a0f8636e6efc284311"
+        },
+        "Chipped": {
+          "file": "Chipped_30_2.csv",
+          "size": 80257645,
+          "git_blob_sha1": "b1b9fe80a72abf853ef40cc9f80f00030fec501c",
+          "blake2b_1MB": "21996a0a2566e589372da23e40b8b3ab"
+        },
+        "Miss": {
+          "file": "Miss_30_2.csv",
+          "size": 80290321,
+          "git_blob_sha1": "926207e37dd78dfd4263e2852ca25d79f26ccb16",
+          "blake2b_1MB": "c6a0bbf99229385f7efbe93670dae2c5"
+        },
+        "Root": {
+          "file": "Root_30_2.csv",
+          "size": 80270482,
+          "git_blob_sha1": "173954e6a0324a07f716f3483eef84b7c6aeaa57",
+          "blake2b_1MB": "4d5724b21096ca990611984daec0be86"
+        },
+        "Surface": {
+          "file": "Surface_30_2.csv",
+          "size": 80296794,
+          "git_blob_sha1": "e65cdbc9a8c1adfbb7547cd5fe18c4c7282bb60d",
+          "blake2b_1MB": "62c305e3f30958c4025e796bf1f4056f"
+        }
+      },
+      "A_normalization": {
+        "recomputed_mean": [
+          0.0008879628761472904,
+          0.0006653757912204985,
+          0.001093705384888549
+        ],
+        "meta_mean": [
+          0.0008879628761472901,
+          0.0006653757912204983,
+          0.001093705384888549
+        ],
+        "recomputed_std": [
+          0.008435196189738604,
+          0.01693101332855069,
+          0.01251187889303153
+        ],
+        "meta_std": [
+          0.008435196190738604,
+          0.016931013329550687,
+          0.012511878894031528
+        ],
+        "pass": true
+      },
+      "B_bin_edges": {
+        "recomputed": [
+          [
+            -7.225198028030209,
+            -0.90868815659222,
+            -0.3894352665019742,
+            0.006287598137578485,
+            0.40011364856675585,
+            0.909882467605125,
+            8.455646498254474
+          ],
+          [
+            -8.998597593346899,
+            -0.881363418813035,
+            -0.37702266647302446,
+            -0.00037657469737780125,
+            0.37709640202179395,
+            0.8817915336233152,
+            9.778482893850015
+          ],
+          [
+            -8.87498243343241,
+            -0.8893712511144993,
+            -0.3834520319374753,
+            -0.0007756936405414238,
+            0.38142110037281235,
+            0.8887789524005767,
+            9.039752988506361
+          ]
+        ],
+        "meta": [
+          [
+            -7.225198027173655,
+            -0.9086881564844942,
+            -0.38943526645580623,
+            0.006287598136833123,
+            0.4001136485193221,
+            0.9098824674972577,
+            8.455646497252049
+          ],
+          [
+            -8.998597592815413,
+            -0.8813634187609789,
+            -0.3770226664507563,
+            -0.00037657469735554675,
+            0.37709640199952144,
+            0.8817915335712337,
+            9.778482893272468
+          ],
+          [
+            -8.874982432723085,
+            -0.8893712510434173,
+            -0.3834520319068283,
+            -0.0007756936404794273,
+            0.3814211003423277,
+            0.8887789523295421,
+            9.039752987783869
+          ]
+        ],
+        "pass": true
+      },
+      "C_end_to_end": {
+        "checked": [
+          {
+            "row": 0,
+            "class": "Health",
+            "window": 0,
+            "max_abs_diff": 3.4971368023661853e-09
+          },
+          {
+            "row": 151,
+            "class": "Health",
+            "window": 151,
+            "max_abs_diff": 3.5850226398626006e-09
+          },
+          {
+            "row": 152,
+            "class": "Chipped",
+            "window": 0,
+            "max_abs_diff": 3.0355565283635144e-09
+          },
+          {
+            "row": 303,
+            "class": "Chipped",
+            "window": 151,
+            "max_abs_diff": 1.8562755776940776e-09
+          },
+          {
+            "row": 304,
+            "class": "Miss",
+            "window": 0,
+            "max_abs_diff": 3.0355565283635144e-09
+          },
+          {
+            "row": 455,
+            "class": "Miss",
+            "window": 151,
+            "max_abs_diff": 3.5014453003689994e-09
+          },
+          {
+            "row": 456,
+            "class": "Root",
+            "window": 0,
+            "max_abs_diff": 3.1332514915938248e-09
+          },
+          {
+            "row": 607,
+            "class": "Root",
+            "window": 151,
+            "max_abs_diff": 2.3185245945356314e-09
+          },
+          {
+            "row": 608,
+            "class": "Surface",
+            "window": 0,
+            "max_abs_diff": 2.604970725239575e-09
+          },
+          {
+            "row": 759,
+            "class": "Surface",
+            "window": 151,
+            "max_abs_diff": 3.238907655966905e-09
+          }
+        ],
+        "worst_row": 151,
+        "max_abs_diff": 3.5850226398626006e-09,
+        "pass": true
+      },
+      "D_cross_dataset_negative_control": {
+        "used_other_dataset": "bearing",
+        "max_rel_mean_diff": 1.0908344705637443,
+        "max_rel_std_diff": 0.8865821186201948,
+        "pass": true
+      },
+      "E_official_file_list": {
+        "rows": [
+          {
+            "path": "gearbox/gearset/Health_30_2.csv",
+            "expected": "c5bfcf7f5519a72923cc2fe321ff8b14ad2f532d",
+            "actual": "c5bfcf7f5519a72923cc2fe321ff8b14ad2f532d",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Chipped_30_2.csv",
+            "expected": "b1b9fe80a72abf853ef40cc9f80f00030fec501c",
+            "actual": "b1b9fe80a72abf853ef40cc9f80f00030fec501c",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Miss_30_2.csv",
+            "expected": "926207e37dd78dfd4263e2852ca25d79f26ccb16",
+            "actual": "926207e37dd78dfd4263e2852ca25d79f26ccb16",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Root_30_2.csv",
+            "expected": "173954e6a0324a07f716f3483eef84b7c6aeaa57",
+            "actual": "173954e6a0324a07f716f3483eef84b7c6aeaa57",
+            "match": true
+          },
+          {
+            "path": "gearbox/gearset/Surface_30_2.csv",
+            "expected": "e65cdbc9a8c1adfbb7547cd5fe18c4c7282bb60d",
+            "actual": "e65cdbc9a8c1adfbb7547cd5fe18c4c7282bb60d",
+            "match": true
+          }
+        ],
+        "pass": true
+      },
+      "F_split_hash": {
+        "recorded": "6c27fb80612b2f3542b811b271035d54029901ba04dd7da2906448901a01a835",
+        "recomputed": "9f2ff9f0c934b9837817ca5d6be9a6e3355f833b8a50463031d9042a5d72788c",
+        "recomputed_with_legacy_label": "6c27fb80612b2f3542b811b271035d54029901ba04dd7da2906448901a01a835",
+        "channel_indices_source_recorded": "default",
+        "note": "缓存由旧版代码建立（当时把 channel_indices 的来源记为 default）；指纹差异完全由这一个标签造成，通道取值本身与协议一致",
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "task": "bearing",
+      "condition": "20_0",
+      "class_names": [
+        "health",
+        "ball",
+        "inner",
+        "outer",
+        "comb"
+      ],
+      "source_files": {
+        "health": {
+          "file": "health_20_0.csv",
+          "size": 80061736,
+          "git_blob_sha1": "418d32421da25a88992b92107ef91a447ecfa275",
+          "blake2b_1MB": "44cfab756e028e023303980044534579"
+        },
+        "ball": {
+          "file": "ball_20_0.csv",
+          "size": 79957011,
+          "git_blob_sha1": "5c31daf260048692b52466ce5751e097840f11b5",
+          "blake2b_1MB": "38f3614ab73ff49647f0a11d339eda42"
+        },
+        "inner": {
+          "file": "inner_20_0.csv",
+          "size": 80129050,
+          "git_blob_sha1": "d90f53bb6143a0ee366218878304572d0eb2a9d6",
+          "blake2b_1MB": "e7eeb90b4d4d283efed7b4cca149737a"
+        },
+        "outer": {
+          "file": "outer_20_0.csv",
+          "size": 79732483,
+          "git_blob_sha1": "58d10225a6b25abefff62aae46a696215abf5e27",
+          "blake2b_1MB": "f02483af3e2fb87e33f144be58419ede"
+        },
+        "comb": {
+          "file": "comb_20_0.csv",
+          "size": 79868771,
+          "git_blob_sha1": "f4b34b4255fc14405fcb2019e840afcef799ef17",
+          "blake2b_1MB": "3bb47c4ae92d5c78b2be06cf67888345"
+        }
+      },
+      "A_normalization": {
+        "recomputed_mean": [
+          3.573715513002678e-05,
+          -6.490674073972934e-05,
+          0.000932868103146853
+        ],
+        "meta_mean": [
+          3.5737155130026155e-05,
+          -6.490674073972897e-05,
+          0.0009328681031468531
+        ],
+        "recomputed_std": [
+          0.01376596223318045,
+          0.012994723585126237,
+          0.006628009478221291
+        ],
+        "meta_std": [
+          0.013765962234180452,
+          0.01299472358612623,
+          0.0066280094792212935
+        ],
+        "pass": true
+      },
+      "B_bin_edges": {
+        "recomputed": [
+          [
+            -31.961785867363744,
+            -0.13691285238217468,
+            -0.019013357053904667,
+            0.06082123651711736,
+            0.14065583008813937,
+            0.2515089600147814,
+            2.4943598030587353
+          ],
+          [
+            -35.275016837136306,
+            -0.1902382334696083,
+            -0.03756088046527918,
+            0.055553835832723976,
+            0.14543647106914356,
+            0.28880235244367236,
+            4.8145623360815755
+          ],
+          [
+            -25.965241701695856,
+            -0.472369285746263,
+            -0.16639507031043374,
+            0.040756112033448734,
+            0.24866166867574302,
+            0.5543341343922076,
+            7.021584994676637
+          ]
+        ],
+        "meta": [
+          [
+            -31.961785865041943,
+            -0.13691285237222886,
+            -0.01901335705252343,
+            0.06082123651269916,
+            0.14065583007792173,
+            0.2515089599965111,
+            2.494359802877537
+          ],
+          [
+            -35.275016834421756,
+            -0.1902382334549688,
+            -0.03756088046238875,
+            0.055553835828448875,
+            0.14543647105795163,
+            0.2888023524214479,
+            4.814562335711076
+          ],
+          [
+            -25.965241697778346,
+            -0.47236928567499425,
+            -0.16639507028532888,
+            0.04075611202729963,
+            0.24866166863822609,
+            0.5543341343085724,
+            7.021584993617254
+          ]
+        ],
+        "pass": true
+      },
+      "C_end_to_end": {
+        "checked": [
+          {
+            "row": 0,
+            "class": "health",
+            "window": 0,
+            "max_abs_diff": 6.596792223589887e-09
+          },
+          {
+            "row": 151,
+            "class": "health",
+            "window": 151,
+            "max_abs_diff": 7.104465599150345e-09
+          },
+          {
+            "row": 152,
+            "class": "ball",
+            "window": 0,
+            "max_abs_diff": 3.599718717550715e-09
+          },
+          {
+            "row": 303,
+            "class": "ball",
+            "window": 151,
+            "max_abs_diff": 3.5115291646681257e-09
+          },
+          {
+            "row": 304,
+            "class": "inner",
+            "window": 0,
+            "max_abs_diff": 7.315777927896505e-09
+          },
+          {
+            "row": 455,
+            "class": "inner",
+            "window": 151,
+            "max_abs_diff": 7.0311891309238206e-09
+          },
+          {
+            "row": 456,
+            "class": "outer",
+            "window": 0,
+            "max_abs_diff": 3.7161909105520863e-09
+          },
+          {
+            "row": 607,
+            "class": "outer",
+            "window": 151,
+            "max_abs_diff": 3.7161909105520863e-09
+          },
+          {
+            "row": 608,
+            "class": "comb",
+            "window": 0,
+            "max_abs_diff": 3.7106813177700815e-09
+          },
+          {
+            "row": 759,
+            "class": "comb",
+            "window": 151,
+            "max_abs_diff": 3.488126856798779e-09
+          }
+        ],
+        "worst_row": 304,
+        "max_abs_diff": 7.315777927896505e-09,
+        "pass": true
+      },
+      "D_cross_dataset_negative_control": {
+        "used_other_dataset": "gear",
+        "max_rel_mean_diff": 23.93185907802454,
+        "max_rel_std_diff": 0.6646722991749275,
+        "pass": true
+      },
+      "E_official_file_list": {
+        "rows": [
+          {
+            "path": "gearbox/bearingset/health_20_0.csv",
+            "expected": "418d32421da25a88992b92107ef91a447ecfa275",
+            "actual": "418d32421da25a88992b92107ef91a447ecfa275",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/ball_20_0.csv",
+            "expected": "5c31daf260048692b52466ce5751e097840f11b5",
+            "actual": "5c31daf260048692b52466ce5751e097840f11b5",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/inner_20_0.csv",
+            "expected": "d90f53bb6143a0ee366218878304572d0eb2a9d6",
+            "actual": "d90f53bb6143a0ee366218878304572d0eb2a9d6",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/outer_20_0.csv",
+            "expected": "58d10225a6b25abefff62aae46a696215abf5e27",
+            "actual": "58d10225a6b25abefff62aae46a696215abf5e27",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/comb_20_0.csv",
+            "expected": "f4b34b4255fc14405fcb2019e840afcef799ef17",
+            "actual": "f4b34b4255fc14405fcb2019e840afcef799ef17",
+            "match": true
+          }
+        ],
+        "pass": true
+      },
+      "F_split_hash": {
+        "recorded": "b98480aeaabe36763d7e851de65a923bf9098a993a141b5ed8398f1326a4655a",
+        "recomputed": "d3dde4b985e6cc9dfbd60667a87bc59d6f898e1643e68da4b19889dcf4034cdf",
+        "recomputed_with_legacy_label": "b98480aeaabe36763d7e851de65a923bf9098a993a141b5ed8398f1326a4655a",
+        "channel_indices_source_recorded": "default",
+        "note": "缓存由旧版代码建立（当时把 channel_indices 的来源记为 default）；指纹差异完全由这一个标签造成，通道取值本身与协议一致",
+        "pass": true
+      },
+      "pass": true
+    },
+    {
+      "task": "bearing",
+      "condition": "30_2",
+      "class_names": [
+        "health",
+        "ball",
+        "inner",
+        "outer",
+        "comb"
+      ],
+      "source_files": {
+        "health": {
+          "file": "health_30_2.csv",
+          "size": 80208353,
+          "git_blob_sha1": "9b54d93b4a0583837cf5ef4336760a7a727d4785",
+          "blake2b_1MB": "e9f85009cfecbf8460cb01aaf4f6bf4c"
+        },
+        "ball": {
+          "file": "ball_30_2.csv",
+          "size": 80200560,
+          "git_blob_sha1": "d9c40a39b0a6d09b5384c2e4dc70a4d45b55d409",
+          "blake2b_1MB": "d74f19342cfcde7f4669247874dd9391"
+        },
+        "inner": {
+          "file": "inner_30_2.csv",
+          "size": 80291118,
+          "git_blob_sha1": "156ecf9446e17bc1fe7c3da169973793228c45db",
+          "blake2b_1MB": "04d41a3fc5eade06b60b9e5401759f72"
+        },
+        "outer": {
+          "file": "outer_30_2.csv",
+          "size": 80174707,
+          "git_blob_sha1": "154cdc24b50d4ed4278313ebcc41ba80737f00bd",
+          "blake2b_1MB": "efb16b7aa76ed0fbfa81466226a7acd0"
+        },
+        "comb": {
+          "file": "comb_30_2.csv",
+          "size": 80269961,
+          "git_blob_sha1": "78e7a492c293b2cd1857156c35276ba02a46433d",
+          "blake2b_1MB": "46dc106b9ca8c91b5ab9dbeceb13ece3"
+        }
+      },
+      "A_normalization": {
+        "recomputed_mean": [
+          2.271082809768378e-05,
+          -6.043905881228096e-05,
+          0.0008088082091346148
+        ],
+        "meta_mean": [
+          2.2710828097683623e-05,
+          -6.0439058812281585e-05,
+          0.0008088082091346154
+        ],
+        "recomputed_std": [
+          0.015913690301387215,
+          0.017196622120100827,
+          0.011907839381263201
+        ],
+        "meta_std": [
+          0.01591369030238721,
+          0.017196622121100825,
+          0.011907839382263207
+        ],
+        "pass": true
+      },
+      "B_bin_edges": {
+        "recomputed": [
+          [
+            -28.819444273596233,
+            -0.36111742275119785,
+            -0.11962723868842258,
+            0.051231936556616696,
+            0.2217769169225735,
+            0.45767443213768105,
+            4.67385551454515
+          ],
+          [
+            -27.0835491812538,
+            -0.48285999908562477,
+            -0.17774193791319978,
+            0.039277426351235115,
+            0.2557152810651222,
+            0.5548437938669049,
+            8.201752534525387
+          ],
+          [
+            -15.48532880778356,
+            -0.727067936670152,
+            -0.2945797383406175,
+            0.02638528962355346,
+            0.34466301227771573,
+            0.7669058591128417,
+            9.03120947029915
+          ]
+        ],
+        "meta": [
+          [
+            -28.819444271785255,
+            -0.36111742272850567,
+            -0.11962723868090534,
+            0.051231936553397354,
+            0.22177691690863735,
+            0.4576744321089214,
+            4.673855514251452
+          ],
+          [
+            -27.08354917967887,
+            -0.4828599990575459,
+            -0.17774193790286388,
+            0.039277426348951136,
+            0.25571528105025215,
+            0.5548437938346403,
+            8.201752534048447
+          ],
+          [
+            -15.485328806483121,
+            -0.7270679366090937,
+            -0.29457973831587914,
+            0.026385289621337613,
+            0.34466301224877127,
+            0.7669058590484379,
+            9.03120946954072
+          ]
+        ],
+        "pass": true
+      },
+      "C_end_to_end": {
+        "checked": [
+          {
+            "row": 0,
+            "class": "health",
+            "window": 0,
+            "max_abs_diff": 3.538842996420044e-09
+          },
+          {
+            "row": 151,
+            "class": "health",
+            "window": 151,
+            "max_abs_diff": 3.566339709659694e-09
+          },
+          {
+            "row": 152,
+            "class": "ball",
+            "window": 0,
+            "max_abs_diff": 3.6357663962816034e-09
+          },
+          {
+            "row": 303,
+            "class": "ball",
+            "window": 151,
+            "max_abs_diff": 1.8553406588850407e-09
+          },
+          {
+            "row": 304,
+            "class": "inner",
+            "window": 0,
+            "max_abs_diff": 6.055190682197065e-09
+          },
+          {
+            "row": 455,
+            "class": "inner",
+            "window": 151,
+            "max_abs_diff": 6.617076470094574e-09
+          },
+          {
+            "row": 456,
+            "class": "outer",
+            "window": 0,
+            "max_abs_diff": 3.1972677283498285e-09
+          },
+          {
+            "row": 607,
+            "class": "outer",
+            "window": 151,
+            "max_abs_diff": 2.4349967875370027e-09
+          },
+          {
+            "row": 608,
+            "class": "comb",
+            "window": 0,
+            "max_abs_diff": 2.641403873404613e-09
+          },
+          {
+            "row": 759,
+            "class": "comb",
+            "window": 151,
+            "max_abs_diff": 3.663384207097664e-09
+          }
+        ],
+        "worst_row": 455,
+        "max_abs_diff": 6.617076470094574e-09,
+        "pass": true
+      },
+      "D_cross_dataset_negative_control": {
+        "used_other_dataset": "gear",
+        "max_rel_mean_diff": 38.09865524186687,
+        "max_rel_std_diff": 0.4699409106294357,
+        "pass": true
+      },
+      "E_official_file_list": {
+        "rows": [
+          {
+            "path": "gearbox/bearingset/health_30_2.csv",
+            "expected": "9b54d93b4a0583837cf5ef4336760a7a727d4785",
+            "actual": "9b54d93b4a0583837cf5ef4336760a7a727d4785",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/ball_30_2.csv",
+            "expected": "d9c40a39b0a6d09b5384c2e4dc70a4d45b55d409",
+            "actual": "d9c40a39b0a6d09b5384c2e4dc70a4d45b55d409",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/inner_30_2.csv",
+            "expected": "156ecf9446e17bc1fe7c3da169973793228c45db",
+            "actual": "156ecf9446e17bc1fe7c3da169973793228c45db",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/outer_30_2.csv",
+            "expected": "154cdc24b50d4ed4278313ebcc41ba80737f00bd",
+            "actual": "154cdc24b50d4ed4278313ebcc41ba80737f00bd",
+            "match": true
+          },
+          {
+            "path": "gearbox/bearingset/comb_30_2.csv",
+            "expected": "78e7a492c293b2cd1857156c35276ba02a46433d",
+            "actual": "78e7a492c293b2cd1857156c35276ba02a46433d",
+            "match": true
+          }
+        ],
+        "pass": true
+      },
+      "F_split_hash": {
+        "recorded": "9194b05c460f24bd0a1f08f1682af474089edd128086bafcfb7a5ba6a9a29ed7",
+        "recomputed": "bbc73536b0951112b7a577adfd67da1dc7e342edf4c8b48c8c8027318e46e50a",
+        "recomputed_with_legacy_label": "9194b05c460f24bd0a1f08f1682af474089edd128086bafcfb7a5ba6a9a29ed7",
+        "channel_indices_source_recorded": "default",
+        "note": "缓存由旧版代码建立（当时把 channel_indices 的来源记为 default）；指纹差异完全由这一个标签造成，通道取值本身与协议一致",
+        "pass": true
+      },
+      "pass": true
+    }
+  ],
+  "pass": true
+}

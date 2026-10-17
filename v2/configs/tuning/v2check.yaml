@@ -1,0 +1,6 @@
+tag: v2check
+task: gear
+condition: 30_2
+models: [cnn]
+seeds: [42]
+grid: {}

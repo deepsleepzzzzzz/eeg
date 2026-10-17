@@ -1,0 +1,2 @@
+tune_id,tag,task,condition,model,seed,params,best_epoch,val_acc,macro_f1,balanced_acc,plateau_acc,plateau_std,train_val_gap,epochs_run,final_lr,run_dir
+gear_cnn_302_v2check_001,v2check,gear,302,cnn,42,{},35,0.9887179487179487,0.9887412546031399,0.9887179487179487,0.9858461538461538,0.0019621668174060343,0.014132012092710755,65,6.25e-05,D:\SEU_Fault_Diagnosis_v2\artifacts\tuning\v2check\gear_cnn_302_v2check_001

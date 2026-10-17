@@ -1,0 +1,8 @@
+experiment_id: raw_1dcnn_bearing_20_0
+protocol: main_70_15_15_v5
+comparison_group: main_clean_compare
+task: bearing
+condition: 20_0
+model: raw_1dcnn
+seed_list: [42, 43, 44, 45, 46]
+notes: same split and preprocessing protocol as main

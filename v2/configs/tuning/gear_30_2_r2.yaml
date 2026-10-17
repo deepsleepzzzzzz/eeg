@@ -1,0 +1,11 @@
+# 第 2 轮调参：在 v2 上（ReduceLROnPlateau 已生效）
+# 只调 v2 里真正相关的 3 个正则化旋钮，共 3x2x2 = 12 组 x 2 模型 = 24 次
+tag: gear_30_2_r2
+task: gear
+condition: 30_2
+models: [cnn, gcn]
+seeds: [42]
+grid:
+  train.dropout: [0.2, 0.3, 0.4]
+  train.weight_decay: [0.0001, 0.001]
+  train.label_smoothing: [0.0, 0.05]

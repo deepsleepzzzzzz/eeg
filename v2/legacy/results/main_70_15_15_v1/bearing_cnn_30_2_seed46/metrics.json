@@ -1,0 +1,56 @@
+{
+  "experiment_id": "bearing_cnn_30_2_seed46",
+  "protocol": "main_70_15_15",
+  "task": "bearing",
+  "condition": "30_2",
+  "model": "cnn",
+  "seed": 46,
+  "best_epoch": 3,
+  "best_val_acc": 1.0,
+  "val_metrics": {
+    "n": 975,
+    "correct": 975,
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "balanced_accuracy": 1.0,
+    "confusion_matrix": [
+      [
+        195,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        195,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        195,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        195,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        195
+      ]
+    ]
+  },
+  "dataset_split_hash": "28ef2659309b5675f082d12c47166f3191857e355ab4bb121632867fea241a89",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9"
+}

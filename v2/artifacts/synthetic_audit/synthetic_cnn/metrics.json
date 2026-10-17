@@ -1,0 +1,56 @@
+{
+  "experiment_id": "synthetic_cnn",
+  "protocol": "synthetic_audit",
+  "task": "bearing",
+  "condition": "20_0",
+  "model": "cnn",
+  "seed": 42,
+  "best_epoch": 1,
+  "best_val_acc": 0.2625,
+  "val_metrics": {
+    "n": 80,
+    "correct": 21,
+    "accuracy": 0.2625,
+    "macro_f1": 0.08316831683168317,
+    "balanced_accuracy": 0.2,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        16,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        11,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        21,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        13,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        19,
+        0,
+        0
+      ]
+    ]
+  },
+  "dataset_split_hash": "synthetic",
+  "dataset_hash": "synthetic"
+}

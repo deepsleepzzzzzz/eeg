@@ -1,0 +1,8 @@
+tag: gear_30_2_r1a
+task: gear
+condition: 30_2
+models: [cnn, gcn]
+seeds: [42]
+grid:
+  train.lr: [0.0001, 0.0003, 0.0005, 0.001]
+  train.dropout: [0.1, 0.2, 0.3, 0.4]

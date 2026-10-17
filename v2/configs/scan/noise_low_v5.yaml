@@ -1,0 +1,10 @@
+# 【历史口径声明】noise.reference: per_window（同 noise_v5.yaml，见该文件注释）
+#   低信噪比延伸档；严格口径版本见 noise_global_v5.yaml。
+# v5 低信噪比延伸（AWGN，训练与验证同 SNR，匹配加噪）
+# 目的：把抗噪曲线从 -10 dB 继续往低压，检验"极低信噪比下性能平坦"是否成立
+# 基准协议 = 自动解析 status: main（当前为 v5）
+# 与 noise_v5.yaml 同源，只增加 -12/-14/-16 三档
+variants:
+  snrm12: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -12, noise.splits: "train,val", noise.seed: 0}
+  snrm14: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -14, noise.splits: "train,val", noise.seed: 0}
+  snrm16: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -16, noise.splits: "train,val", noise.seed: 0}

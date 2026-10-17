@@ -1,0 +1,7 @@
+# v5 全局尺度加噪 —— 补中高信噪比档（与 -4~-16 档拼成完整曲线）
+variants:
+  gsnr20: {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: 20, noise.splits: "train,val", noise.seed: 0}
+  gsnr10: {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: 10, noise.splits: "train,val", noise.seed: 0}
+  gsnr4:  {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: 4,  noise.splits: "train,val", noise.seed: 0}
+  gsnr0:  {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: 0,  noise.splits: "train,val", noise.seed: 0}
+  gsnrm2: {noise.enabled: true, noise.type: awgn, noise.reference: global, noise.snr_db: -2, noise.splits: "train,val", noise.seed: 0}

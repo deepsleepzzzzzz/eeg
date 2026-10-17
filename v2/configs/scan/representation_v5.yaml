@@ -1,0 +1,17 @@
+# 在 v5（训练集固定尺度归一化）下重新扫描表示层
+# 背景：表示层的最优组合（滞后1-10 / 窗2048 / 6档）是在 v2 的逐窗 z-score 下选出的，
+#       v5 换了归一化后从未重新验证。此扫描用来确认或推翻那个结论。
+variants:
+  base:      {}
+  # ---- 分位档数 ----
+  bins4:     {preprocessing.bins: 4}
+  bins8:     {preprocessing.bins: 8}
+  bins10:    {preprocessing.bins: 10}
+  # ---- 滞后阶数（gcn_steps 由脚本自动同步）----
+  lag4:      {representation.lags: [1, 2, 3, 4]}
+  lag7:      {representation.lags: [1, 2, 3, 4, 5, 6, 7]}
+  lag13:     {representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}
+  # ---- 窗长 ----
+  win1024:   {window.length: 1024, window.stride: 512}
+  win1600:   {window.length: 1600, window.stride: 800}
+  win3200:   {window.length: 3200, window.stride: 1600}

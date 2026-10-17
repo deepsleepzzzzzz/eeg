@@ -1,0 +1,13 @@
+# 滞后取样方式：连续 vs 间隔（回答导师问的「延迟是否需要间隔」）
+#
+# 基准协议 = 自动解析 status: main（当前 v5）。窗口/归一化/训练全部与主协议一致，
+# 且跑在与 variant_scan_rep_v5 相同的任务-工况（gear 30-2）上，
+# 这样可以直接和已有的 lag4 / lag7 / base(1-10) / lag13 放在同一张表里比较。
+#
+# 对照组设计（把"取几个"和"怎么取"两个问题分开）：
+#   固定维数 10： base 连续 1-10   vs  lag_odd10 间隔 {1,3,...,19}
+#   固定范围 1-5：lag_contig5 连续 1-5 vs lag_odd5 间隔 {1,3,5,7,9}
+variants:
+  lag_contig5: {representation.lags: [1, 2, 3, 4, 5]}
+  lag_odd5:    {representation.lags: [1, 3, 5, 7, 9]}
+  lag_odd10:   {representation.lags: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]}

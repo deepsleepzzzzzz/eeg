@@ -1,0 +1,132 @@
+{
+  "task": "gear",
+  "condition": "20_0",
+  "seed": 42,
+  "protocol": "seu_time_split",
+  "method": "transition_none_cnn",
+  "epoch_samples": 1600,
+  "window_stride": 800,
+  "split_seed": 42,
+  "split_sample_id_fingerprint": "95822144564aef9d4c9d6923b843830f01e75ef6ac25d18c2b396fc27e9dd8ba",
+  "best_epoch": 67,
+  "epochs_ran": 97,
+  "best_val_acc": 0.9923371647509579,
+  "best_val_loss": 0.022667530069694814,
+  "test_evaluated": true,
+  "input_shape": [
+    21,
+    6,
+    6
+  ],
+  "class_names": [
+    "Health",
+    "Chipped",
+    "Miss",
+    "Root",
+    "Surface"
+  ],
+  "train_class_counts": {
+    "Health": 916,
+    "Chipped": 916,
+    "Miss": 916,
+    "Root": 916,
+    "Surface": 916
+  },
+  "val_class_counts": {
+    "Health": 261,
+    "Chipped": 261,
+    "Miss": 261,
+    "Root": 261,
+    "Surface": 261
+  },
+  "val_acc": 0.9923371647509579,
+  "val_balanced_acc": 0.9923371647509578,
+  "val_macro_f1": 0.9923429692474178,
+  "val_confusion_matrix": [
+    [
+      261,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      261,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      258,
+      1,
+      2
+    ],
+    [
+      0,
+      0,
+      1,
+      258,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      4,
+      257
+    ]
+  ],
+  "test_loss": 0.011074947778565379,
+  "test_acc_once": 0.9969230769230769,
+  "test_evaluated_after_freeze": true,
+  "test_acc": 0.9969230769230769,
+  "test_balanced_acc": 0.9969230769230769,
+  "test_macro_f1": 0.9969170453532923,
+  "test_confusion_matrix": [
+    [
+      130,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      130,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      130,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      130,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      1,
+      128
+    ]
+  ],
+  "test_class_counts": {
+    "Health": 130,
+    "Chipped": 130,
+    "Miss": 130,
+    "Root": 130,
+    "Surface": 130
+  }
+}

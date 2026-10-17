@@ -1,0 +1,21 @@
+# 【历史口径声明】noise.reference: per_window（同 noise_v5.yaml，见该文件注释）
+# 加噪变体：AWGN，训练与验证同 SNR（匹配加噪，主流做法）
+# 训练和验证都加噪 -> 模型在含噪数据上学，在含噪数据上评（与 DDGF-Net / Dual-Channel 同口径）
+variants:
+  base: {}
+  snr20:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 20,  noise.splits: "train,val", noise.seed: 0}
+  snr10:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 10,  noise.splits: "train,val", noise.seed: 0}
+  snr4:   {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 4,   noise.splits: "train,val", noise.seed: 0}
+  snr0:   {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 0,   noise.splits: "train,val", noise.seed: 0}
+  snrm2:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -2,  noise.splits: "train,val", noise.seed: 0}
+  snrm4:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4,  noise.splits: "train,val", noise.seed: 0}
+  snrm6:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -6,  noise.splits: "train,val", noise.seed: 0}
+  snrm8:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -8,  noise.splits: "train,val", noise.seed: 0}
+  snrm10: {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -10, noise.splits: "train,val", noise.seed: 0}
+
+# ---- 判定性测试：符号化前加不同滤波（同一 SNR = -4 dB）----
+  snrm4_fir:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0, preprocessing.prefilter: fir_bandpass}
+  snrm4_wav:  {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0, preprocessing.prefilter: wavelet, preprocessing.prefilter_wavelet: db4, preprocessing.prefilter_level: 3}
+  snrm4_ma:   {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0, preprocessing.prefilter: moving_average, preprocessing.prefilter_k: 20}
+  snr0_wav:   {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 0,  noise.splits: "train,val", noise.seed: 0, preprocessing.prefilter: wavelet, preprocessing.prefilter_wavelet: db4, preprocessing.prefilter_level: 3}
+  snr4_wav:   {noise.enabled: true, noise.type: awgn, noise.reference: per_window, noise.snr_db: 4,  noise.splits: "train,val", noise.seed: 0, preprocessing.prefilter: wavelet, preprocessing.prefilter_wavelet: db4, preprocessing.prefilter_level: 3}

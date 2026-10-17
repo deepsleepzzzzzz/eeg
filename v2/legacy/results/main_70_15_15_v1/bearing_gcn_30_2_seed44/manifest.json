@@ -1,0 +1,13 @@
+{
+  "experiment_id": "bearing_gcn_30_2_seed44",
+  "protocol": "main_70_15_15",
+  "task": "bearing",
+  "condition": "30_2",
+  "model": "gcn",
+  "seed": 44,
+  "dataset_meta": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\main_70_15_15\\dataset\\bearing\\30_2\\meta.json",
+  "split_hash": "28ef2659309b5675f082d12c47166f3191857e355ab4bb121632867fea241a89",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9",
+  "metrics_path": "D:\\SEU_Fault_Diagnosis_v2\\artifacts\\main_70_15_15\\bearing_gcn_30_2_seed44\\metrics.json",
+  "test_access": "sealed"
+}

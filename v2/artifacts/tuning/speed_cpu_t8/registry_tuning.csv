@@ -1,0 +1,2 @@
+tune_id,tag,task,condition,model,seed,params,best_epoch,val_acc,macro_f1,balanced_acc,plateau_acc,plateau_std,train_val_gap,epochs_run,final_lr,run_dir
+gear_cnn_302_speed_cpu_t8_001,speed_cpu_t8,gear,302,cnn,42,{},4,1.0,1.0,1.0,0.9972820512820514,0.011380803242555386,0.0026306124734071235,34,0.0005,D:\SEU_Fault_Diagnosis_v2\artifacts\tuning\speed_cpu_t8\gear_cnn_302_speed_cpu_t8_001

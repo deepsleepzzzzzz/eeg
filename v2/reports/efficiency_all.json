@@ -1,0 +1,27 @@
+{
+  "raw_cnn": {
+    "params": 32485,
+    "flops": 40502528,
+    "input": "3 x 2048 = 6144"
+  },
+  "wdcnn": {
+    "params": 42813,
+    "flops": 1986024,
+    "input": "3 x 2048 = 6144"
+  },
+  "resnet1d": {
+    "params": 3847365,
+    "flops": 699012096,
+    "input": "3 x 2048 = 6144"
+  },
+  "cnn": {
+    "params": 27685,
+    "flops": 954496,
+    "input": "30 x 6 x 6 = 1080"
+  },
+  "gcn": {
+    "params": 54941,
+    "flops": 2017152,
+    "input": "30 x 6 x 6 = 1080"
+  }
+}

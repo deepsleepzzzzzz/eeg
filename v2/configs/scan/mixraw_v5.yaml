@@ -1,0 +1,13 @@
+# 混合表示判定性测试：转移张量 + 少量原始降采样
+# 目的：转移张量丢掉了波形形状，看补回极少量原始采样点能否补上与原始波形基线的差距。
+# raw_fuse = 每通道保留的采样点数，必须是 bins^2=36 的整数倍；
+#            36 -> 输入 [33,6,6]；72 -> [36,6,6]；144 -> [42,6,6]
+variants:
+  f36_nm4:  {representation.raw_fuse: 36,  noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0}
+  f36_nm6:  {representation.raw_fuse: 36,  noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -6, noise.splits: "train,val", noise.seed: 0}
+  f72_nm4:  {representation.raw_fuse: 72,  noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0}
+  f72_nm6:  {representation.raw_fuse: 72,  noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -6, noise.splits: "train,val", noise.seed: 0}
+  f144_nm4: {representation.raw_fuse: 144, noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -4, noise.splits: "train,val", noise.seed: 0}
+  f144_nm6: {representation.raw_fuse: 144, noise.enabled: true, noise.reference: per_window, noise.type: awgn, noise.snr_db: -6, noise.splits: "train,val", noise.seed: 0}
+  f72_clean:  {representation.raw_fuse: 72}
+  f144_clean: {representation.raw_fuse: 144}

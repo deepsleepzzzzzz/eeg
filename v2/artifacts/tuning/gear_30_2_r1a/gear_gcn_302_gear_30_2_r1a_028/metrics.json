@@ -1,0 +1,56 @@
+{
+  "experiment_id": "gear_gcn_302_gear_30_2_r1a_028",
+  "protocol": "main_70_15_15",
+  "task": "gear",
+  "condition": "30_2",
+  "model": "gcn",
+  "seed": 42,
+  "best_epoch": 62,
+  "best_val_acc": 0.9466666666666667,
+  "val_metrics": {
+    "n": 975,
+    "correct": 923,
+    "accuracy": 0.9466666666666667,
+    "macro_f1": 0.9464710923594172,
+    "balanced_accuracy": 0.9466666666666667,
+    "confusion_matrix": [
+      [
+        195,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        189,
+        4,
+        2,
+        0
+      ],
+      [
+        0,
+        3,
+        176,
+        5,
+        11
+      ],
+      [
+        0,
+        4,
+        1,
+        187,
+        3
+      ],
+      [
+        0,
+        5,
+        9,
+        5,
+        176
+      ]
+    ]
+  },
+  "dataset_split_hash": "8fbb54985f1a1d1836586d9421d12b7e4eae5db892d6437d8a982a9776947568",
+  "dataset_hash": "929ca83abc10f81af45ec504c7012218ad10ebcc6d99d79d70d4b7f16be3f5a9"
+}

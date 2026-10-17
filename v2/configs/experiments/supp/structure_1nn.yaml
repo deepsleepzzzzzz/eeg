@@ -1,0 +1,7 @@
+experiment_id: structure_1nn
+protocol: main_70_15_15_v5
+comparison_group: supp_structure
+task: all
+condition: all
+analysis: structure_1nn
+notes: uses train/validation data only; does not access the sealed test set

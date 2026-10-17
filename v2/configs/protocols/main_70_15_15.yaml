@@ -1,0 +1,86 @@
+name: main_70_15_15
+version: v1
+status: superseded_by_v2
+
+paths:
+  raw_root: data/seu
+  artifact_root: artifacts
+  sealed_test_root: artifacts/sealed_test
+
+dataset:
+  name: seu_dds
+  tasks: [gear, bearing]
+  conditions: [20_0, 30_2]
+  num_classes: 5
+  file_length: 1048560
+
+split:
+  kind: time_contiguous
+  shuffle: false
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  train_interval: "[0, 733992)"
+  val_interval: "[733992, 891276)"
+  test_interval: "[891276, 1048560)"
+  windows_per_class:
+    train: 916
+    val: 195
+    test: 195
+  totals:
+    train: 4580
+    val: 975
+    test: 975
+
+window:
+  length: 1600
+  stride: 800
+  overlap: 0.5
+  cross_split_window_overlap: forbidden
+
+preprocessing:
+  normalize: per_window_per_channel_zscore
+  bins: 6
+  bin_edges: equal_frequency_quantile
+  bin_scope: fit_on_train_only
+
+representation:
+  channels: [x, y, z]
+  lags: [1, 2, 3, 4, 5, 6, 7]
+  transition: joint_probability
+  transition_weight: probability
+  transition_multichannel: stack
+  include_self_transition: true
+  input_shape: [21, 6, 6]
+
+models:
+  cnn:
+    conv_channels: [32, 64]
+    kernel_size: 3
+    pool_size: 2
+    fc_hidden: []
+  gcn:
+    layers: 2
+    hidden: 32
+    layout: relational
+    gcn_steps: 3
+    gcn_pool: flat
+    gcn_attention: false
+
+training:
+  optimizer: adam
+  lr: 0.0005
+  weight_decay: 0.0001
+  dropout: 0.2
+  batch_size: 32
+  epochs: 200
+  early_stop_patience: 30
+  monitor: val_accuracy
+  stop_on: val_acc
+  deterministic: true
+  num_workers: 0
+  seeds: [42, 43, 44, 45, 46]
+
+evaluation:
+  metrics: [accuracy, macro_f1, balanced_accuracy]
+  test_access: sealed_once

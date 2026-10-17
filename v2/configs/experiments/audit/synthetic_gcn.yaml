@@ -1,0 +1,7 @@
+experiment_id: synthetic_gcn
+protocol: synthetic_audit
+comparison_group: synthetic_audit
+task: bearing
+condition: 20_0
+model: gcn
+seed: 42

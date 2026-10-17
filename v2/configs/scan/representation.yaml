@@ -1,0 +1,21 @@
+# 表示层变体
+variants:
+  base:           {}
+  bins8:          {preprocessing.bins: 8}
+  bins10:         {preprocessing.bins: 10}
+  bins12:         {preprocessing.bins: 12}
+  lag4:           {representation.lags: [1, 2, 3, 4]}
+  lag10:          {representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+  lag13:          {representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}
+  lag_sparse:     {representation.lags: [1, 2, 3, 4, 5, 6, 7, 10, 13, 16]}
+  lag1:           {representation.lags: [1]}
+  win1024:        {window.length: 1024, window.stride: 512}
+  win2048:        {window.length: 2048, window.stride: 1024}
+  win3200:        {window.length: 3200, window.stride: 1600}
+  win4800:        {window.length: 4800, window.stride: 2400}
+  win6400:        {window.length: 6400, window.stride: 3200}
+  lag10_win2048:  {representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], window.length: 2048, window.stride: 1024}
+  lag10_win3200:  {representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], window.length: 3200, window.stride: 1600}
+  lag13_win3200:  {representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], window.length: 3200, window.stride: 1600}
+  lag20_win3200:  {representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], window.length: 3200, window.stride: 1600}
+  bins10_lag10:   {preprocessing.bins: 10, representation.lags: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
