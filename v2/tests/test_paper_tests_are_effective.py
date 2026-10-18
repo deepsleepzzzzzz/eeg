@@ -39,6 +39,7 @@ NOISE = _load("test_paper_noise_tables")
 PROSE = _load("test_paper_prose_numbers")
 FIGCONS = _load("test_figure_caption_consistency")
 FIGURES = _load("test_paper_figures")
+FCC = _load("test_figure_caption_consistency")
 
 
 def _parse_tables(paper_text: str) -> dict:
@@ -173,3 +174,25 @@ def test_figure_explanation_mutation_is_caught(original):
     with pytest.raises(AssertionError):
         FIGURES.test_every_figure_has_an_explanation(mutated.split("\n"))
     FIGURES.test_every_figure_has_an_explanation(original.split("\n"))
+
+# --------------------------------------------------------------------------- #
+# 变异测试（参数化）：证明"摘要/结论同口径"与"题注关键词"这两批新测试真的有效
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize("needle", PROSE.HEADLINE_NUMBERS)
+def test_headline_number_mutation_is_caught(original, needle):
+    """把某个核心数字全部改成错值 → 摘要/结论一致性测试必须失败。"""
+    mutated = original.replace(needle, "999.99%")
+    with pytest.raises(AssertionError):
+        PROSE.test_abstract_conclusion_headline_numbers_consistent(mutated, needle)
+    PROSE.test_abstract_conclusion_headline_numbers_consistent(original, needle)
+
+
+@pytest.mark.parametrize("label,tokens", sorted(FCC.FIG_TOKENS.items()))
+def test_figure_caption_token_mutation_is_caught(original, label, tokens):
+    """把某张图题注里的关键词改掉 → 题注参数测试必须失败。"""
+    tok = tokens[0]
+    mutated = original.replace(tok, "ZZZ_NONEXISTENT_TOKEN")
+    with pytest.raises(AssertionError):
+        FCC.test_every_figure_caption_declares_key_parameters(mutated, label, tokens)
+    FCC.test_every_figure_caption_declares_key_parameters(original, label, tokens)
+

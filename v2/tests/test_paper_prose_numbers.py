@@ -423,3 +423,23 @@ def test_figure13_body_numbers_match_tables(paper):
              "−6 dB 处 86.1% vs 93.5%",
              "−10 dB 处本文反而更高（84.4% vs 71.2%）",
              "1/552")
+
+# 摘要与结论必须同口径的数字（防前后表述漂移）
+HEADLINE_NUMBERS = [
+    "99.68%–100%", "27,685", "1/139", "1/552",
+    "84.0%", "84.4%", "70.5%", "1080", "参考功率口径",
+]
+
+
+@pytest.mark.parametrize("needle", HEADLINE_NUMBERS)
+def test_abstract_conclusion_headline_numbers_consistent(paper, needle):
+    """摘要与结论里都出现的核心数字，必须两处都还在（防止改一处忘另一处）。"""
+    def section(start: str, end: str) -> str:
+        i = paper.index(start)
+        j = paper.index(end, i)
+        return paper[i:j]
+    abstract = section("## 摘要", "## 1 引言")
+    conclusion = section("## 6 结论", "## 参考文献")
+    assert needle in abstract, f"摘要里没有『{needle}』"
+    assert needle in conclusion, f"结论里没有『{needle}』"
+

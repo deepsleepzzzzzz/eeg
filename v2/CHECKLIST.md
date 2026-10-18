@@ -18,7 +18,7 @@ python verify_all.py
 
 | 检查 | 内容 | 当前 |
 |---|---|---|
-| 单元测试 | `pytest tests` | **125 项** |
+| 单元测试 | `pytest tests` | **259 项** |
 | 端到端审计 | `src/audit_main.py`（从原始 CSV 独立复算、泄漏、标签顺序、退化窗） | 44 项 |
 | 数据溯源审计 | `src/audit_provenance.py`（齿轮/轴承不串、A~F 全通过） | 4/4 工况 |
 | 论文数字溯源 | `src/audit_paper_numbers.py`（论文每个数字追到本项目 run，协议必须是 v5） | 全通过 |
@@ -29,7 +29,7 @@ python verify_all.py
 
 ## 自动执行
 
-`.git/hooks/pre-commit` 已在每次 `git commit` 前强制跑 **pytest tests**（当前 125 项）。
+`.git/hooks/pre-commit` 已在每次 `git commit` 前强制跑 **pytest tests**（当前 259 项）。
 未通过则拒绝提交。跳过：`git commit --no-verify`（**禁止**，见 AGENTS.md 硬规则第 5 条）。
 
 变异测试因为会改动数据缓存，**不在钩子里**，请手动跑 `python verify_all.py`。

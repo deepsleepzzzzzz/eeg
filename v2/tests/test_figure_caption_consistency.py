@@ -87,3 +87,32 @@ def test_other_figure_captions_declare_key_attributes(paper):
         c = caption(paper, label)
         for token in tokens:
             assert token in c, f"图 {label} 题注缺少『{token}』：{c}"
+
+# 每张图题注必须声明其关键参数（键 = 图号，值 = 必须出现的关键词）
+FIG_TOKENS = {
+    "1": ["总流程", "CNN/GCN"],
+    "2": ["振动信号", "健康 vs 故障", "x/y/z 三通道"],
+    "3": ["机理示意", "红色标出故障位置", "非实物照片"],
+    "4": ["符号互信息", "随滞后", "B=6"],
+    "5": ["滞后取样", "连续", "间隔", "3 个种子"],
+    "6": ["归一化互信息", "量化档数", "滞后 1"],
+    "7": ["混淆矩阵", "验证集", "5 个种子"],
+    "8": ["倒数第二层特征", "64 维", "t-SNE", "随机种子 42"],
+    "9": ["参数量–精度", "3 个种子", "Pareto"],
+    "10": ["相对类均值", "第 3 个滞后", "行归一化"],
+    "11(a)": ["齿轮任务", "转移矩阵差值", "TV"],
+    "11(b)": ["轴承任务", "转移矩阵差值", "TV"],
+    "12": ["参考功率口径", "验证集"],
+    "13": ["AWGN", "验证集", "齿轮 20-0", "反超"],
+    "S1": ["t-SNE", "两种工况叠加"],
+    "S2": ["四个任务-工况", "行归一化"],
+}
+
+
+@pytest.mark.parametrize("label,tokens", sorted(FIG_TOKENS.items()))
+def test_every_figure_caption_declares_key_parameters(paper, label, tokens):
+    """每张图的题注都要写明"这图是怎么画的/画了什么"的关键词（图文适配的兜底）。"""
+    c = caption(paper, label)
+    for tok in tokens:
+        assert tok in c, f"图 {label} 题注缺少『{tok}』：{c}"
+
