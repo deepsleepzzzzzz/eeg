@@ -17,6 +17,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from data.seu_dds import class_names, normalize_condition  # noqa: E402
+from data.build_dataset import validate_cache  # noqa: E402
 from config.protocol import (  # noqa: E402
     artifact_root,
     build_train_omega,
@@ -93,7 +94,7 @@ def train_one(experiment_cfg: dict, protocol_cfg: dict, evaluate_test: bool, con
 
     data_dir = dataset_dir(protocol_cfg, task, condition)
     meta_path = data_dir / "meta.json"
-    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    meta = validate_cache(protocol_cfg, task, condition, include_test=evaluate_test)
     names = list(class_names(task))
 
     X_train, y_train = load_arrays(data_dir, "train")
@@ -207,7 +208,8 @@ def train_one(experiment_cfg: dict, protocol_cfg: dict, evaluate_test: bool, con
         # 可选：把最佳权重落盘，供 t-SNE 等分析脚本提取 embed()（默认关闭，不影响已有结果）
         torch.save({"state": best["state"], "experiment_id": experiment_id,
                     "protocol": protocol_name, "task": task, "condition": condition,
-                    "model": model_name, "seed": seed}, run_dir / "best_state.pt")
+                    "model": model_name, "seed": seed,
+                    "cache_fingerprint": meta["cache_fingerprint"]}, run_dir / "best_state.pt")
         print(f"saved state {run_dir / 'best_state.pt'}")
     best_val_loss, best_val_acc, y_true, y_pred = evaluate(model, val_loader, device, criterion, predictions=True)
     best["val_acc"] = float(best_val_acc)
@@ -242,6 +244,7 @@ def train_one(experiment_cfg: dict, protocol_cfg: dict, evaluate_test: bool, con
         "lr_scheduler": scheduler_record,
         "dataset_split_hash": meta.get("split_hash"),
         "dataset_hash": meta.get("dataset_hash"),
+        "cache_fingerprint": meta["cache_fingerprint"],
     }
     if evaluate_test:
         sdir = sealed_test_dir(protocol_cfg, task, condition)
@@ -265,6 +268,7 @@ def train_one(experiment_cfg: dict, protocol_cfg: dict, evaluate_test: bool, con
         "dataset_meta": str(meta_path),
         "split_hash": meta.get("split_hash"),
         "dataset_hash": meta.get("dataset_hash"),
+        "cache_fingerprint": meta["cache_fingerprint"],
         "metrics_path": str(run_dir / "metrics.json"),
         "history_path": str(run_dir / "history.json"),
         "lr_scheduler": scheduler_record,

@@ -7,7 +7,7 @@ from __future__ import annotations
 import csv
 import json
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import numpy as np
 
@@ -67,7 +67,14 @@ def resolve_run_dir(recorded_path: str) -> Path:
     所以**不能只按 run 目录名找**（会串到别的版本）。这里用记录路径里的
     "原协议目录名"做限定：artifacts/<协议目录>/<run>/… → legacy/{results,scans}/<协议目录>/<run>/。
     """
-    run = Path(recorded_path).parent
+    # Historical ledgers keep their original absolute paths. Resolve their
+    # project-relative suffix here, without reading a different checkout.
+    parts = PurePosixPath(recorded_path.replace("\\", "/")).parts
+    if "artifacts" in parts:
+        local = PROJECT_ROOT.joinpath(*parts[parts.index("artifacts"):]).parent
+        if (local / "manifest.json").exists():
+            return local
+    run = Path(*parts).parent
     if (run / "manifest.json").exists():
         return run
     hint = run.parent.name
@@ -93,7 +100,8 @@ def cache_meta_matches(recorded: Path, want: Path) -> bool:
         return False
     if recorded.resolve() == want.resolve():
         return True
-    if len(recorded.parts) < 3 or recorded.parts[-3:] != want.parts[-3:]:
+    recorded_parts = PurePosixPath(str(recorded).replace("\\", "/")).parts
+    if len(recorded_parts) < 3 or recorded_parts[-3:] != want.parts[-3:]:
         return False
     if not want.exists():
         return False
@@ -281,7 +289,7 @@ def main():
     bad_num, bad_test, dup = 0, [], 0
     seen = set()
     for r in rows:
-        mp = Path(r["metrics_path"])
+        mp = resolve_run_dir(r["metrics_path"]) / "metrics.json"
         if not mp.exists():
             bad_num += 1; continue
         m = json.loads(mp.read_text(encoding="utf-8"))
@@ -318,7 +326,7 @@ def main():
         key = (r["task"], r["condition"])
         if key not in cache_hash:
             continue
-        m = json.loads(Path(r["metrics_path"]).read_text(encoding="utf-8"))
+        m = json.loads((resolve_run_dir(r["metrics_path"]) / "metrics.json").read_text(encoding="utf-8"))
         checked += 1
         if m.get("dataset_split_hash") != cache_hash[key]:
             mismatch.append(r["experiment_id"])

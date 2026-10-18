@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from utils.console import safe_print, setup_utf8_console
 
 setup_utf8_console()
-PY = str(ROOT / ".venv" / "Scripts" / "python.exe")
+PY = sys.executable
 FILES = ("X_train.npy", "y_train.npy", "X_val.npy", "y_val.npy", "meta.json")
 
 

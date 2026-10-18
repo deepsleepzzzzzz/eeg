@@ -39,6 +39,74 @@ from representation.recurrence_plot import preprocess_signal  # noqa: E402
 from representation.state_transition import build_state_transition, fit_train_edges  # noqa: E402
 from utils.io_utils import ensure_dir, save_json  # noqa: E402
 
+CACHE_FORMAT_VERSION = 1
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def cache_spec(protocol: dict) -> dict:
+    """Only data-affecting settings belong to a reusable representation cache."""
+    return {
+        **{key: protocol.get(key, {}) for key in
+           ("dataset", "split", "window", "preprocessing", "representation", "noise")},
+        "raw_root": str(protocol_raw_root(protocol).resolve()),
+    }
+
+
+def source_digests(protocol: dict, task: str, condition: str) -> dict:
+    folder = task_dir(protocol_raw_root(protocol), task)
+    return {class_file(task, name, condition): file_sha256(folder / class_file(task, name, condition))
+            for name in class_names(task)}
+
+
+def integrity_fingerprint(integrity: dict) -> str:
+    return hashlib.sha256(json.dumps(integrity, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+def validate_cache(protocol: dict, task: str, condition: str, *,
+                   check_sources: bool = False, include_test: bool = False) -> dict:
+    """Reject stale/partial/tampered caches before training; test stays sealed by default."""
+    out_dir = dataset_dir(protocol, task, condition)
+    meta_path = out_dir / "meta.json"
+
+    def reject(reason):
+        raise RuntimeError(f"Invalid cache {out_dir}: {reason}; rebuild with --force")
+
+    if not meta_path.exists():
+        reject("missing completion metadata")
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    integrity = meta.get("cache_integrity") or {}
+    if meta.get("meta_only") or integrity.get("version") != CACHE_FORMAT_VERSION:
+        reject("metadata-only or legacy cache without integrity records")
+    if meta.get("task") != task or meta.get("condition") != condition:
+        reject("task or condition mismatch")
+    if integrity.get("spec") != cache_spec(protocol):
+        reject("data configuration mismatch")
+    if meta.get("cache_fingerprint") != integrity_fingerprint(integrity):
+        reject("metadata integrity mismatch")
+    metadata = {key: value for key, value in meta.items() if key not in ("cache_integrity", "cache_fingerprint")}
+    if integrity.get("metadata") != integrity_fingerprint(metadata):
+        reject("fitted metadata changed")
+    if check_sources and integrity.get("sources") != source_digests(protocol, task, condition):
+        reject("raw CSV contents changed")
+    splits = ("train", "val", "test") if include_test else ("train", "val")
+    for split in splits:
+        folder = sealed_test_dir(protocol, task, condition) if split == "test" else out_dir
+        for kind in ("X", "y"):
+            name = f"{kind}_{split}.npy"
+            path = folder / name
+            expected = integrity.get("arrays", {}).get(name)
+            if not expected or not path.exists() or file_sha256(path) != expected:
+                reject(f"missing or changed {name}")
+    return meta
+
+
 def split_intervals(protocol: dict) -> dict:
     n = int(protocol["dataset"].get("file_length", 1_048_560))
     split = protocol["split"]
@@ -125,9 +193,17 @@ def build_condition(protocol: dict, task: str, condition: str, force: bool = Fal
     raw_dir = protocol_raw_root(protocol)
     out_dir = dataset_dir(protocol, task, condition)
     meta_path = out_dir / "meta.json"
+    cache_files = [out_dir / f"{kind}_{split}.npy" for split in ("train", "val") for kind in ("X", "y")]
+    if not force and any(path.exists() for path in cache_files):
+        meta = validate_cache(protocol, task, condition, check_sources=True, include_test=include_test)
+        print(f"{task} {condition}: verified cache, skip")
+        return meta
+    # A fresh clone contains tracked metadata but no ignored arrays: rebuild it.
+    # A cache with a completion record must never hide deletion of all its arrays.
     if meta_path.exists() and not force:
-        print(f"{task} {condition}: meta exists, skip")
-        return json.loads(meta_path.read_text(encoding="utf-8"))
+        old_meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        if old_meta.get("cache_integrity"):
+            validate_cache(protocol, task, condition, check_sources=True, include_test=include_test)
 
     length, stride = window_cfg(protocol)
     intervals = split_intervals(protocol)
@@ -154,6 +230,7 @@ def build_condition(protocol: dict, task: str, condition: str, force: bool = Fal
         return meta
 
     folder = task_dir(raw_dir, task)
+    sources = source_digests(protocol, task, condition)
     splits_to_build = ["train", "val"] + (["test"] if include_test else [])
     by_split = {name: [] for name in splits_to_build}
     y_split = {name: [] for name in splits_to_build}
@@ -212,7 +289,11 @@ def build_condition(protocol: dict, task: str, condition: str, force: bool = Fal
     method_cfg["bin_edges"] = edges.tolist()
 
     ensure_dir(str(out_dir))
+    # Revoke completion before the first overwrite. An interrupted rebuild cannot
+    # leave mixed arrays looking like a completed cache.
+    meta_path.unlink(missing_ok=True)
     arrays = {}
+    array_digests = {}
     for split in splits_to_build:
         X = encode_windows(by_split[split], method_cfg)
         y = np.asarray(y_split[split], dtype=np.int64)
@@ -220,6 +301,9 @@ def build_condition(protocol: dict, task: str, condition: str, force: bool = Fal
         ensure_dir(str(save_dir))
         np.save(save_dir / f"X_{split}.npy", X)
         np.save(save_dir / f"y_{split}.npy", y)
+        for kind in ("X", "y"):
+            name = f"{kind}_{split}.npy"
+            array_digests[name] = file_sha256(save_dir / name)
         arrays[split] = {"n": int(len(y)), "X_shape": list(X.shape)}
         print(f"{task} {condition} {split}: {X.shape}", flush=True)
 
@@ -229,7 +313,16 @@ def build_condition(protocol: dict, task: str, condition: str, force: bool = Fal
     meta["val_class_counts"] = class_count_dict(np.asarray(y_split["val"]), names)
     test_count = len(window_starts(intervals["test"][0], intervals["test"][1], length, stride))
     meta["test_class_counts"] = {name: int(test_count) for name in names}
-    save_json(meta, str(meta_path))
+    if sources != source_digests(protocol, task, condition):
+        raise RuntimeError("Raw CSV contents changed during cache construction; rebuild with --force")
+    meta["cache_integrity"] = {
+        "version": CACHE_FORMAT_VERSION, "spec": cache_spec(protocol), "sources": sources,
+        "arrays": array_digests, "metadata": integrity_fingerprint(meta),
+    }
+    meta["cache_fingerprint"] = integrity_fingerprint(meta["cache_integrity"])
+    pending_meta = meta_path.with_suffix(".json.tmp")
+    save_json(meta, str(pending_meta))
+    pending_meta.replace(meta_path)
     return meta
 
 

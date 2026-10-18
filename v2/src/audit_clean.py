@@ -6,10 +6,11 @@ import ast, csv, json, sys
 from pathlib import Path
 import numpy as np
 
-ROOT = Path(r"D:\SEU_Fault_Diagnosis_v2")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from utils.console import setup_utf8_console  # noqa: E402
 from config.protocol import load_protocol, dataset_dir, sealed_test_dir  # noqa: E402
+from audit_main import resolve_run_dir  # noqa: E402
 from data.build_dataset import split_intervals  # noqa: E402
 from data.seu_dds import class_names, window_starts, load_seu_csv, class_file, task_dir, vibration_xyz  # noqa: E402
 from representation.recurrence_plot import preprocess_signal  # noqa: E402
@@ -52,7 +53,7 @@ print("② 测试集是否被访问")
 rows = list(csv.DictReader(open(ROOT / "registry.csv", encoding="utf-8")))
 badtest = []
 for r in rows:
-    run = Path(r["metrics_path"]).parent
+    run = resolve_run_dir(r["metrics_path"])
     m = json.loads((run / "metrics.json").read_text(encoding="utf-8"))
     man = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
     if "test_metrics" in m or (run / "test_predictions.csv").exists() or man.get("test_access") != "sealed":
@@ -125,7 +126,7 @@ import hashlib
 sig = {}
 for r in rows:
     if r["task"] == "gear" and r["condition"] == "30_2" and r["model"] == "cnn":
-        run = Path(r["metrics_path"]).parent
+        run = resolve_run_dir(r["metrics_path"])
         hist = json.loads((run / "history.json").read_text(encoding="utf-8"))
         first = ",".join(f"{h['train_loss']:.6f}" for h in hist[:3])   # 前 3 轮的训练损失
         sig[int(r["seed"])] = (hashlib.sha256(first.encode()).hexdigest()[:10], len(hist))

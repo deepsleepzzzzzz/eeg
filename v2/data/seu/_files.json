@@ -1,0 +1,102 @@
+[
+  {
+    "path": "gearbox/bearingset/ball_20_0.csv",
+    "sha": "5c31daf260048692b52466ce5751e097840f11b5",
+    "size": 79957011
+  },
+  {
+    "path": "gearbox/bearingset/ball_30_2.csv",
+    "sha": "d9c40a39b0a6d09b5384c2e4dc70a4d45b55d409",
+    "size": 80200560
+  },
+  {
+    "path": "gearbox/bearingset/comb_20_0.csv",
+    "sha": "f4b34b4255fc14405fcb2019e840afcef799ef17",
+    "size": 79868771
+  },
+  {
+    "path": "gearbox/bearingset/comb_30_2.csv",
+    "sha": "78e7a492c293b2cd1857156c35276ba02a46433d",
+    "size": 80269961
+  },
+  {
+    "path": "gearbox/bearingset/health_20_0.csv",
+    "sha": "418d32421da25a88992b92107ef91a447ecfa275",
+    "size": 80061736
+  },
+  {
+    "path": "gearbox/bearingset/health_30_2.csv",
+    "sha": "9b54d93b4a0583837cf5ef4336760a7a727d4785",
+    "size": 80208353
+  },
+  {
+    "path": "gearbox/bearingset/inner_20_0.csv",
+    "sha": "d90f53bb6143a0ee366218878304572d0eb2a9d6",
+    "size": 80129050
+  },
+  {
+    "path": "gearbox/bearingset/inner_30_2.csv",
+    "sha": "156ecf9446e17bc1fe7c3da169973793228c45db",
+    "size": 80291118
+  },
+  {
+    "path": "gearbox/bearingset/outer_20_0.csv",
+    "sha": "58d10225a6b25abefff62aae46a696215abf5e27",
+    "size": 79732483
+  },
+  {
+    "path": "gearbox/bearingset/outer_30_2.csv",
+    "sha": "154cdc24b50d4ed4278313ebcc41ba80737f00bd",
+    "size": 80174707
+  },
+  {
+    "path": "gearbox/gearset/Chipped_20_0.csv",
+    "sha": "38cb396de0e0f32aa5d4786d982bcb499a4c77de",
+    "size": 80055432
+  },
+  {
+    "path": "gearbox/gearset/Chipped_30_2.csv",
+    "sha": "b1b9fe80a72abf853ef40cc9f80f00030fec501c",
+    "size": 80257645
+  },
+  {
+    "path": "gearbox/gearset/Health_20_0.csv",
+    "sha": "2eeda4ce45649972da0c5b01fe489cb504d8175c",
+    "size": 80323854
+  },
+  {
+    "path": "gearbox/gearset/Health_30_2.csv",
+    "sha": "c5bfcf7f5519a72923cc2fe321ff8b14ad2f532d",
+    "size": 80317583
+  },
+  {
+    "path": "gearbox/gearset/Miss_20_0.csv",
+    "sha": "4deca60a9be31ae64ad03b76565611c045287717",
+    "size": 80165741
+  },
+  {
+    "path": "gearbox/gearset/Miss_30_2.csv",
+    "sha": "926207e37dd78dfd4263e2852ca25d79f26ccb16",
+    "size": 80290321
+  },
+  {
+    "path": "gearbox/gearset/Root_20_0.csv",
+    "sha": "b1fec5e94366517495acdfe0f8ae702d86188112",
+    "size": 80220486
+  },
+  {
+    "path": "gearbox/gearset/Root_30_2.csv",
+    "sha": "173954e6a0324a07f716f3483eef84b7c6aeaa57",
+    "size": 80270482
+  },
+  {
+    "path": "gearbox/gearset/Surface_20_0.csv",
+    "sha": "9bb7fb21beef7980b34183f812d82a6482de65d3",
+    "size": 80115358
+  },
+  {
+    "path": "gearbox/gearset/Surface_30_2.csv",
+    "sha": "e65cdbc9a8c1adfbb7547cd5fe18c4c7282bb60d",
+    "size": 80296794
+  }
+]

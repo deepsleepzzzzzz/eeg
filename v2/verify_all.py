@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-PY = str(ROOT / ".venv" / "Scripts" / "python.exe")
+PY = sys.executable
 
 # 子进程统一用 UTF-8 输出：否则 GBK 控制台/管道下，脚本里回显外部输出会抛
 # UnicodeEncodeError 并带着非零码退出 —— 表现为"某项检查失败"，其实是编码问题。
