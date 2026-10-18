@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from data.seu_dds import CONDITIONS, class_names, normalize_condition
+from data.seu_cache import validate_cache
 from experiments.train_runtime import (
     evaluate,
     get_device,
@@ -69,6 +70,8 @@ def train_one(
     condition = normalize_condition(condition)
     data_dir = resolve_path(cfg.data.output_root) / task / condition
     meta = load_json(str(data_dir / "meta.json"))
+    validate_cache(meta, cfg, task, condition, data_dir,
+                   splits=("train", "val", "test") if evaluate_test else ("train", "val"))
     X_train, y_train = load_array_pair(data_dir, "train")
     X_val, y_val = load_array_pair(data_dir, "val")
     X_test = y_test = None
@@ -152,6 +155,7 @@ def train_one(
                     "val_acc": best_val_acc,
                     "val_loss": best_val_loss,
                     "cfg": OmegaConf.to_container(cfg, resolve=True),
+                    "cache_fingerprint": meta["cache_fingerprint"],
                 },
                 ckpt_path,
             )
@@ -179,7 +183,7 @@ def train_one(
             title,
             seed=seed,
         )
-        stem = paper_stem(task, condition, method_name(cfg))
+        stem = paper_stem(task, condition, method_name(cfg), seed=seed)
         shutil.copy2(figs["val_confusion"], paper_dir / f"{stem}_confusion.png")
         shutil.copy2(figs["val_tsne"], paper_dir / f"{stem}_tsne.png")
 
@@ -193,6 +197,7 @@ def train_one(
         "window_stride": int(cfg.data.get("window_stride", cfg.data.epoch_samples)),
         "split_seed": int(meta["split_seed"]),
         "split_sample_id_fingerprint": str(meta["split_sample_id_fingerprint"]),
+        "cache_fingerprint": meta["cache_fingerprint"],
         "best_epoch": int(best_epoch),
         "epochs_ran": int(len(train_losses)),
         "best_val_acc": float(best_val_acc),

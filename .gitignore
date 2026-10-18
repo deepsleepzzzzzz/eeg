@@ -20,3 +20,12 @@ datas/experiments_3way/
 .DS_Store
 .idea/
 .vscode/
+
+# 临时/中间产物（不入库）
+.tmp_audio/
+.tmp_verify/
+.tmp_out/
+tmp_teacher_video/
+.trash/
+*.zip
+doc/references/.patch_refs/backup_*.docx

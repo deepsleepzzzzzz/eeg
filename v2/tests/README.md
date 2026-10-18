@@ -1,7 +1,13 @@
-# Tests —— 259 项检查
+# Tests —— 检查入口与覆盖范围
 
 一条命令跑完（含审计与变异测试）：`python verify_all.py`（约 2.5 分钟）。
 只跑单元测试：`python -m pytest tests -q`（约 1 分钟，pre-commit 钩子跑的就是这条）。
+实际项数以运行输出为准；检查入口和变异测试均沿用启动它们的 Python 解释器。
+
+## 缓存与交付回归
+
+- `test_cache_integrity.py` —— 新克隆重建、配置/来源/数组/元数据失配、重建中断、训练前拒绝和测试集封闭；契约见 [数据模块](../src/data/README.md)。
+- `test_review_portability.py` —— 官方清单缺失/错配、Git 忽略例外、解释器选择和历史登记路径迁移；清单来源见 [数据溯源](../data/DATA_PROVENANCE.md)。
 
 ## 论文专用的五个核心测试
 
@@ -46,5 +52,5 @@
 ## 不用 pytest 也能跑
 
 ```powershell
-D:\SEU_Fault_Diagnosis_v2\.venv\Scripts\python.exe D:\SEU_Fault_Diagnosis_v2\tests\run_all.py
+python tests/run_all.py
 ```

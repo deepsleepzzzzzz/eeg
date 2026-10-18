@@ -1,0 +1,1310 @@
+Highlights
+FE-MCFormer: a novel time–frequency interpretable architecture for machinery fault diagnosis
+under strong noise environments
+Yuhan Yuan, Xiaomo Jiang, Haibin Yang, Haixin Zhao, Shengbo Wang, Xueyu Cheng, Jigang Meng
+•Anovelnetworkarchitectureisproposedfortime–frequencyinterpretablemachineryfaultdiagnosisunderstrongnoise
+conditions.
+•A frequency adaptive learning layer is proposed for first layer interpretable diagnosis.
+•A multiscale time–frequency fusion module is designed to enhance both the noise robustness and interpretability of
+the proposed method.
+•The effectiveness and interpretability of the proposed model are validated on a bearing dataset and a centrifugal
+compressor dataset.
+arXiv:2505.06285v3  [eess.SP]  21 Jul 2026
+FE-MCFormer: a novel time–frequency interpretable architecture for
+machinery fault diagnosis under strong noise environments
+Yuhan Yuana, Xiaomo Jianga,b,c,∗, Haibin Yanga, Haixin Zhaoa, Shengbo Wanga, Xueyu Chengd and
+Jigang Menga
+aSchool of Energy and Power Engineering, Dalian University of Technology, Dalian, 116024, China
+bState Key Lab of Structural Analysis, Optimization and CAE Software for Industrial Equipment, Dalian University of Technology, Dalian, 116024, China
+cProvincial Key Lab of Digital Twin for Industrial Equipment, Dalian University of Technology, Dalian, 116024, China
+dCollege of Arts and Sciences, Clayton State University, Morrow, GA, 30260, USA
+ARTICLE INFO
+Keywords:
+Turbomachinery
+Deep learning
+Intelligent fault diagnosis
+Noise-robust learning
+Interpretability
+ABSTRACT
+Interpretable fault diagnosis (FD) plays a critical role in industrial manufacturing, as it improves
+human–machine understanding and operational efficiency. However, harsh operating environments
+oftenintroducestrongbackgroundinterferenceornoise,whichweakensthediscriminativecapability
+andinterpretabilityofexistingFDmethods.Toaddressthisissue,thispaperproposesFE-MCFormer,
+a time–frequency fusion framework for robust and time–frequency interpretable fault diagnosis
+under strong noise conditions. A frequency adaptive learning layer (FALL) is developed to perform
+learnable spectral reconstruction, which explicitly suppresses noise-dominated frequency responses
+whilepreservingfault-sensitiveharmonicstructures.Furthermore,amultiscaletime–frequencyfusion
+(MSTFF)architectureisdesignedtojointlycapturelocalizedimpulsivecharacteristicsandstructured
+global spectral interactions. Extensive experiments on a rolling bearing dataset and a real-world
+centrifugalcompressordatasetdemonstratethattheproposedmethodachievesstableandinterpretable
+diagnostic performance under severe noise environments down to−10dB SNR. The results indicate
+that FE-MCFormer provides an effective framework for turbomachinery fault diagnosis in complex
+noisy environments.
+1. Introduction
+1.1. Background and Motivation
+Rotatingmachineryplaysacriticalroleinmodernindus-
+trial systems in energy, manufacturing, and process indus-
+tries [1, 2]. The operational reliability of these machines di-
+rectlyaffectsproductionsafety,energyefficiency,andmain-
+tenance costs. Unexpected failures of rotating components
+mayleadtocatastrophicsystembreakdownsandsubstantial
+economic losses [3]. Therefore, accurate and robust fault
+diagnosis (FD) has become an essential requirement for
+intelligentconditionmonitoringandpredictivemaintenance
+of rotating machinery.
+Fault diagnosis methods based on traditional signal pro-
+cessing extract handcrafted features from time, frequency,
+and time–frequency domains. For example, Jiang et al. [4]
+developed a time–frequency fusion approach of the spec-
+tral amplitude to capture the characteristic frequencies of
+vibration signals. Chen et al. [5] developed a hierarchical
+improved envelope spectrum entropy method to extract in-
+trinsic fault features of mechanical vibration signals. Kou
+et al. [6] applied a novel empirical mode decomposition
+(EMD) approach with empirical entropy (EE) to extract
+features and validated the method on mine hoist sheave
+∗Corresponding author at: State Key Lab of Structural Analysis, Opti-
+mizationandCAESoftwareforIndustrialEquipment,DalianUniversityof
+Technology, Dalian, 116024, China.
+yuhanyuan@mail.dlut.edu.cn(Y. Yuan);
+xiaomojiang2019@dlut.edu.cn(X. Jiang);yanghaibin@mail.dlut.edu.cn(H.
+Yang);zhaohaixin@dlut.edu.cn(H. Zhao);s2013566862@mail.dlut.edu.cn
+(S. Wang);xueyucheng@clayton.edu(X. Cheng);
+mengjigang@mail.dlut.edu.cn(J. Meng)
+bearingfaultdetection.Zhouetal.[7]proposedacontinuous
+hierarchical fractional range entropy approach for machine
+FD in noisy environments. Although these approaches have
+achievednotablesuccessinlaboratorysettings,theyusually
+requireextensiveexpertknowledgeandshowlimitedrobust-
+ness under strong noise environments or complex industrial
+operating conditions. This restricts their scalability and ap-
+plicability in practical industrial informatics systems.
+Comparedwithtraditionalsignalprocessingapproaches,
+machine learning (ML) methods can extract more valuable
+fault characteristics from large historical datasets, making
+them a promising approach for machinery FD. For ex-
+ample, Ren et al. [8] introduced an unsupervised across-
+tasks meta-learning strategy to enable few-shot FD under
+varying working conditions. Zhang et al. [9] developed a
+representation-based transfer learning approach for enhanc-
+ing few-shot bearing fault classification. However, machine
+learning approaches exhibit limitations in modeling high-
+dimensionalandnonlinearvariations,whichcanhindertheir
+effectiveness in complex industrial scenarios.
+Withtherapiddevelopmentofartificialintelligenceand
+data-driventechniques,data-drivenFDmethodshavegained
+widespread attention. By automatically extracting discrimi-
+native representations from raw signals, data-driven mod-
+els reduce the reliance on manual feature engineering and
+demonstratesuperiorperformanceundercertainconditions.
+For example, Shao et al. [10] developed a novel multiscale
+network for few-shot rotating machinery fault diagnosis. Jia
+et al. [11] developed a multiscale attention convolutional
+network to reduce noise from vibrational signals. Chen et
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 1 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+al. [12] proposed a multi-channel calibrated transformer for
+few-shot bearing fault diagnosis. Liao et al. [13] proposed
+a physics-informed blind deconvolution network for robust
+bearing fault diagnosis. Chen et al. [14] developed a multi-
+scale convolutional network for bearing fault diagnosis un-
+der noisy conditions. Wang et al. [15] introduced a novel
+network, which integrates 1D and 2D feature information
+for efficient feature extraction and classification. Although
+the aforementioned methods have significantly advanced
+machinery health monitoring, the internal mechanisms un-
+derlying their diagnostic decisions are rarely investigated.
+This lack of interpretability may weaken the reliability and
+practical applicability of intelligent operation and mainte-
+nance systems in real industrial scenarios.
+Toaddressthislimitation,recentstudieshaveintroduced
+interpretability capability into FD models. These methods
+are typically categorized into time-domain and frequency-
+domaininterpretability.Specifically,time-domaininterpretabil-
+ity is usually achieved by guiding the model to focus on
+critical temporal segments, such as fault-induced impulsive
+regions in signals. In comparison, frequency-domain meth-
+ods generally integrate prior knowledge from signal pro-
+cessingtoassociatelearnedrepresentationswithmeaningful
+spectral components.
+Time-domain interpretable methods usually incorporate
+priorconstraintsorattentionmechanismstoguidenetworks
+toward informative temporal regions, such as transient im-
+pulses induced by mechanical faults. For example, Li et al.
+[16] proposed an interpretable variational transformer with
+a Dirichlet prior for fault diagnosis and analyzed its inter-
+pretability through attention weight visualization. Han et al.
+[17]developedalocalattentionnetworkfordegradationfea-
+ture extraction of industrial robots, further explaining how
+the attention mechanism highlights degradation-related fea-
+tures.Zhang etal.[18] proposedaKAN-Transformer-based
+rotating machinery FD framework and conducted weight
+heatmap analysis to reveal the internal operating mecha-
+nism of the network. Although these methods [16, 17, 18]
+demonstrate promising diagnostic performance by extract-
+ing interpretable time-domain features, their applicability
+maybelimitedwhenfaultmodesdonotexhibitpronounced
+time-domain impulsive signatures. For instance, in sliding
+bearings of large-scale centrifugal compressor units, fault-
+relatedinformationisoftenmoreclearlyreflectedinspectral
+variations and harmonic components.
+Methods focusing on frequency-domain interpretability
+usually embed prior spectral knowledge or physical con-
+straints into neural networks. The interpretability of these
+methods is commonly examined by visualizing the learned
+spectral weights or reconstructed frequency components.
+For example, Liu et al. [19] proposed a Transformer-based
+interpretable network for few-shot bearing fault diagnosis.
+Wang et al.[20] proposed a global explainable convolu-
+tional neural network for bearing fault diagnosis. Chen et
+al.[21]proposedanovelinterpretablebearingfaultdiagnosis
+method based on convolutional neural network and varia-
+tional inference. Zhou et al.[22] proposed a CNN-LSTM-
+based interpretable network for rotating machinery fault
+diagnosis.Althoughtheabovemethods[19,20,21,22]show
+greatpotentialininterpretablefaultdiagnosis,theaforemen-
+tioned studies rarely consider the influence of strong noise
+environments. In practical industrial environments, mea-
+sured signals are inevitably contaminated by strong noise
+due to harsh operating conditions, variable loads, electro-
+magneticinterference,andcomplextransmissionpaths.Un-
+der such circumstances, fault-related impulsive features are
+often weak and easily submerged by noise, making reliable
+faultdiagnosisparticularlychallenging.Insummary,current
+interpretableFDmethodsstillfacethefollowingchallenges:
+1) Although current interpretability studies can extract
+fault-related features in a single time or frequency do-
+main, time–frequency interpretability remains rarely in-
+vestigated. As a result, this limitation restricts their
+generality and applicability in practical industrial fault
+diagnosis.
+2) The aforementioned studies have achieved promising
+performance under ideal experimental conditions. How-
+ever,realindustrialenvironmentsareoftencontaminated
+by strong noise. This poses a significant challenge to the
+reliabilityofinterpretablefaultdiagnosismodelsinreal-
+world production scenarios.
+In order to address the existing challenges, this work
+introduces a time–frequency interpretable and noise-robust
+faultdiagnosisframeworknamedFE-MCFormer(Frequency-
+Enhanced Multiscale convformer). The proposed method
+can extract interpretable components from both time and
+frequency domains, thereby achieving time–frequency in-
+terpretability from both the first-layer and deep feature
+representations under strong noise conditions. Specifically,
+the proposed method can adaptively learn hierarchical fre-
+quency representations from input signals through a novel
+network architecture. This architecture can adaptively guide
+themodeltofocusonfault-sensitivefrequency-domaincom-
+ponents,enhancingitsrobustnessagainstnoiseinterference.
+Moreover, local attention mechanisms are employed to ex-
+tract interpretable temporal components, further improving
+the model’s interpretability and diagnostic accuracy.
+The main contributions of this paper are summarized as
+follows:
+1. A novel network architecture, named FE-MCFormer,
+is developed for time–frequency interpretable fault
+diagnosis of turbomachinery under strong noise. The
+time–frequency features of measurement signals are
+capturedintheproposedframeworkthroughtheadept
+integration of the time–frequency interpretable fea-
+tures.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 2 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Fig. 1:Network architecture of the proposed FE-MCFormer.
+2. A frequency adaptive learning layer (FALL) is intro-
+duced to adaptively encode global spectral informa-
+tionandsuppressnoise-dominatedfrequencycompo-
+nents in the first layer of the model. This layer en-
+hances both the noise robustness and interpretability
+of the proposed method.
+3. A multiscale time–frequency fusion module is de-
+signedbycombiningmultiscaleattentionandtime–frequency
+fusion networks. This design further enhances the
+noise robustness and interpretability of the model.
+4. TheeffectivenessandinterpretabilityofFE-MCFormer
+are validated using a benchmark laboratory dataset
+and a real-world centrifugal compressor dataset. Ex-
+tensive experiments, including robustness evaluation
+under varying signal-to-noise ratios, ablation studies,
+and interpretability analysis, demonstrate the effec-
+tiveness and industrial applicability of the proposed
+framework.
+1.2. Paper Organization
+The remainder of this paper is given as follows. Sec-
+tion 2 describes the network architecture of the proposed
+FE-MCFormer and details its key components, including
+the frequency adaptive learning layer and the multiscale
+time–frequency fusion module. Section 3 presents the ex-
+perimental setup, datasets, and comparative evaluation re-
+sults, followed by robustness analysis, ablation studies, and
+interpretabilityvisualization.Section4concludesthepaper.
+2. Methodology
+This section details the proposed FE-MCFormer frame-
+work, designed to provide robust and interpretable fault
+diagnosis for rotating machinery in harsh industrial envi-
+ronments. The architecture, illustrated in Fig. 1, integrates
+a frequency adaptive learning layer (FALL), multiscale
+time–frequency fusion (MSTFF) modules, and three distil-
+lation layers to balance feature extraction performance with
+computational efficiency.
+2.1. Frequency adaptive learning layer (FALL)
+Conventional embedding layers often fail to distinguish
+between fault-related impulsive features and broadband in-
+dustrialnoise.Therefore,afrequencyadaptivelearninglayer
+(FALL) is proposed to address this. This layer is applied
+at the input stage to perform first-layer frequency-domain
+reconstruction and suppress noise-dominated components.
+2.1.1. Operator-Theoretic Formulation
+Given an input feature map
+𝑋∈ℝ 𝐵×𝐶×𝐿,
+a linear projection is first applied:
+̃𝑋= Conv 1×𝑘(𝑋),(1)
+where𝐶𝑜𝑛𝑣(⋅)stands for the convolutional operation.
+In this layer, a frequency adaptive learning (FAL) strat-
+egy is employed to enhance model robustness and inter-
+pretability. Let∶→ℂ 𝐿 denote the discrete Fourier
+transform (DFT), which is unitary:
+ −1 = ∗.(2)
+By Parseval’s theorem,
+‖𝑥‖2
+2 =‖𝑥‖ 2
+2.(3)
+Let𝑊∈ℂ 𝐿 denote a learnable spectral weight vector.
+Define the diagonal spectral multiplication operator as fol-
+lows:
+𝑊 (̂ 𝑥) =𝑊 ⊙ ̂ 𝑥,(4)
+where⊙denotes element-wise multiplication.
+Thefrequency-adaptivelearningoperationisdefinedas:
+𝐹 =𝐼+𝛾 −1𝑊 ,(5)
+where𝐼is the identity operator and𝛾∈ (0,1)is a scaling
+factor. The embedding becomes:
+𝑥𝑟 = 𝐹 (𝑥).(6)
+ThisdemonstratesthatFALLactsasalearnablespectral
+shaping operator that attenuates noise-dominated frequency
+components while preserving fault-related harmonics. As
+such, FALL serves as a global encoder, effectively inte-
+grating local patterns with frequency-domain global de-
+pendencies in an adaptive and differentiable manner. Un-
+like conventional convolutional filters that implicitly learn
+frequency responses, FALL explicitly performs learnable
+spectralshaping,whichallowsthemodeltodecouplenoise-
+dominated high-frequency components from fault-related
+harmonic structures.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 3 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Fig. 2:Illustration of the proposed multiscale convolutional attention layer (MSCAL).
+Fig. 3:Illustration of the proposed time–frequency fusion network (TFFN).
+2.2. Multiscale Time–Frequency Fusion (MSTFF)
+Operator
+In this model, a Multiscale Time–Frequency Fusion
+(MSTFF) operator is designed to capture local impulsive
+behaviors alongside global spectral structures without the
+quadratic computational cost of the conventional MHSA
+mechanism. As illustrated in Fig. 1, the MSTFF includes
+a multiscale convolution attention layer (MSCAL) and a
+time–frequencyfusionnetwork(TFFN)withtwoBatchNor-
+malization layers.
+2.2.1. MSCAL
+AsshowninFig.2,MSCALextractsmultiscaletemporal
+features by utilizing parallel branches with1 × 3and1 × 5
+convolutional operations. A softmax-based attention mech-
+anism is applied to these branches to adaptively scale fea-
+tures based on their diagnostic relevance. This architecture
+enables the model to concentrate on localized fault-related
+features that are often obscured in global sequences.
+Let𝑋∈ℝ 𝐶×𝐿, multiscale temporal operators are
+constructed as follows:
+𝑋𝑘 = Conv1×𝑘(𝑋), 𝑘∈ {3,5},(7)
+Subsequently,twoparallelbrancheswith1 × 3and1 × 5
+convolutionaloperationsareintroducedtoextractmultiscale
+time-domain features as follows:
+𝑌2 =
+2∑
+𝑖=1
+𝐵𝑟𝑎𝑛𝑐ℎ𝑖[𝑋𝑘],(8)
+where𝐵𝑟𝑎𝑛𝑐ℎ 𝑖[⋅]denotesthetwofeaturebrancheswith1×3
+and1 × 5convolutional operations, which are sensitive to
+local fault features.
+Further,a softmaxfunctionis appliedtomapmultiscale
+features to the value of[0,1], and another1 × 1convolution
+kernel is utilized to fuse the multiscale information. The
+Hadamardproductisperformedbetweenfusionfeaturesand
+featuremap𝑋 𝑘,andaresidualconnectionisaddedbetween
+𝑋𝑘 and the output features, given as follows:
+𝑌3 =
+{
+𝐶𝑜𝑛𝑣 1×1(𝑎𝑡𝑡𝑛)⊗𝑋 𝑘 +𝑋𝑘,
+𝑎𝑡𝑡𝑛=𝑠𝑜𝑓𝑡𝑚𝑎𝑥(𝑌 2) (9)
+where⊗denotes the Hadamard product, and𝑠𝑜𝑓𝑡𝑚𝑎𝑥(⋅)
+stands for the softmax function. Finally, the GELU function
+is employed to enhance nonlinear representation capability,
+and a1 × 1convolution kernel is introduced as another
+channel-mixing kernel. Ultimately, the residual structure is
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 4 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Fig. 4:Illustration of the proposed fault diagnosis framework.
+employed to prevent gradient vanishing or explosion, given
+by:
+𝑌4 =𝐶𝑜𝑛𝑣 1×1[𝐺𝐸𝐿𝑈(𝑌 3)] +𝑋,(10)
+As such, MSCAL acts as a data-adaptive local feature
+amplifier, enhancing impulsive fault signatures.
+2.2.2. TFFN
+The Time–Frequency Fusion Network (TFFN) is uti-
+lized to capture deep features and model time–frequency
+interactions among high-level semantic representations, as
+showninFig.3.TheTFFNemploysatime–frequencyfusion
+adaptive learning operation to filter irrelevant information
+in the frequency domain and capture local features in the
+time domain. More specifically, TFFN utilizes a local con-
+volutional operation in the time domain to capture local
+time-seriesfeaturesandintroducestheFALoperationinthe
+frequency domain to model long-range dependencies and
+enhance nonlinear representation capability.
+As shown in Fig. 3, for the input tensor𝑋∈ℝ𝐶×𝐿, the
+TFFNemploysa1 × 1convolutionaloperationtoexpandthe
+feature dimensionality, given by:
+̄𝑋∈ℝ 2𝐶×𝐿 =𝐶𝑜𝑛𝑣 𝑒𝑥
+1×1(𝑋∈ℝ 𝐶×𝐿 ),(11)
+where𝐶𝑜𝑛𝑣 𝑒𝑥
+1×1(⋅)denotesthe1×1convolutionwithchannel
+expansion. Subsequently, a1 × 3depthwise convolution is
+applied to capture local patterns, and a GELU activation
+function is introduced to improve nonlinear representation
+capability, formulated as:
+̇𝑋=𝐺𝐸𝐿𝑈[𝐷𝑒𝑝𝑡ℎ𝑤𝑖𝑠𝑒𝐶𝑜𝑛𝑣 𝑑𝑤
+1×3( ̄𝑋)],(12)
+where𝐺𝐸𝐿𝑈denotestheactivationfunction,and𝐶𝑜𝑛𝑣 𝑑𝑤
+1×3(⋅)
+represents the1 × 3depthwise convolutional operation.
+Furthermore, to obtain frequency-domain representations,
+the time-domain features are processed using a discrete
+Fourier transform (DFT), given by
+𝑋′ =𝐹[ ̇𝑋],(13)
+where𝐹[⋅]denotes the DFT operation. Then, a learnable
+weight𝑊is introduced to reconstruct the features in the
+frequencydomain,andascalingfactorisutilizedtomaintain
+numerical stability, defined by:
+̂𝑋=𝛾(𝑋 ′⊗𝑊),(14)
+where ̂𝑋represents the reconstructed feature,⊗stands for
+the Hadamard product, and𝛾denotes the scaling factor.
+Moreover,aninverseDFTisappliedtotransformthefeature
+back into the time domain, where a1 × 1convolutional
+operation is applied to transform the output features back
+into the time-domain, given by:
+̌𝑋∈𝑅 𝐶×𝐿 =𝐶𝑜𝑛𝑣 𝑠𝑒
+1×1[𝐹 −1( ̂𝑋)],(15)
+where𝐶𝑜𝑛𝑣 𝑠𝑒
+1×1(⋅)representsa1×1convolutionwithchannel
+reduction, and𝐹 −1[⋅]stands for the inverse DFT. Finally,
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 5 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+the output features are added element-wise to the original
+feature𝑋as the final output of TFFN:
+𝑋𝑟 =𝑋+ ̌𝑋,(16)
+where𝑋 𝑟 stands for the output of TFFN.
+2.2.3. Distilling layer
+To enhance the model’s efficiency, a hierarchical distill-
+ing layer is positioned between MSTFF blocks. This layer
+employs a 1-D convolution and a max-pooling operation to
+halvethetemporaldimension,effectivelycreatingafocused
+global feature map and reducing memory usage for subse-
+quent layers. This distilling procedure from the j-th layer to
+the (j+1)-th layer is formulated as follows:
+𝑋
+2𝐶×𝐿
+2
+𝑗+1
+=𝑀𝑎𝑥𝑃𝑜𝑜𝑙
+(
+𝐺𝐸𝐿𝑈
+(
+𝐶𝑜𝑛𝑣1𝑑
+([
+𝑋𝐶×𝐿
+𝑗
+]
+𝑀𝑆
+)))
+,
+(17)
+where[⋅] 𝑀𝑆 represents the MSTFF module, and𝐶𝑜𝑛𝑣1𝑑
+denotes a 1-D convolution kernel with the GELU function.
+Here,𝐶and𝐿represent the number of channels and the
+sequence length of𝑋. We expand the number of channels
+byusinga1 × 5convolutionaloperationandemployamax-
+pooling layer to downsample𝑋into half of its temporal
+length after stacking a layer, which reduces the overall
+memory usage of the next MSTFF module.
+2.3. Unified Operator Formulation
+The overall FE-MCFormer architecture can be formu-
+lated as:
+𝑓𝜃 =◦
+( 𝑀∏
+𝑗=1
+𝑗◦𝑗
+)
+◦,(18)
+wheredenotes the FALL spectral encoder,𝑗 denotes the
+𝑗-th MSTFF block,𝑗 denotes the distillation operator, and
+denotes the classifier.
+This formulation unifies spectral filtering, multiscale
+temporal modeling, global dependency extraction, and hi-
+erarchical compression within a computationally efficient
+framework suitable for industrial fault diagnosis.
+2.4. Computational Complexity Analysis
+In industrial fault diagnosis, vibration signals are typi-
+cally sampled at high frequency, resulting in long temporal
+sequences. Therefore, computational efficiency is a critical
+consideration for real-time monitoring systems.
+Let𝐿denote the input length and𝐶the number of
+channels.Weanalyzethecomputationalcomplexityofeach
+major component in FE-MCFormer.
+2.4.1. Complexity of FALL
+FALL consists of a 1-D convolution:(𝐿), a forward
+DFT:(𝐿log𝐿),element-wisespectralmultiplication:(𝐿),
+andaninverseDFT:(𝐿log𝐿).Thus,thedominanttermis
+(𝐹𝐴𝐿𝐿) =(𝐿log𝐿)+(𝐿)+(𝐿log𝐿)⇒(𝐿log𝐿)
+(19)
+2.4.2. Complexity of MSCAL
+MSCAL mainly consists of two parallel convolutions
+withkernelsizes𝑘∈ {3,5}formultiscalefeatureextraction:
+(2𝐿), and element-wise multiplication:(𝐿). Therefore,
+(𝑀𝑆𝐶𝐴𝐿) =(2𝐿) +(𝐿)⇒(𝐿)(20)
+2.4.3. Complexity of TFFN
+TFFNmainlyconsistsofadepthwiseconvolution,spec-
+traltransformation,andfrequencyadaptivelearning,includ-
+ingdepthwiseconvolution:(𝐿),forwardDFT:(𝐿log𝐿),
+spectralmultiplication:(𝐿),andinverseDFT:(𝐿log𝐿).
+Therefore, the overall complexity is determined by
+(𝑇𝐹𝐹𝑁) =(𝐿)+(𝐿log𝐿)+(𝐿)+(𝐿log𝐿)⇒(𝐿log𝐿)
+(21)
+2.4.4. Complexity of Distillation
+The distillation layer applies convolution and pooling,
+reducing sequence length from𝐿𝑗 to𝐿 𝑗+1 =𝐿 𝑗∕2. Its
+complexity is
+(𝐿𝑗).(22)
+Sincethesequencelengthdecreasesgeometricallyacross
+layers, the cumulative complexity over𝑀blocks becomes
+𝑀∑
+𝑗=1
+(𝐿𝑗 log𝐿𝑗),(23)
+which remains near-linear in practice. Therefore, the pro-
+posed FE-MCFormer achieves near-linear time complex-
+ity and reduced computational burden across hierarchical
+layers, making it well-suited for long vibration sequences
+and real-time health monitoring in industrial informatics
+systems.
+3. Results and Discussion
+To evaluate the adaptability and practicability of FE-
+MCFormer and FALL, two case studies are conducted in
+this section. A benchmark rolling bearing dataset is used
+in Case 1, while the actual measurements from a real-world
+centrifugal compressor are utilized in Case 2.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 6 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Table 1
+Network structure of FE-MCFormer and FE-MCFormer-s.
+FE-MCFormer FE-MCFormer-s
+Module Network Layer Parameter Output shape Module Network Layer Parameter Output shape
+Input sequence1 × 2048Input sequence1 × 2048
+Embedding FALL kernel = 63,
+stride = 1
+32 × 2048Embedding FALL kernel = 63,
+stride = 1
+16 × 2048
+Distilling
+Conv layer kernel = 64,
+stride = 2
+32 × 496Distilling
+Conv layer kernel = 64,
+stride = 2
+16 × 496
+Pooling kernel = 3,
+stride = 2
+Pooling kernel = 3,
+stride = 2
+MSTFF
+block #1
+2×MSCAL B1 size = 5, B2 size = 3,
+stride = 1 32 × 496 MSTFF
+block #1
+1×MSCAL B1 size = 5, B2 size = 3,
+stride = 1 16 × 496
+2×TFFN𝛾= 0.1 1×TFFN𝛾= 0.1
+Distilling
+Conv layer kernel = 5,
+stride = 1
+64 × 247Distilling
+Conv layer kernel = 5,
+stride = 1
+32 × 247
+Pooling kernel = 3,
+stride = 2
+Pooling kernel = 3,
+stride = 2
+MSTFF
+block #2
+2×MSCAL B1 size = 5, B2 size = 3,
+stride = 1
+64 × 247
+MSTFF
+block #2
+1×MSCAL B1 size = 5, B2 size = 3,
+stride = 1
+32 × 247
+2×TFFN𝛾= 0.1 64 × 247 1×TFFN𝛾= 0.1 32 × 247
+Distilling
+Conv layer kernel = 5,
+stride = 1
+128 × 123Distilling
+Conv layer kernel = 5,
+stride = 1
+64 × 123
+Pooling kernel size = 3,
+stride = 2
+Pooling kernel size = 3,
+stride = 2
+MSTFF
+block #3
+2×MSCAL B1 size = 5, B2 size = 3,
+stride = 1 128 × 123 MSTFF
+block #3
+1×MSCAL B1 size = 5, B2 size = 3,
+stride = 1 64 × 123
+2×TFFN𝛾= 0.1 1×TFFN𝛾= 0.1
+Distilling
+Conv layer kernel = 5,
+stride=1
+256 × 61Distilling
+Conv layer kernel = 5,
+stride=1
+128 × 61
+Pooling kernel = 3,
+stride = 2
+Pooling kernel = 3,
+stride = 2
+MSTFF
+block #4
+2×MSCAL B1 size = 5, B2 size = 3,
+stride = 1 256 × 61 MSTFF
+block #4
+1×MSCAL B1 size = 5, B2 size = 3,
+stride = 1 128 × 61
+2×TFFN𝛾= 0.1 1×TFFN𝛾= 0.1
+Classifier
+Flatten layer / 15616
+Classifier
+Flatten layer / 7808
+Linear layer / 256 Linear layer / 256
+Linear layer /𝐶Linear layer /𝐶
+3.1. Experimental settings
+The code of FE-MCFormer is implemented using Py-
+Torch framework on a computer with an Intel(R) Xeon(R)
+Gold 6226R CPU and a RTX 4090 GPU. For training, FE-
+MCFormerusescross-entropyasthelossfunctionandAdam
+as the optimizer. The learning rate and batch size are set to
+0.001 and 64, respectively.
+The following max-min normalization operation is ap-
+plied to mitigate the effects of various magnitudes of the
+measured values on the modeling accuracy:
+̃ 𝑥=𝑥−𝑥 𝑚𝑖𝑛
+𝑥𝑚𝑎𝑥 −𝑥𝑚𝑖𝑛
+,(24)
+wherẽ 𝑥denotesthenormalizedvalueof𝑥;𝑥 𝑚𝑎𝑥and𝑥𝑚𝑖𝑛are
+the maximum and minimum values, respectively. Accuracy
+isusedtoevaluatefaultdiagnosisperformanceandisdefined
+as:
+𝐴𝑐𝑐= 𝐶𝑃
+𝐶𝑃+𝐼𝑃 × 100%,(25)
+where𝐶𝑃indicates the correctly classified samples, and
+𝐼𝑃refers to incorrectly classified samples. To evaluate the
+performanceofFE-MCFormerundernoise,Gaussianwhite
+noise is added to the raw mechanical signals, resulting in
+signals with different SNRs, defined as follows:
+𝑆𝑁𝑅= 10 lg
+(𝑃𝑠
+𝑃𝑛
+)
+,(26)
+𝑃𝑠 = 1
+𝑁
+𝑁∑
+𝑛=1
+|𝑣(𝑛)|2,(27)
+where𝑃 𝑠 and𝑃 𝑛 denote the power of the raw signal and
+the added noise, and𝑣(𝑛)represents the raw signal. In this
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 7 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Table 2
+Description of PU dataset (Case 1)
+Category Bearing Damage Level Method Label
+0 K001 Normal / /𝐻 1
+1 K002 Normal / /𝐻 2
+2 K003 Normal / /𝐻 3
+3 K004 Normal / /𝐻 4
+4 K005 Normal / /𝐻 5
+5 K006 Normal / /𝐻 6
+6 KA01 Outer ring 1 EDM damage𝐻 7
+7 KA03 Outer ring 2 electric engraver𝐻 8
+8 KA05 Outer ring 1 EDM damage𝐻 9
+9 KA06 Outer ring 2 electric engraver𝐻 10
+10 KA07 Outer ring 1 drilling𝐻 11
+11 KA08 Outer ring 2 drilling𝐻 12
+12 KA09 Outer ring 2 drilling𝐻 13
+13 KI01 Inner ring 1 EDM damage𝐻 14
+14 KI03 Inner ring 1 electric engraver𝐻 15
+15 KI05 Inner ring 1 electric engraver𝐻 16
+16 KI07 Inner ring 2 electric engraver𝐻 17
+17 KI08 Inner ring 2 electric engraver𝐻 18
+Fig. 5:Rolling bearing test rig. (Case 1)
+experiment, the SNR is set in the range from−10dB to−2
+dB.Eachgroupofexperimentswasrepeatedfivetimes,with
+200 epochs assigned to each experiment. Table 1 shows the
+network structure of FE-MCFormer-s and FE-MCFormer,
+where FE-MCFormer-s is the lightweight version of the
+proposedmethodwithfewerparametersandFE-MCFormer
+is the standard version with standard parameters. In the𝑙-th
+MSTFF block,𝐵1and𝐵2represent convolution kernels of
+size1 × 5and1 × 3in Eq. (8),respectively;𝛾= 0.1denotes
+the scaling factor𝛾in Eq. (5) and Eq. (14) is set to 0.1;𝐶
+represents the number of classes in each dataset.
+3.2. Case 1: Rolling Bearing Dataset
+The bearing dataset [23] from Paderborn University
+(PU)isemployedtovalidatetheFE-MCFormerunderstrong
+noise conditions.
+3.2.1. Dataset description
+As shown in Fig. 5, the rolling bearing test bench com-
+prises an induction motor, a load motor, a measurement
+shaft, and a control panel. A deep groove ball bearing is
+selectedasthetestobject.Theexperimentisconductedwith
+the induction motor operating at 1500 rpm under a torque
+load of 0.7 Nm, with a sampling frequency of 64 kHz. A
+total of 18 bearing states are employed, including 6 normal
+Fig. 6:Test results of rolling bearing dataset in Case 1.
+states,7outer-ringfaults,and5inner-ringfaults,asdetailed
+in Table 2. For each health state, the raw vibration signal
+was segmented sequentially into 1000 consecutive samples,
+resulting in a total of 18×1000 = 18,000 samples, with
+eachsamplecontaining2048vibrationpoints.Toavoiddata
+leakage,thefirst80%ofthesequentiallysegmentedsamples
+wereusedformodeltraining,whiletheremaining20%were
+reserved for testing.
+3.2.2. Overall Diagnostic Performance
+To assess the effectiveness of FE-MCFormer, extensive
+experiments are conducted under varying noise conditions,
+withSNRrangingfrom−10dBto−2dB.Sevenapproaches,
+namelyMSCNN-LSTM[24],VanillaTransformer[16],WD-
+CNN, ResNet50 [25], DenseNet, MCSwin-T [26] and Li-
+convformer [27], are employed for comparison with FE-
+MCFormer.FromTable3andFig.6,itcanbeobservedthat
+theproposedmethodconsistentlyoutperformsexistingdata-
+drivenbaselinesacrossallnoiselevelsintermsofdiagnostic
+performance.
+Specifically,FE-MCFormerandFE-MCFormer-sachieve
+superior performance across all noise scenarios, signif-
+icantly outperforming both CNN-based and transformer-
+based methods. The proposed network architecture main-
+tains high accuracy even under extremely noisy environ-
+ments,furtherillustratingitsstrongrobustness.Fig.7shows
+the 2D T-SNE visualization results of various methods
+under SNR =−6dB, the results show dense clustering of
+differentfaulttypeswithhighclassificationaccuracy,which
+further illustrates the feature discrimination capability of
+FE-MCFormer in complex industrial environments. These
+results indicate that FE-MCFormer architecture maintains
+a robust feature extraction capability even under severe
+noise interference, which is critical for industrial condition
+monitoring scenarios.
+3.2.3. Comparative Analysis
+MSCNN-LSTM, as a state-of-the-art multiscale convo-
+lutional network, exhibits outstanding performance under
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 8 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Table 3
+Test results of various data-driven methods on PU dataset in Case 1 (%)
+Methods
+SNR=-10 SNR=-8 SNR=-6 SNR=-4 SNR=-2
+Params(M) FLOPs(M)
+Acc Acc Acc Acc Acc
+MSCNN-LSTM 50.17±2.17 61.90±5.66 75.39±5.09 85.65±1.11 91.13±1.20 0.09 57.37
+WDCNN 52.81±1.53 65.23±0.72 75.70±1.51 84.23±1.12 90.01±0.670.04 0.65
+ResNet50 58.85±0.47 72.90±0.62 83.86±0.54 90.57±0.47 96.49±0.34 15.99 1610.34
+DenseNet 60.81±0.33 74.11±0.72 84.15±0.39 90.31±0.92 94.15±0.59 3.80 526.17
+Vanilla Transformer 43.43±2.16 58.20±0.43 72.29±0.25 83.72±0.21 92.43±0.58 3.19 266.95
+Li-convformer 58.98±0.34 75.34±0.68 86.12±0.32 93.65±0.33 97.29±0.38 0.32 28.83
+MCSwin-T 55.49±0.46 70.16±0.10 82.34±0.26 89.74±0.19 96.14±0.25 1.94 453.66
+FE-MCFormer-s 70.44±1.26 81.70±1.28 91.90±0.64 96.16±0.44 98.42±0.152.43 54.60
+FE-MCFormer 72.99±0.54 86.31±0.51 94.74±0.17 98.01±0.14 99.11±0.187.24 338.95
+weak noise conditions, reaching 91.13% mean accuracy at
+the SNR of−2dB. However, as the noise level increases
+from−2dB to−6dB, its accuracy drops significantly. In
+contrast, standard FE-MCFormer achieves diagnostic ac-
+curacy of 99.11%, 98.01%, and 94.74% under the SNR
+from−2dB to−6dB. Numerical results indicate that, in
+noisyenvironments,themultiscalekernelsinthemultiscale
+convolutional neural networks (MSCNN) tend to amplify
+both high-frequency noise patterns and key local features,
+resulting in redundant and conflicting weight distributions.
+This makes it difficult for the network to focus on critical
+faultfeatures,resultingindegradedperformanceintheFDof
+rotating machines. In contrast, the proposed FE-MCFormer
+leverages FALL and TFFN to suppress irrelevant frequency
+components and employs MSCAL to strengthen local mul-
+tiscale feature representations, thereby achieving superior
+performance over MSCNNs.
+TheWDCNNuseslargekernelstocaptureglobaldepen-
+dencies, thus reducing noise interference. However, due to
+thelimitationoftheconvolutionkernel,themodelstruggles
+to fully capture long-range dependencies over the entire
+signal sequence. More specifically, as illustrated in Table
+3, the mean accuracies of WDCNN under SNR= −2,−4,
+−6,−8,−10are 90.01%, 84.23%, 75.70%, 65.23% and
+52.81%. Compared with standard FE-MCFormer and FE-
+MCFormer-s, FE-MCFormer consistently achieves higher
+accuracyunderallnoiseconditions,indicatingtheeffective-
+ness of FE-MCFormer.
+ComparedwithResNet50andDenseNet,FE-MCFormer
+achieves higher diagnostic accuracy under all noise condi-
+tions.Thisimprovementcanbeattributedtoitstime–frequency
+modeling strategy. In conventional CNN architectures such
+as ResNet50 and DenseNet, small convolutional kernels
+mainly capture local patterns within a limited receptive
+field, and their responses can be easily affected by noise-
+inducedfluctuationsunderlow-SNRconditions.Incontrast,
+FE-MCFormer combines frequency adaptive learning with
+multiscale temporal feature extraction, enabling the model
+to suppress noise-dominated components while retaining
+fault-sensitive structures. As reported in Table 3, the mean
+accuracies of the standard FE-MCFormer under SNR levels
+of−2,−4,−6,−8, and−10dB are 99.11%, 98.01%,
+94.74%,86.31%,and72.99%,respectively.Theseresultsare
+consistently higher than those of ResNet50, which obtains
+96.49%,90.57%,83.86%,72.90%,and58.85%,respectively.
+Compared with DenseNet, FE-MCFormer also achieves
+accuracy improvements of 4.96%, 7.70%, 10.59%, 12.20%,
+and 12.18% across the same noise levels. It is also worth
+noting that FE-MCFormer maintains lower computational
+cost than these CNN baselines. Specifically, the compu-
+tational costs of FE-MCFormer and FE-MCFormer-s are
+338.95Mand54.60MFLOPs,respectively,whicharelower
+than those of ResNet50 (1610.34M FLOPs) and DenseNet
+(526.17M FLOPs). These results indicate that the proposed
+framework achieves a favorable balance between noise-
+robustdiagnosticperformanceandcomputationalefficiency
+compared with representative CNN-based models.
+Vanilla Transformer shows a dramatic decrease in di-
+agnostic performance under strong noise. This is mainly
+attributed to the fact that the severe noise contaminates
+the entire signal sequence, which prevents the MHSA from
+effectively modeling global features. The proposed FE-
+MCFormer utilizes FALL and TFFN to suppress irrelevant
+information and capture global dependencies. The MSCAL
+and distillation mechanism are further introduced to pre-
+cisely extract the key local features, thus achieving higher
+performance.
+Li-convformer,asastate-of-the-artlightweightconvformer-
+based fault diagnosis model, achieves competitive perfor-
+mance under relatively weak noise conditions, with mean
+accuraciesof97.29%,93.65%,and86.12%atSNRlevelsof
+−2,−4, and−6dB, respectively. However, its diagnostic
+performance degrades noticeably as the noise intensity
+increases. In comparison, FE-MCFormer-s obtains mean
+accuracies of 98.42%, 96.16%, and 91.90% under the same
+SNR levels, indicating improved robustness under noisy
+conditions. Moreover, FE-MCFormer-s maintains stable
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 9 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Fig. 7:Results of 2D t-SNE visualization on the rolling bearing dataset under SNR =−6dB in Case 1.
+Fig. 8:Reconstruction results of the bearing dataset (Case 1) under SNR =−4dB, KA01, outer ring fault. (a) Frequency
+spectrum analysis. (b) Envelope spectrum analysis.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 10 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Fig. 9:Reconstruction results of the bearing dataset (Case 1) under SNR =−4dB, KA03, outer ring fault. (a) Frequency
+spectrum analysis. (b) Envelope spectrum analysis.
+Fig. 10:Reconstruction results of the bearing dataset (Case 1) under SNR =−4dB, KI01, inner ring fault. (a) Frequency
+spectrum analysis. (b) Envelope spectrum analysis.
+diagnostic performance even under severe noise interfer-
+ence, suggesting that the frequency adaptive learning and
+time–frequency modeling strategy can better preserve fault-
+sensitivefeaturesinlow-SNRenvironments.Fromthecom-
+putational perspective, FE-MCFormer-s requires 54.60M
+FLOPs, which remains comparable to Li-convformer with
+28.83M FLOPs. Although FE-MCFormer-s introduces a
+moderate increase in computational cost, it provides higher
+diagnostic accuracy across the investigated noise levels.
+TheseresultssuggestthatFE-MCFormer-sachievesafavor-
+able trade-off between noise-robust diagnostic performance
+andcomputationalefficiencycomparedwiththelightweight
+convformer baseline.
+Compared with MCSwin-T, which relies on a fixed-
+length sliding-window attention mechanism, the proposed
+method employs multiscale local attention to aggregate
+fault-related information across different temporal receptive
+fields. This design enables the model to capture localized
+impulsive patterns with varying durations, which are com-
+monly observed in rotating machinery vibration signals.
+In addition, FALL and TFFN are introduced to further
+perform frequency-domain feature aggregation, allowing
+the model to suppress noise-dominated components while
+preserving fault-sensitive spectral structures. As a result,
+theproposedframeworkexhibitsimprovedrobustnessunder
+noisy operating conditions.
+3.2.4. Interpretability Analysis
+To validate the frequency-domain interpretability of the
+proposed FE-MCFormer under severe noise conditions, the
+Fig. 11:Reconstruction results of the bearing dataset (Case 1) under SNR =−4dB, KI07, inner ring fault. (a) Frequency
+spectrum analysis. (b) Envelope spectrum analysis.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 11 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Table 4
+Results of ablation study on PU dataset in Case 1
+Methods
+SNR=-10 SNR=-8 SNR=-6 SNR=-4 SNR=-2
+Params(M) FLOPs(M)
+Acc Acc Acc Acc Acc
+FE-MCFormer72.99±0.54 86.31±0.51 94.74±0.17 98.01±0.14 99.11±0.187.24 338.95
+Non-MSA 70.78±1.09 82.59±1.34 91.61±0.75 95.80±0.51 98.08±0.31 7.24 263.50
+Non-FAL-Head 69.77±0.81 81.28±0.33 90.99±0.74 95.95±0.58 98.22±0.40 6.98 338.07
+Non-FAL-Body 70.01±0.74 83.40±0.86 91.83±0.59 96.51±0.27 98.54±0.97 7.11 271.71
+Fig. 12:Attention heat map of FE-MCFormer under SNR =−8dB: (a) KA01, outer ring. (b) KA07, outer ring. (c) KI01, inner
+ring.
+reconstructed signals in test dataset produced by FALL
+are visualized in both the frequency domain and envelope
+spectrum. For illustration, Fig. 8, Fig. 9, Fig. 10, and Fig.
+11 present the reconstruction results under SNR =−4dB,
+where the blue curve denotes the noisy signal, the orange
+curve represents the FALL-reconstructed signal, and the
+pinkshadedbandsindicatethefrequency-resolutionregions
+around the ball pass frequency of outer race (BPFO) or the
+ballpassfrequencyofinnerrace(BPFI)andtheirharmonics.
+As shown in Fig. 8, Fig. 9, Fig. 10, and Fig. 11, the
+reconstructed spectra suppress part of the broadband high-
+frequency noise components while retaining several fault-
+sensitivespectralresponses.Moreimportantly,theenvelope
+spectra of the reconstructed signals exhibit pronounced re-
+sponses within the frequency-resolution bands around the
+theoreticalfaultcharacteristicfrequenciesandtheirharmon-
+ics. Specifically, for the outer-race faults KA01 and KA03
+shown in Fig. 8 and Fig. 9, the dominant responses are
+distributed around the BPFO-related bands, including ap-
+proximately76Hz,152Hz,228Hz,305Hz,andtheirneigh-
+boringharmonicregions.Fortheinner-racefaultsKI01and
+KI07 shown in Fig. 10 and Fig. 11, clear responses can be
+observed around the BPFI-related bands, including approx-
+imately 123 Hz, 247 Hz, 371 Hz, 494 Hz, and their neigh-
+boring harmonic regions. These results indicate that FALL
+can effectively suppress noise-dominated spectral compo-
+nents while preserving physically meaningful fault-related
+periodic modulation features, thereby providing frequency-
+domain interpretability for the proposed model.
+To illustrate the interpretability of the proposed method
+in the time domain, we visualize the attention heatmaps
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 12 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Fig. 13:Illustration of the centrifugal compressor for methodology implementation (Case 2).
+Table 5
+Description of compressor dataset (Case 2)
+Category Fault Label Samples
+0 Normal 𝐶1 1000
+1 Blade rupture 𝐶2 1000
+2 Block friction 𝐶3 1000
+3 Oil whirl 𝐶4 1000
+4 Rotor imbalance 𝐶5 1000
+of the first MSA in Eq. (9) in the fourth MSTFF block.
+Fig. 12 shows the attention heatmaps of three typical fault
+states in test dataset under SNR =−8dB, where darker
+colors represent regions that receive more attention from
+the model. The attention heatmaps in Fig. 12 demonstrate
+that the proposed model focuses on physically meaningful
+fault impulse regions, as shown in the red solid circles
+in the figure. The above results indicate that the proposed
+FE-MCFormer remains interpretable even in a high-noise
+environment. More specifically, small-kernel convolutions
+(e.g.,1 × 3and1 × 5)exhibitstrongsensitivitytolocalsignal
+components. This feature enables the small-kernel convo-
+lutions to effectively capture impulsive segments caused by
+rotating machinery faults. The proposed MSA module first
+employs multi-branch small-kernel convolutions to capture
+localfaultcharacteristicsatdifferenttemporalscales.Subse-
+quently, sparse activation functions and channel-interaction
+convolutions are introduced to enhance cross-channel in-
+formation exchange and nonlinear feature representation.
+Finally,anattentionmechanismisadoptedtoadaptivelyem-
+phasize fault-sensitive features while suppressing irrelevant
+responses, thereby improving the discriminative capability
+and interpretability of the model.
+3.2.5. Ablation Study and Component Effectiveness
+Three variant models are constructed for validation on
+the PU dataset to assess the impact of different components
+in FE-MCFormer, namely Non-MSA, Non-FAL-Head and
+Non-FAL-Body.Morespecifically,Non-MSAindicatesthat
+the multiscale attention mechanism of Eq. (9) is not used;
+Non-FAL-Headdenotesthatthefrequencyadaptivelearning
+(FAL) operations in FALL are not used; Non-FAL-Body
+indicates that the FAL in TFFN is not used. The ablation
+results shown in Table 4 confirm that each component con-
+tributes to the overall performance.
+Table 4 demonstrates that the addition of MSA and
+FALcaneffectivelyimprovetherobustnessandaccuracyof
+the model under strong noise conditions. More specifically,
+the introduction of MSA enables the model to extract key
+multiscale temporal features from the input representations,
+as illustrated in Table 4. Compared with FE-MCFormer
+without the MSA mechanism, the FE-MCFormer achieves
+performance improvements of 2.21%, 3.72%, 3.13%, 2.20%
+and 1.03% at the SNR levels of−10,−8,−6,−4and−2
+dB, respectively. In the MSA, the1 × 3and1 × 5convo-
+lutional filters are introduced to extract multiscale features.
+The Hadamard product is used to activate the multiscale
+attention. Furthermore, the softmax function is applied to
+enhance the sparsity and interpretability of the attention
+maps.
+FAL effectively suppresses noise-dominated spectra in
+the frequency domain. This mechanism not only improves
+thediagnosticaccuracyofFE-MCFormerbutalsoenhances
+the time-domain interpretability of the MSA module under
+severenoiseconditions.Theaboveconclusioncanbefurther
+validatedbyvisualizingtheattention-weightdistributionsof
+MSA in different network variants.
+AsshowninFig.12,modelswithoutFALexhibitsignif-
+icantly dispersed attention distributions under noisy condi-
+tions, particularly in the red dotted circle of Fig. 12 (b) and
+(c). In fact, small-kernel convolutions (e.g.,1 × 3and1 × 5)
+are highly effective in capturing local fault-related features
+underlaboratoryconditionswithrelativelylownoiselevels.
+However, as the noise intensity increases, fault-sensitive lo-
+cal information becomes progressively obscured, making it
+difficult for small-kernel convolutions to accurately identify
+discriminative patterns from complex signals.
+Consequently, the diagnostic accuracy decreases sig-
+nificantly when FAL is removed, as shown in Table 4.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 13 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Table 6
+Test results on the compressor dataset in Case 2 (%)
+Methods
+SNR=-10 SNR=-8 SNR=-6 SNR=-4 SNR=-2
+Params(M) FLOPs(M)
+Acc Acc Acc Acc Acc
+MSCNN-LSTM 63.69±2.04 72.05±2.29 74.81±1.75 88.70±0.63 90.54±2.17 0.092 57.37
+WDCNN 74.52±2.94 86.04±0.86 91.53±1.39 94.12±0.33 96.84±0.200.042 0.65
+ResNet50 75.90±0.87 84.01±0.49 89.90±0.37 94.05±0.22 94.99±0.50 15.99 1610.34
+DenseNet 81.56±1.22 88.39±0.41 93.00±0.49 95.32±0.44 96.66±0.61 3.80 526.17
+Vanilla Transformer 62.70±0.49 72.72±0.91 81.17±0.40 87.49±0.44 92.76±0.51 3.19 266.95
+Li-convformer 89.51±0.25 93.24±0.39 95.73±0.48 97.62±0.25 98.28±0.27 0.32 28.83
+MCSwin-T 63.90±0.61 73.78±1.53 84.16±1.51 89.52±0.79 94.71±0.63 1.94 453.66
+FE-MCFormer-s 93.25±0.30 96.97±0.14 98.35±0.17 99.61±0.08 99.93±0.042.43 54.60
+FE-MCFormer 93.48±1.18 96.63±0.15 98.46±0.18 99.71±0.07 99.98±0.047.24 338.95
+Meanwhile, the attention distributions learned by MSA be-
+come increasingly dispersed and susceptible to noise in-
+terference, resulting in reduced feature discrimination ca-
+pability and poor interpretability. In contrast, the complete
+FE-MCFormer architecture exhibits highly concentrated at-
+tention around fault-related impulsive regions. This phe-
+nomenon suggests that FAL suppresses irrelevant spectral
+components and preserves fault-sensitive harmonic struc-
+tures. As a result, MSA can focus more consistently on di-
+agnostically informative temporal regions, thereby enhanc-
+ing both the noise robustness and interpretability of FE-
+MCFormer under severe noise conditions.
+3.3. Case 2: Centrifugal Compressor Dataset
+3.3.1. Dataset description
+Onthebasisoffaultdiagnosisstudiesonsmall-scalero-
+tatingmachinery,thisworkfurtherextendstheinvestigation
+to fault identification of large-scale turbomachinery. Large-
+scale compressors are critical turbomachines in the energy,
+petrochemical, metallurgical, and manufacturing industries,
+and their operating conditions are directly associated with
+production continuity, equipment safety, and energy utiliza-
+tionefficiency.Oncefaultsoccur,theymayleadtoincreased
+vibration, degraded operating efficiency, and unexpected
+shutdowns, resulting in substantial economic losses and
+safety risks. Moreover, large-scale compressors usually op-
+erate in complex industrial environments, where the col-
+lectedsignalsareeasilyaffectedbybackgroundnoise,which
+poses a challenge to the robustness of diagnostic models.
+To evaluate the practical applicability of FE-MCFormer, a
+real-world centrifugal compressor dataset is employed. The
+7200 and 3300 eddy current probes are utilized to acquire
+the bearing displacement signals; the sampling frequency is
+set to 1024 Hz. In this study, the shaft displacement signals
+in the x-direction of the compressor bearing are collected
+under five operating conditions, including four fault states
+andonenormalstate,with1000samplesforeachcondition,
+assummarizedinTable5.Representativefaultmodesofthe
+centrifugalcompressorunitareillustratedinFig.13,suchas
+block friction and blade rupture. Meanwhile, similar to the
+experiment in the PU dataset, the first 80% of samples are
+usedformodeltraining,andtheremaining20%areusedfor
+testing. Each sample contains 2048 points. All samples are
+normalized according to Eq. (24).
+3.3.2. Comparative Analysis
+In this case, Gaussian white noise with SNR levels
+ranging from−10dB to−2dB is added to the raw signals
+to evaluate the robustness of the proposed method. Table
+6 reports the diagnostic performance of various meth-
+ods in this case. As shown in Table 6, the proposed FE-
+MCFormer family achieves the best or highly competitive
+performance among the compared methods under all noisy
+conditions. More specifically, compared with MSCNN-
+LSTM and WDCNN, the proposed method provides clear
+accuracy improvements, particularly at low SNRs, indicat-
+ing that frequency adaptive learning is beneficial for sup-
+pressing noise-dominated responses in compressor signals.
+ComparedwithResNet50andDenseNet,FE-MCFormerob-
+tains higher accuracy with lower computational cost, while
+FE-MCFormer-s further reduces the FLOPs to 54.60M and
+still maintains competitive accuracy. In comparison with
+Transformer-based models such as the Vanilla Transformer
+and MCSwin-T, FE-MCFormer shows better robustness
+and avoids the high computational burden introduced by
+attention-based architectures. Moreover, compared with the
+strong lightweight convformer baseline Li-convformer, FE-
+MCFormer-sachieveshigheraccuraciesacrossallSNRlev-
+els, with gains ranging from 1.65% to 3.74%. These results
+indicate that the proposed framework provides an effective
+trade-off between noise-robust fault diagnosis performance
+and computational efficiency for centrifugal compressor
+applications.
+3.3.3. Interpretability Analysis
+It is worth noting that, unlike rolling-bearing faults, the
+abnormal trajectory of the shaft centerline caused by com-
+pressorfailuredoesnotresultinobvioustemporalimpulsive
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 14 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+Fig. 14:Reconstruction results of the compressor dataset with four different types of faults described in Table 5 (Case 2) under
+SNR =−8dB, where the red curve denotes the reconstruction results, the blue curve denotes the original noisy signal. (a) Blade
+rupture. (b) Block friction.
+Fig. 15:Reconstruction results of the compressor dataset with four different types of faults described in Table 5 (Case 2) under
+SNR =−8dB, where the red curve denotes the reconstruction results, the blue curve denotes the original noisy signal. (a) Oil
+whirl. (b) Rotor imbalance.
+patterns in the time domain. Therefore, this section mainly
+focuses on analyzing the interpretability of the model in
+the frequency domain. To demonstrate the practical inter-
+pretability and effectiveness of FE-MCFormer, we compare
+the normalized frequency spectra of the original and recon-
+structedsignalsofFALLintestdatasetunderSNR=−8dB,
+as illustrated in Fig. 14 and Fig. 15, where the blue curves
+denote the original spectra, and the red ones correspond
+to the reconstructed signals; The horizontal axis represents
+frequency, and the vertical axis represents amplitude. Here,
+𝑖×𝑓denotesthefaultrotationalfrequencyanditsharmonics.
+It can be observed from Fig. 14 and Fig. 15 that FALL
+attenuatessubstantialhigh-frequencynoisewhilepreserving
+fault-sensitivespectralcomponentsandtheirharmonics.For
+instance, in the compressor blade rupture case shown in
+Fig. 14(a), the signal reconstructed by FALL retains the
+dominant low-frequency components associated with the
+faultcondition,includingtherotationalcomponentat32Hz
+(1 ×𝑓) and its harmonics at 64 Hz (2 ×𝑓), 96 Hz (3 ×𝑓),
+and 128 Hz (4 ×𝑓).
+For the block-friction case shown in Fig. 14(b), pro-
+nouncedspectralpeakscanalsobeobservedattherotational
+frequency of 32 Hz (1 ×𝑓) and its harmonic components,
+such as 64 Hz (2 ×𝑓) and 128 Hz (4 ×𝑓). This is consis-
+tent with the nonlinear vibration characteristics commonly
+induced by rubbing-related faults. In contrast, for the oil-
+whirl case shown in Fig. 15(a), particular attention should
+be paid to the preservation of sub-synchronous components
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 15 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+(0.4 ×𝑓∼ 0.6 ×𝑓),sinceoil-whirlphenomenaaretypically
+associated with frequency components below the rotational
+frequency.Theretainedrotationalcomponentmayreflectthe
+synchronous rotor response rather than the primary charac-
+teristic component of oil whirl.
+Rotorimbalanceistypicallycharacterizedbyadominant
+spectralcomponentneartherotationalfrequency(1 ×𝑓),as
+illustratedinFig.15(b).Thepreservationofthesephysically
+relevant and fault-sensitive spectral components across dif-
+ferent fault conditions indicates that the proposed method
+can focus on meaningful frequency information, thereby
+improving the interpretability of the diagnostic process in
+addition to enhancing classification performance.
+4. Concluding Remarks
+Interpretable fault diagnosis (FD) of rotating machinery
+becomes particularly challenging under strong noise condi-
+tions. Most deep learning (DL) methods fail to fully exploit
+the time–frequency features of input signals, resulting in
+poor performance under noisy conditions. To address this
+issue, this study proposes a frequency-enhanced multiscale
+transformer (FE-MCFormer) model for time–frequency in-
+terpretable FD of rotating machinery under severe noise
+conditions.
+First, a frequency adaptive learning layer (FALL) is in-
+troducedtofullyexploreglobalfrequencyfeatureswhilefil-
+teringoutirrelevantinformation.Next,amultiscaletime–frequency
+fusion (MSTFF) module is employed to extract multiscale
+time-domain information and global frequency-domain fea-
+tures. Additionally, a distillation layer is incorporated to
+expand the receptive field. Based on these modules, two
+novel deep learning architectures named FE-MCFormer
+and FE-MCFormer-s are developed based on the proposed
+improvements.
+The effectiveness and interpretability of FE-MCFormer
+arevalidatedthroughcasestudiesusingtwodifferentdatasets.
+ComparedwithsevenDLmethods,FE-MCFormerachieves
+improved diagnostic results and demonstrates strong noise
+robustness.Forexample,onthebearingdataset,FE-MCFormer
+achieves accuracies of 99.11%, 98.01%, 94.74%, 86.31%
+and 72.99% at SNR levels of−2,−4,−6,−8and−10dB,
+respectively. Meanwhile, on the compressor dataset, FE-
+MCFormerachievesaccuraciesof99.98%,99.71%,98.46%,
+96.63% and 93.48% at SNR levels of−2,−4,−6,−8
+and−10dB, respectively, higher than other DL methods,
+illustrating its strong potential for deployment in real-world
+industrial condition monitoring. Furthermore, comparative
+experiments are conducted to demonstrate the necessity of
+each component in FE-MCFormer. Interpretability analysis
+in both the time and frequency domains further reveals the
+internal mechanisms of the proposed FE-MCFormer.
+In future work, we will focus on expanding the applica-
+tionfieldandfurtherenhancingtheinterpretabilityandnoise
+robustness of both FALL and FE-MCFormer.
+5. Declarations
+5.1. Competing Interests
+We would like to declare that the work described is
+original research that has not been published previously
+and is not under consideration for publication elsewhere, in
+whole or in part. We have no known competing financial
+interests or personal relationships that could have appeared
+to influence the work reported in this paper.
+5.2. Acknowledgment
+ThisworkwassupportedinpartbytheNationalNatural
+Science Foundation in China under Grant No. U2541267,
+Liaoning Department of Science and Technology under
+GrantNo.2023JH1/10400084,andDalianHigh-levelTalent
+Innovation Program under Grant No. 2022RG10, which is
+highly appreciated.
+5.3. Author contribution
+Yuhan Yuan: Conceptualization, Data curation, Formal
+analysis, Investigation, Methodology, Software, Validation,
+Writing – original draft.
+Xiaomo Jiang: Conceptualization, Funding acquisition,
+Project administration, Resources, Supervision, Writing –
+review & editing.
+Haibin Yang: Methodology, Validation.
+Haixin Zhao: Validation, Supervision, Writing – review
+& editing.
+Shengbo Wang: Software, Validation.
+XueyuCheng:Validation,Supervision,Writing–review
+& editing.
+Jigang Meng: Project administration, Resources.
+References
+[1] Lei, Y., Yang, B., Jiang, X., Jia, F., Li, N., Nandi, A.K., 2020. Appli-
+cationsofmachinelearningtomachinefaultdiagnosis:Areviewand
+roadmap. Mech. Syst. Signal Process. 138, 106587.
+[2] Ahmad, H., Cheng, W., Wang, W., Zhang, S., Nie, Z., Liu, H., Chen,
+X., 2025. Consistency-regularized-label-aware contrastive learning
+with uncertainty-aware periodic pseudo-labeling for machinery fault
+diagnosis under limited labeled data. Adv. Eng. Inform. 68, 103656.
+[3] Zhao, L., Qi, J., Wu, F., Wang, Y., Qin, Y., 2026. Physics
+modeling-driven interpretable data augmentation method for bear-
+ing fault diagnosis under imbalanced data. Adv. Eng. Inform. 70,
+104189. URL:https://www.sciencedirect.com/science/article/pii/
+S1474034625010821, doi:https://doi.org/10.1016/j.aei.2025.104189.
+[4] Jiang, Z., Zhang, K., Xiang, L., Yu, G., Xu, Y., 2023. A time-
+frequencyspectralamplitudemodulationmethodanditsapplications
+in rolling bearing fault diagnosis. Mech. Syst. Signal Process. 185,
+109832. doi:10.1016/j.ymssp.2022.109832.
+[5] Chen, Z., Yang, Y., He, C., Liu, Y., Liu, X., Cao, Z., 2023. Feature
+extractionbasedonhierarchicalimprovedenvelopespectrumentropy
+for rolling bearing fault diagnosis. IEEE Trans. Instrum. Meas. 72,
+1–12. doi:10.1109/TIM.2023.3277938.
+[6] Kou, Z., Yang, F., Wu, J., Li, T., 2020. Application of ICEEMDAN
+energy entropy and AFSA-SVM for fault diagnosis of hoist sheave
+bearing. Entropy 22, 1347. doi:10.3390/e22121347.
+[7] Zhou, J., Chen, C., Guo, J., Wang, L., Liu, Z., Feng, C., 2023. A
+novel rolling bearing fault diagnosis method based on continuous
+hierarchical fractional range entropy. Measurement 220, 113395.
+doi:10.1016/j.measurement.2023.113395.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 16 of 17
+FE-MCFormer: A novel time–frequency interpretable fault diagnosis architecture
+[8] Ren, C., Jiang, B., Lu, N., Simani, S., Gao, F., 2024. Meta-learning
+with distributional similarity preference for few-shot fault diagnosis
+under varying working conditions. IEEE Trans. Cybern. 54, 2746–
+2756. doi:10.1109/TCYB.2023.3338768.
+[9] Zhang, L., Wang, B., Liang, P., Yuan, X., Li, N., 2023. Semi-
+supervised fault diagnosis of gearbox based on feature pre-extraction
+mechanismandimprovedgenerativeadversarialnetworksunderlim-
+ited labeled samples and noise environment. Adv. Eng. Inform. 58,
+102211. doi:10.1016/j.aei.2023.102211.
+[10] He,C.,Gai,N.,Yan,K.,Shao,H.,2026. Ahybridcross-domainfew-
+shot bearing fault diagnosis method combining multi-scale feature
+association and physical information. Adv. Eng. Inform. 69, 104077.
+[11] Jia, L., Chow, T.W.S., Wang, Y., Yuan, Y., 2022. Multiscale residual
+attention convolutional neural network for bearing fault diagnosis.
+IEEETrans. Instrum. Meas.71, 1–13. doi:10.1109/TIM.2022.3196742.
+[12] Chen, Z., Chen, J., Liu, S., Feng, Y., He, S., Xu, E., 2022. Multi-
+channelcalibratedtransformerwithshiftedwindowsforfew-shotfault
+diagnosis under sharp speed variation. ISA Transactions 131, 501–
+515.
+[13] Liao, J.X., He, C., Li, J., Sun, J., Zhang, S., Zhang, X., 2025.
+Classifier-guided neural blind deconvolution: A physics-informed
+denoising module for bearing fault diagnosis under noisy
+conditions. Mechanical Systems and Signal Processing 222,
+111750. URL:https://www.sciencedirect.com/science/article/
+pii/S0888327024006484, doi:https://doi.org/10.1016/j.ymssp.2024.
+111750.
+[14] Chen, K., Zhou, F., Zhang, F., Yu, K., Yang, D., 2026. A multi-
+channel signal fault diagnosis method based on dynamic weighted
+data fusion and multi-scale feature enhancement. Expert Systems
+with Applications 306, 130747.
+[15] Wang,L.,Zhao,W.,2025. Anensembledeeplearningnetworkbased
+on2dconvolutionalneuralnetworkand1dlstmwithself-attentionfor
+bearing fault diagnosis. Applied Soft Computing 172, 112889.
+[16] Li, Y., Zhou, Z., Sun, C., Chen, X., Yan, R., 2024. Variational
+Attention-Based Interpretable Transformer Network for Rotary Ma-
+chine Fault Diagnosis. IEEE Trans. Neural Netw. Learning Syst. 35,
+6180–6193.
+[17] Yuan, Y., Han, Y., Xiao, K., Xu, Z., Jiang, X., 2025. Remain-
+ing useful life prediction for the harmonic reducer of industrial
+robots via in-situ current signal and lightweight multiscale atten-
+tion deep networks. Journal of Manufacturing Systems 83, 322–
+336. URL:https://www.sciencedirect.com/science/article/pii/
+S0278612525002353, doi:https://doi.org/10.1016/j.jmsy.2025.09.008.
+[18] Zhang, Y., Zhao, X., Peng, Z., Xu, R., Chen, P., 2025. Wd-kantf:
+An interpretable intelligent fault diagnosis framework for rotating
+machinery under noise environments and small sample conditions.
+Adv. Eng. Inform. 66, 103452.
+[19] Liu, K., Li, Y., Cui, Z., Qi, G., Wang, B., 2025. Adaptive frequency
+attention-based interpretable transformer network for few-shot fault
+diagnosis of rolling bearings. Reliability Engineering & System
+Safety 263, 111271. URL:https://www.sciencedirect.com/science/
+article/pii/S0951832025004727,doi:https://doi.org/10.1016/j.ress.
+2025.111271.
+[20] Wang,Z.,Han,G.,Liu,L.,Wang,F.,Zhu,Y.,2025. Agloballyinter-
+pretable convolutional neural network combining bearing semantics
+for bearing fault diagnosis. IEEE Transactions on Instrumentation
+and Measurement 74, 1–13. doi:10.1109/TIM.2025.3538068.
+[21] Chen, G., Tang, G., Zhu, Z., 2024. Vkcnn: An interpretable
+variational kernel convolutional neural network for rolling bear-
+ing fault diagnosis. Advanced Engineering Informatics 62,
+102705. URL:https://www.sciencedirect.com/science/article/pii/
+S1474034624003537, doi:https://doi.org/10.1016/j.aei.2024.102705.
+[22] Zhou, Q., Tang, J., 2024. An interpretable parallel spatial cnn-lstm
+architecture for fault diagnosis in rotating machinery. IEEE Internet
+of Things Journal 11, 31730–31744. doi:10.1109/JIOT.2024.3422969.
+[23] Lessmeier, C., Kimotho, J.K., Zimmer, D., Sextro, W., 2016. Con-
+dition monitoring of bearing damage in electromechanical drive sys-
+tems by using motor current signals of electric motors: A benchmark
+data set for data-driven classification, in: PHM society European
+conference.
+[24] Chen, X., Zhang, B., Gao, D., 2021. Bearing fault diagnosis base on
+multi-scale cnn and lstm model. J. Intell. Manuf. 32, 971–987.
+[25] Zhao, Z., Li, T., Wu, J., Sun, C., Wang, S., Yan, R., Chen, X.,
+2020. Deep learning algorithms for rotating machinery intelligent
+diagnosis: An open source benchmark study. ISA Transactions 107,
+224–255. URL:https://www.sciencedirect.com/science/article/
+pii/S0019057820303335, doi:https://doi.org/10.1016/j.isatra.2020.
+08.010.
+[26] Chen, Z., Chen, J., Liu, S., Feng, Y., He, S., Xu, E., 2022. Multi-
+channelcalibratedtransformerwithshiftedwindowsforfew-shotfault
+diagnosis under sharp speed variation. ISA transactions 131, 501–
+515.
+[27] Yan,S.,Shao,H.,Wang,J.,Zheng,X.,Liu,B.,2024. LiConvFormer:
+A lightweight fault diagnosis framework using separable multiscale
+convolutionandbroadcastself-attention. ExpertSystemswithAppli-
+cations 237, 121338. doi:10.1016/j.eswa.2023.121338.
+Yuhan Yuan et al.:Preprint submitted to ElsevierPage 17 of 17

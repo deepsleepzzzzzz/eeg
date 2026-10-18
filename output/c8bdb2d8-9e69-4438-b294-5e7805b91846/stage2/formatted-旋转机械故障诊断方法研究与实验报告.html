@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="docx-page-size" content="A4">
+<title>旋转机械故障诊断方法研究与实验报告</title>
+<style>
+:root {
+  --ff-heading: 微软雅黑, Microsoft YaHei, PingFang SC;
+  --ff-body: 微软雅黑, Microsoft YaHei, PingFang SC;
+  --fs-title: 22pt;
+  --fs-h2: 13pt;
+  --fs-h3: 11pt;
+  --fs-body: 10.5pt;
+  --fs-small: 9pt;
+  --fw-bold: 600;
+  --fw-normal: 400;
+  --lh-body: 1.6;
+  --lh-heading: 1.3;
+  --color-primary: #1565C0;
+  --color-secondary: #0288D1;
+  --color-accent: #00897B;
+  --color-heading: #1A237E;
+  --color-text: #212121;
+  --color-muted: #616161;
+  --color-border: #E0E0E0;
+  --color-bg: #FFFFFF;
+  --color-highlight: #F5F7FA;
+  --color-emphasis: #C62828;
+  --spacing-paragraph: 0.75em;
+  --spacing-section: 1.6em;
+  --spacing-block: 0.6em;
+  --margin-page: 2.5cm;
+  --page-content-width: 160mm;
+}
+body {
+  max-width: var(--page-content-width);
+  margin-left: auto;
+  margin-right: auto;
+  font-family: var(--ff-body);
+  font-size: var(--fs-body);
+  color: var(--color-text);
+  line-height: var(--lh-body);
+}
+h1, h2, h3 { font-family: var(--ff-heading); color: var(--color-heading); line-height: var(--lh-heading); }
+p { margin: 0 0 var(--spacing-paragraph) 0; }
+table { width: 100%; border-collapse: collapse; margin: var(--spacing-block) 0 var(--spacing-section) 0; }
+th, td { border: 1px solid var(--color-border); padding: 0.4em 0.6em; text-align: center; font-size: var(--fs-small); line-height: 1.4; }
+th { background: var(--color-primary); color: var(--color-bg); font-weight: var(--fw-bold); }
+.data-emphasis { color: var(--color-emphasis); font-weight: var(--fw-bold); }
+.cover-category { text-align: center; color: var(--color-primary); font-size: 14pt; font-weight: 700; letter-spacing: 0.3em; margin: 0 0 2em 0; }
+section[role="cover"] h1 { text-align: center; font-size: var(--fs-title); color: var(--color-heading); font-weight: var(--fw-bold); line-height: 1.4; margin: 0 0 1.2em 0; }
+.cover-subtitle { text-align: center; font-size: 13pt; color: var(--color-muted); margin: 0 0 3em 0; }
+.cover-meta { text-align: center; font-size: var(--fs-small); color: var(--color-muted); }
+h2 { font-size: var(--fs-h2); font-weight: var(--fw-bold); border-left: 4px solid var(--color-primary); padding-left: 0.6em; margin: var(--spacing-section) 0 var(--spacing-paragraph) 0; }
+h3 { font-size: var(--fs-h3); font-weight: var(--fw-bold); margin: var(--spacing-paragraph) 0 0.4em 0; }
+.doc-toc { margin: 0 0 var(--spacing-section) 0; padding: 1em 1.2em; background: var(--color-highlight); border: 1px solid var(--color-border); }
+.toc-title { font-size: var(--fs-h3); font-weight: var(--fw-bold); color: var(--color-heading); margin: 0 0 0.5em 0; }
+.toc-list, .toc-list ol, .toc-list ul { list-style: none; list-style-type: none; margin: 0; padding: 0; }
+.toc-list li { margin: 0.35em 0; font-size: var(--fs-body); }
+.toc-list a { color: var(--color-text); text-decoration: none; }
+@page { @bottom-center { content: counter(page); } }
+@page cover { @bottom-center { content: none; } }
+section[role="cover"] { page: cover; }
+</style>
+</head>
+<body>
+
+<section role="cover">
+  <p class="cover-category">实验研究报告</p>
+  <h1>旋转机械故障诊断方法研究<br>与实验报告</h1>
+  <p class="cover-subtitle">基于状态转移网络的轴承与齿轮故障识别</p>
+  <p class="cover-meta">东南大学 DDS 数据集 · 2026 年 9 月</p>
+</section>
+
+<section role="body" data-page-restart="1">
+
+<nav class="doc-toc" aria-label="文档目录">
+  <p class="toc-title">目录</p>
+  <ol class="toc-list">
+    <li><a href="#section-1">一、研究背景与任务</a></li>
+    <li><a href="#section-2">二、数据集说明</a></li>
+    <li><a href="#section-3">三、方法描述</a></li>
+    <li><a href="#section-4">四、实验设置</a></li>
+    <li><a href="#section-5">五、实验结果</a></li>
+    <li><a href="#section-6">六、结论</a></li>
+  </ol>
+</nav>
+
+<h2 id="section-1">一、研究背景与任务</h2>
+<h3>（一）研究背景</h3>
+<p>旋转机械（轴承、齿轮）是工业装备的核心传动部件，其故障是导致设备停机与安全事故的主要原因。基于振动信号的智能故障诊断方法能够在设备运行状态下自动识别故障类型，对保障装备安全运行具有重要意义。</p>
+<h3>（二）任务定义</h3>
+<p>本研究围绕两类旋转部件的故障识别展开：</p>
+<p>· 轴承五分类：健康、滚动体故障、内圈故障、外圈故障、复合故障；</p>
+<p>· 齿轮五分类：健康、崩齿、缺齿、齿根裂纹、齿面磨损。</p>
+<p>每类任务在两种工况下分别建模、分别评估，共构成 8 组「任务 × 工况」实验。</p>
+
+<h2 id="section-2">二、数据集说明</h2>
+<h3>（一）数据来源与参数</h3>
+<p>采用东南大学 Drivetrain Dynamic Simulator（DDS）公开数据集，振动信号采集自行星齿轮箱。主要参数如下：</p>
+<table>
+  <thead><tr><th>项目</th><th>参数</th></tr></thead>
+  <tbody>
+    <tr><td>采样率</td><td>5120 Hz</td></tr>
+    <tr><td>单类信号长度</td><td>1 048 560 采样点（约 205 秒）</td></tr>
+    <tr><td>使用通道</td><td>行星齿轮箱 x / y / z 三通道</td></tr>
+    <tr><td>工况</td><td>20 Hz–0 V（20-0）、30 Hz–2 V（30-2）</td></tr>
+    <tr><td>故障类别数</td><td>轴承 5 类、齿轮 5 类</td></tr>
+  </tbody>
+</table>
+<h3>（二）数据划分</h3>
+<p>采用时间连续划分，模拟真实部署场景「以历史数据训练、预测未来状态」，避免随机划分带来的时间信息泄漏：</p>
+<table>
+  <thead><tr><th>集合</th><th>比例</th><th>窗口数（每类）</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>训练集</td><td>70%</td><td>916</td><td>时间轴前 70%</td></tr>
+    <tr><td>验证集</td><td>20%</td><td>261</td><td>时间轴中段 20%</td></tr>
+    <tr><td>测试集</td><td>10%</td><td>130</td><td>时间轴末段 10%</td></tr>
+  </tbody>
+</table>
+<p>三个集合在时间轴上互不重叠，测试集窗口与训练/验证集之间无任何数据交集。</p>
+
+<h2 id="section-3">三、方法描述</h2>
+<h3>（一）总体框架</h3>
+<p>本方法采用「幅值符号化 → 多时间步状态转移矩阵 → 深度网络分类」三阶段流程，将原始振动信号转换为状态转移矩阵作为故障特征表示，再由深度网络完成分类。</p>
+<h3>（二）幅值符号化</h3>
+<p>对每窗振动信号逐通道执行以下两步，将连续幅值映射为离散符号：</p>
+<p>1. 逐窗 z-score 归一化：将每个窗口内的信号标准化为均值为 0、标准差为 1，消除不同类别间幅值量级的差异；</p>
+<p>2. 等频（分位数）分档：采用 6 个符号状态，边界由训练集拟合的分位数确定，保证每个符号状态内的样本量大致均衡。</p>
+<h3>（三）状态转移矩阵</h3>
+<p>对符号化后的序列，在多个时间步长上统计状态转移关系：</p>
+<p>1. 多时间步：转移步长取 [1, 2, 3, 4, 5, 6, 7]，捕捉不同时间尺度上的动态特征；</p>
+<p>2. 概率归一化：将状态转移计数归一化为转移概率，构成有向加权转移矩阵；</p>
+<p>3. 多通道堆叠：将 x/y/z 三通道在 7 个步长上的转移矩阵堆叠，得到形状为 [21, 6, 6] 的特征张量。</p>
+<h3>（四）分类网络</h3>
+<table>
+  <thead><tr><th>网络</th><th>结构</th></tr></thead>
+  <tbody>
+    <tr><td>CNN</td><td>两层卷积（通道 32、64），3×3 卷积核，2×2 池化，自适应平均池化后全连接分类</td></tr>
+    <tr><td>GCN</td><td>关系布局图卷积网络，2 层，隐层维度 32，节点数为符号状态数 6</td></tr>
+  </tbody>
+</table>
+<h3>（五）关键改进</h3>
+<p>针对符号化表示在幅值差异大、故障特征相近场景下的失效问题，本方法提出四项改进：</p>
+<table>
+  <thead><tr><th>改进项</th><th>改进前</th><th>改进后</th><th>改进动机</th></tr></thead>
+  <tbody>
+    <tr><td>归一化</td><td>无</td><td>逐窗 z-score</td><td>消除类间幅值尺度差异，避免符号状态塌缩</td></tr>
+    <tr><td>符号化边界</td><td>等宽</td><td>等频（分位数）</td><td>保证各符号桶样本量均衡，充分利用状态空间</td></tr>
+    <tr><td>转移步长</td><td>[1, 2, 3]</td><td>[1, …, 7]</td><td>多时间尺度捕捉细粒度时序纹理</td></tr>
+    <tr><td>窗口采样</td><td>800 点不重叠</td><td>1600 点、50% 重叠</td><td>加长窗口完整呈现故障冲击模式，重叠采样保持样本量</td></tr>
+  </tbody>
+</table>
+<p>其中，逐窗 z-score 与等频分档共同解决了轴承 20-0 工况的状态塌缩问题；长窗口采样对齿轮 30-2 工况的细粒度故障区分贡献最大。</p>
+
+<h2 id="section-4">四、实验设置</h2>
+<h3>（一）训练配置</h3>
+<table>
+  <thead><tr><th>参数</th><th>取值</th></tr></thead>
+  <tbody>
+    <tr><td>归一化</td><td>逐窗 z-score</td></tr>
+    <tr><td>符号状态数</td><td>6</td></tr>
+    <tr><td>符号化边界</td><td>等频（分位数）</td></tr>
+    <tr><td>转移步长</td><td>[1, 2, 3, 4, 5, 6, 7]</td></tr>
+    <tr><td>转移权重</td><td>概率归一化</td></tr>
+    <tr><td>窗口长度 / 步长</td><td>1600 点 / 800 点（50% 重叠）</td></tr>
+    <tr><td>输入张量形状</td><td>[21, 6, 6]</td></tr>
+    <tr><td>优化器</td><td>Adam</td></tr>
+    <tr><td>学习率</td><td>5 × 10⁻⁴</td></tr>
+    <tr><td>权重衰减</td><td>1 × 10⁻⁴</td></tr>
+    <tr><td>Dropout</td><td>0.2</td></tr>
+    <tr><td>批大小</td><td>32</td></tr>
+    <tr><td>最大训练轮数</td><td>200</td></tr>
+    <tr><td>早停</td><td>验证集准确率，耐心 30 轮</td></tr>
+    <tr><td>随机种子</td><td>42</td></tr>
+  </tbody>
+</table>
+<h3>（二）评价指标</h3>
+<p>采用准确率（Accuracy）、宏平均 F1（Macro-F1）与均衡准确率（Balanced Accuracy）评价分类性能；通过 5 折时间序列交叉验证评估方法在不同时间段上的稳定性。</p>
+
+<h2 id="section-5">五、实验结果</h2>
+<h3>（一）总体结果</h3>
+<p>所提方法在全部 8 组「任务 × 工况」上的测试集结果如下：</p>
+<table>
+  <thead><tr><th>任务</th><th>模型</th><th>工况</th><th>准确率</th><th>宏平均 F1</th><th>均衡准确率</th></tr></thead>
+  <tbody>
+    <tr><td>轴承</td><td>CNN</td><td>20-0</td><td>0.9985</td><td>0.9985</td><td>0.9985</td></tr>
+    <tr><td>轴承</td><td>CNN</td><td>30-2</td><td>1.0000</td><td>1.0000</td><td>1.0000</td></tr>
+    <tr><td>轴承</td><td>GCN</td><td>20-0</td><td>0.9985</td><td>0.9985</td><td>0.9985</td></tr>
+    <tr><td>轴承</td><td>GCN</td><td>30-2</td><td>1.0000</td><td>1.0000</td><td>1.0000</td></tr>
+    <tr><td>齿轮</td><td>CNN</td><td>20-0</td><td>0.9954</td><td>0.9954</td><td>0.9954</td></tr>
+    <tr><td>齿轮</td><td>CNN</td><td>30-2</td><td>0.9815</td><td>0.9816</td><td>0.9815</td></tr>
+    <tr><td>齿轮</td><td>GCN</td><td>20-0</td><td>0.9985</td><td>0.9985</td><td>0.9985</td></tr>
+    <tr><td>齿轮</td><td>GCN</td><td>30-2</td><td>0.9769</td><td>0.9770</td><td>0.9769</td></tr>
+  </tbody>
+</table>
+<p>全部组合准确率均超过 <span class="data-emphasis">95%</span>，轴承任务在两种工况下均接近满分。</p>
+<h3>（二）改进前后对比</h3>
+<table>
+  <thead><tr><th>任务</th><th>模型</th><th>工况 20-0（前 → 后）</th><th>工况 30-2（前 → 后）</th></tr></thead>
+  <tbody>
+    <tr><td>轴承</td><td>CNN</td><td>0.6857 → 0.9985</td><td>0.9776 → 1.0000</td></tr>
+    <tr><td>轴承</td><td>GCN</td><td>0.7296 → 0.9985</td><td>0.9898 → 1.0000</td></tr>
+    <tr><td>齿轮</td><td>CNN</td><td>0.9194 → 0.9954</td><td>0.8582 → 0.9815</td></tr>
+    <tr><td>齿轮</td><td>GCN</td><td>0.9184 → 0.9985</td><td>0.8194 → 0.9769</td></tr>
+  </tbody>
+</table>
+<p>轴承 20-0 工况提升约 0.31，齿轮 30-2 工况提升约 0.12，前者源于状态塌缩问题的解决，后者源于长窗口对细粒度故障的区分能力增强。</p>
+<h3>（三）5 折交叉验证</h3>
+<p>采用 rolling-origin 5 折时间序列交叉验证，每折训练集严格位于测试集之前，测试窗口随折次向前滑动。逐折测试准确率如下：</p>
+<table>
+  <thead><tr><th>任务</th><th>模型</th><th>工况</th><th>第 1 折</th><th>第 2 折</th><th>第 3 折</th><th>第 4 折</th><th>第 5 折</th><th>均值</th><th>标准差</th></tr></thead>
+  <tbody>
+    <tr><td>轴承</td><td>CNN</td><td>20-0</td><td>0.9985</td><td>0.9969</td><td>0.9985</td><td>0.9985</td><td>0.9985</td><td>0.9982</td><td>0.0006</td></tr>
+    <tr><td>轴承</td><td>CNN</td><td>30-2</td><td>1.0000</td><td>0.9985</td><td>0.9985</td><td>1.0000</td><td>1.0000</td><td>0.9994</td><td>0.0007</td></tr>
+    <tr><td>轴承</td><td>GCN</td><td>20-0</td><td>0.9954</td><td>0.9938</td><td>1.0000</td><td>1.0000</td><td>0.9985</td><td>0.9975</td><td>0.0025</td></tr>
+    <tr><td>轴承</td><td>GCN</td><td>30-2</td><td>0.9923</td><td>1.0000</td><td>1.0000</td><td>1.0000</td><td>1.0000</td><td>0.9985</td><td>0.0031</td></tr>
+    <tr><td>齿轮</td><td>CNN</td><td>20-0</td><td>0.9923</td><td>0.9877</td><td>0.9862</td><td>0.9800</td><td>0.9923</td><td>0.9877</td><td>0.0046</td></tr>
+    <tr><td>齿轮</td><td>CNN</td><td>30-2</td><td>0.9831</td><td>0.9815</td><td>0.9892</td><td>0.9785</td><td>0.9692</td><td>0.9803</td><td>0.0066</td></tr>
+    <tr><td>齿轮</td><td>GCN</td><td>20-0</td><td>0.9969</td><td>0.9908</td><td>0.9846</td><td>0.9862</td><td>0.9985</td><td>0.9914</td><td>0.0056</td></tr>
+    <tr><td>齿轮</td><td>GCN</td><td>30-2</td><td>0.9815</td><td>0.9815</td><td>0.9785</td><td>0.9708</td><td>0.9862</td><td>0.9797</td><td>0.0051</td></tr>
+  </tbody>
+</table>
+<p>8 组组合的 5 折均值全部超过 <span class="data-emphasis">95%</span>，40 个测试折无一低于 95%，标准差均不超过 0.0066，表明方法性能跨时间段稳定。</p>
+<h3>（四）混淆矩阵与错误分析</h3>
+<p>齿轮 30-2 工况是最具区分难度的场景，其混淆矩阵（行=真值，列=预测，每类 130 样本）如下：</p>
+<p>CNN 模型：</p>
+<table>
+  <thead><tr><th>类别</th><th>健康</th><th>崩齿</th><th>缺齿</th><th>齿根裂纹</th><th>齿面磨损</th></tr></thead>
+  <tbody>
+    <tr><td>健康</td><td>130</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>崩齿</td><td>0</td><td>130</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>缺齿</td><td>0</td><td>0</td><td>126</td><td>0</td><td>4</td></tr>
+    <tr><td>齿根裂纹</td><td>0</td><td>0</td><td>0</td><td>128</td><td>2</td></tr>
+    <tr><td>齿面磨损</td><td>0</td><td>0</td><td>5</td><td>1</td><td>124</td></tr>
+  </tbody>
+</table>
+<p>GCN 模型：</p>
+<table>
+  <thead><tr><th>类别</th><th>健康</th><th>崩齿</th><th>缺齿</th><th>齿根裂纹</th><th>齿面磨损</th></tr></thead>
+  <tbody>
+    <tr><td>健康</td><td>130</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>崩齿</td><td>0</td><td>125</td><td>0</td><td>1</td><td>4</td></tr>
+    <tr><td>缺齿</td><td>0</td><td>0</td><td>124</td><td>0</td><td>6</td></tr>
+    <tr><td>齿根裂纹</td><td>0</td><td>2</td><td>1</td><td>127</td><td>0</td></tr>
+    <tr><td>齿面磨损</td><td>0</td><td>0</td><td>1</td><td>0</td><td>129</td></tr>
+  </tbody>
+</table>
+<p>错误主要集中在缺齿与齿面磨损之间的相互误判，以及少量崩齿与齿根裂纹的混淆。这几类故障的冲击特征在时域上较为接近，属于旋转机械故障诊断中的公认难点。其余工况（轴承两工况、齿轮 20-0）的混淆矩阵基本为对角阵，几乎无错分。</p>
+
+<h2 id="section-6">六、结论</h2>
+<p>本报告构建了一套基于状态转移网络的旋转机械故障诊断方法，通过逐窗 z-score 归一化、等频符号化、多时间步转移与长窗口采样四项改进，使轴承、齿轮两类部件在多种工况下的故障识别准确率全部达到 95% 以上，并经 5 折交叉验证确认了方法的跨时间段稳定性。方法在幅值差异大、故障特征相近等困难场景下表现出良好的鲁棒性，为后续进一步扩展至更多部件类型与工况提供了基础。</p>
+
+</section>
+
+</body>
+</html>

@@ -19,6 +19,7 @@ data/seu/gearbox/**/*.csv
 data/**
 !data/README.md
 !data/DATA_PROVENANCE.md
+!data/seu/
 !data/seu/_files.json
 !data/seu/data_manifest_sha256.csv
 # 切窗+表示后的张量缓存（由 build_dataset.py 重建）

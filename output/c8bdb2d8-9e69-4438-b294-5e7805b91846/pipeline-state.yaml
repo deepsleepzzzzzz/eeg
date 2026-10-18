@@ -1,0 +1,59 @@
+schema_version: 1
+request_id: c8bdb2d8-9e69-4438-b294-5e7805b91846
+created_at: "2026-09-29T22:09:00+08:00"
+updated_at: "2026-09-29T22:09:00+08:00"
+
+entry_type: full_pipeline
+stage_chain: [1, 2, 3]
+
+output_docx_path: "C:\\Users\\lgt11\\Desktop\\EEG\\EEG\\doc\\旋转机械故障诊断实验成果汇报.docx"
+output_docx_user_specified: true
+
+current_stage: completed
+
+stages:
+  stage_0:
+    status: completed
+    completed_at: "2026-09-29T22:09:00+08:00"
+    decision: full_pipeline
+
+  stage_1:
+    status: completed
+    started_at: "2026-09-29T22:09:00+08:00"
+    completed_at: "2026-09-29T22:10:00+08:00"
+    output_path: "stage1/final_draft.md"
+    genre: work-report
+    expert_used: work-report-expert
+    route_tag: expert_work_report
+    critic_decision: null
+
+  stage_2:
+    status: completed
+    started_at: "2026-09-29T22:10:00+08:00"
+    completed_at: "2026-09-29T22:12:00+08:00"
+    route: html
+    html_sub: template
+    output_path: "stage2/formatted-旋转机械故障诊断实验成果汇报.html"
+    output_format: html
+    skills_invoked: ["design-token", "doc-typeset"]
+    design_tokens_path: null
+    fallback: false
+    fallback_reason: null
+
+  stage_3:
+    status: completed
+    started_at: "2026-09-29T22:12:00+08:00"
+    completed_at: "2026-09-29T22:15:30+08:00"
+    executor: doc-converter
+    input_format: html
+    output_path: "C:\\Users\\lgt11\\Desktop\\EEG\\EEG\\doc\\旋转机械故障诊断实验成果汇报.docx"
+    skill_used: ["html-to-docx"]
+    present_files_opened: true
+    fallback: false
+    fallback_reason: null
+
+consistency_check:
+  output_files_exist: pass
+  stage_chain_complete: pass
+  last_checked_at: "2026-09-29T22:15:30+08:00"
+  errors: []

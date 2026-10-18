@@ -124,6 +124,23 @@ def edges_from(values_by_channel: list[np.ndarray], bins: int) -> np.ndarray:
     return edges
 
 
+def audit_official_files(raw_dir: Path, task: str, source_files: dict) -> dict:
+    """Missing expected hashes are failed evidence, never successful verification."""
+    files_json = raw_dir / "_files.json"
+    if not files_json.is_file():
+        return {"rows": [], "pass": False, "error": "missing _files.json"}
+    items = json.loads(files_json.read_text(encoding="utf-8"))
+    official = {item["path"]: item["sha"] for item in items}
+    rows = []
+    for source in source_files.values():
+        rel = f"gearbox/{'gearset' if task == 'gear' else 'bearingset'}/{source['file']}"
+        expected = official.get(rel)
+        actual = source["git_blob_sha1"]
+        rows.append({"path": rel, "expected": expected, "actual": actual,
+                     "match": bool(expected and expected == actual)})
+    return {"rows": rows, "pass": bool(rows) and all(row["match"] for row in rows)}
+
+
 def audit_one(protocol: dict, dataset_dir: Path, task: str, cond: str) -> dict:
     length, stride = window_cfg(protocol)
     method_cfg = method_cfg_from_protocol(protocol)
@@ -257,20 +274,8 @@ def audit_one(protocol: dict, dataset_dir: Path, task: str, cond: str) -> dict:
     cross_ok = bool((cross_mu_diff > 0.01) or (cross_sd_diff > 0.01))
 
     # ---------- E：官方文件清单比对 ----------
-    files_json = raw_dir / "_files.json"
-    official = {}
-    if files_json.exists():
-        for item in json.loads(files_json.read_text(encoding="utf-8")):
-            official[item["path"]] = item["sha"]
-    official_ok = True
-    official_rows = []
-    for name in saved_names:
-        rel = f"gearbox/{'gearset' if task == 'gear' else 'bearingset'}/{headers[name]['file']}"
-        exp = official.get(rel)
-        got = headers[name]["git_blob_sha1"]
-        ok = (exp is None) or (exp == got)
-        official_ok = official_ok and ok
-        official_rows.append({"path": rel, "expected": exp, "actual": got, "match": bool(ok)})
+    official_check = audit_official_files(raw_dir, task, headers)
+    official_ok = official_check["pass"]
 
     # ---------- F：划分指纹（记录值 vs 当前代码重算值） ----------
     # 缓存是**旧版代码**建立的：那时 channel_indices 的来源被记成 "default"，
@@ -326,7 +331,7 @@ def audit_one(protocol: dict, dataset_dir: Path, task: str, cond: str) -> dict:
             "max_rel_std_diff": cross_sd_diff,
             "pass": cross_ok,
         },
-        "E_official_file_list": {"rows": official_rows, "pass": bool(official_ok)},
+        "E_official_file_list": official_check,
         "F_split_hash": {
             "recorded": recorded_hash,
             "recomputed": h_now,

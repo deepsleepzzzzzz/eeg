@@ -1,0 +1,1200 @@
+
+===== PAGE 0 =====
+Decoupled Feature-Temporal CNN: Explaining
+Deep Learning-Based Machine Health Monitoring
+Chaoyi Zhu, Zhenghua Chen*, Rui Zhao, Jinjiang Wang, and Ruqiang Yan
+Abstract—Machine learning, especially deep learning, has been
+extensively applied and studied in the area of machine health
+monitoring. For machine health monitoring systems (MHMS),
+the major efforts have been put in designing and deploying more
+and more complex machine learning models. Those black-box
+models are non-transparent towards their working mechanism.
+However, this research trend brings huge potential risk in real
+life. Since machine health monitoring itself belongs to high stake
+decision applications, the outputs of the autonomous monitoring
+systems should be trustworthy and reliable, which refers to obtain
+explainability. Then, it comes to the following key question: Why
+the deployed MHMS predicts what they predict. In this paper,
+we shed some lights on this meaningful research direction:
+explainable machine health monitoring systems (EMHMS). In
+EMHMS, the machine doctor could act like a real doctor who can
+not only make diagnosis but also describe the patient’s symptoms.
+First, we propose a speciﬁc convolutional neural network (CNN)
+structure, named as DecouplEd Feature-Temporal CNN (DEFT-
+CNN), to balance precision-explainability trade-off. Speciﬁcally,
+feature and temporal information have been encoded in different
+stages of our model. The spatial attention module is added to
+boost the performance of the model. Then, to explain the decision
+of the model, we adopt the gradient-based methods to generate
+features and temporal saliency maps highlighting which kind of
+features and time steps are key for the model’s predictions. At
+last, we conduct the experimental studies on two real datasets to
+verify the effectiveness of our proposed framework.
+Index Terms—Machine health monitoring, deep learning, con-
+volutional neural network, attention mechanism, explainable
+machine learning
+I. INTRODUCTION
+4In the ﬁeld of machine health monitoring, deep learning
+systems built upon industrial big data have been pervasive
+across various applications [1]–[4]. For example, Georg et
+al. adopted deep neural networks for condition monitoring
+in wind turbine [5]. Xiao et al. combined recurrence quan-
+tiﬁcation analysis and long short-term memory (LSTM) for
+This work is supported by the Agency for Science, Technology and
+Research (A*STAR) under its AME Programmatic Funds (Grant No.
+A20H6b0151) and Career Development Award (Grant No. C210112046).
+Chaoyi Zhu is with School of Instrumentation and Optoelectronic
+Engineering,
+Beihang
+University,
+Beijing,
+China
+100191
+(e-mail:
+z00419@buaa.edu.cn).
+Zhenghua Chen is with the Institute for Infocomm Research, Agency for
+Science, Technology and Research (A∗STAR), Sinagpore 138632 (e-mail:
+chen0832@e.ntu.edu.sg).
+Rui Zhao is with Quantitative Research, Harveston Asset Management,
+Singapore 069542 (e-mail: rui91seu@gmail.com)
+Jinjiang Wang is with School of Mechanical and Transportation Engi-
+neering, China University of Petroleum, Beijing, China 102249 (e-mail:
+jwang@cup.edu.cn).
+Ruqiang Yan is with School of Mechanical Engineering, Xi’an Jiaotong
+University, Xi’an, China 710049 (e-mail: yanruqiang@xjtu.edu.cn).
+* indicates the corresponding author.
+fault diagnosis of induction motors [6]. To classify online
+tool wear during dry machining, Terrazas et al. utilized
+convolutional neural network (CNN) based real-time cutting
+force measurements [7]. In addition to diagnosis, Chen et
+al. proposed a novel attention-based deep learning model for
+machine remaining useful life (RUL) prediction [8]. Li et al.
+[9] proposed a CNN with time-frequency domain features for
+rolling bearing’s RUL prediction. All these previous studies
+validate the effectiveness of deep learning systems in the ap-
+plication of machine health monitoring. Although the reported
+performance metrics such as training and testing accuracies in
+diagnosis tasks are very high and convincing, the deployment
+of these powerful deep learning algorithms in real industrial
+environments have been lagging compared to other appli-
+cations such as recommendation in E-commerce platforms
+and machine translations. It is because that machine health
+monitoring is one of high-stake decision scenarios where any
+potential mistakes may lead to catastrophic outcomes. Since
+these complex models cannot provide any explanations for
+users to understand models’ predictions (e.g., why the model
+predicts an inner race fault for a gearbox), users cannot rely on
+and trust these machine health monitoring systems. In contrast
+to these deep learning based MHMS, traditional machine
+health monitoring and fault diagnosis techniques can provide
+intuitive explanations and justify the models’ predictions [10],
+[11]. For example, signal processing techniques can be adopted
+to extract some metrics and the abnormal working condition
+may be inferred based on the value range of pre-deﬁned
+working circumferences. However, these previous approaches
+have limited precision and scalability due to the requirement
+of intensive expert efforts.
+In this paper, we propose a novel approach named
+DecouplEd Feature-Temporal CNN (DEFT-CNN) to solve the
+above trade-off problem between precision and explainability
+in the application of machine health monitoring. For each data
+sample, local feature extraction is conducted ﬁrstly to obtain
+a sequence of feature vectors which contain two directions:
+features and temporal ones, as shown in Figure 1. The details
+will be presented in the following sections. In computer vision,
+the conventional CNN has shown powerful capability to learn
+meaningful representations from images by capturing spatial
+relationships of pixels across rows and columns of an image.
+In our proposed DEFT-CNN structure, there are two kinds of
+convolution layers: one is to focus on feature direction while
+the other one is to focus on time axis, which is also called 1D
+convolution layers. The decoupled domain-temporal modelling
+design is able to provide separate explanation focusing on
+features and temporal information. And the spatial attention
+
+===== PAGE 1 =====
+module recently studied extensively in the ﬁeld of computer
+vision is added in our network [12]. This module can not only
+boost the classiﬁcation accuracy but also compute attention
+values of features and temporal dimensions indicating their
+importance. In our framework, one of the gradient-based
+methods named Gradient-weighted Class Activation Mapping
+(Grad-CAM) is adopted to explain the model decisions [13].
+In our proposed CNN structure with Grad-CAM, features
+and temporal saliency maps can be visualized and pointed
+out which features and time segments are discriminative over
+model predictions. What is more, users are able to gain insights
+into the inner information ﬂow in the deep learning model
+and ﬁnd directions for model optimization, bias removal and
+model debugging. At last, the trust of the users could be built
+by providing explanations of the model decisions, which is
+vital for the application of deep learning systems in the ﬁeld
+of machine health monitoring. The contributions of our work
+could be summarized as the following aspects:
+• Introduce a gradient-based deep learning explanation
+method, i.e., Grad-CAM, to understand the contributions
+from features and temporal directions in machine health
+monitoring tasks.
+• Design the speciﬁc network structure of CNN, i.e., DEFT-
+CNN, so that the attributions from domain features and
+time dynamics could be analyzed and understood sepa-
+rately.
+• Spatial attention module is incorporated to boost the
+model performance in terms of the diagnosis accuracy
+and model explainability.
+• The proposed framework achieves a good balance be-
+tween precision and explainability and has been veriﬁed
+by using two real datasets.
+In a previous paper [14], the authors proposed DEFT-
+CNN, which has several problems such as relatively low
+accuracy and only testing on a single dataset. To solve these
+problems, the main improvements of this work are summarized
+as follows: 1) We introduce a spatial attention module into
+DEFT-CNN, which can focus on important features and time
+steps to improve accuracy and explainability. With the spatial
+attention module, accuracy improves by more than 1% on two
+different datasets. 2) Our proposed framework is validated
+on two more challenging real datasets for rolling element
+bearing and gearbox diagnosis, which can better demonstrate
+performance of our model. 3) We conduct an additional feature
+selection experiment. In this experiment, we compared the
+testing accuracy using the features selected by importance
+score with the accuracy using the randomly selected features
+and the features selected by mutual information, which proves
+the superiority of the ﬁrst one. This also manifests the effec-
+tiveness of the computed feature importance scores by using
+the proposed DEFT-CNN.
+The remainder of the paper is organised as follows: Sec-
+tion 2 provides an overview of machine learning explanation
+approaches and some previous works in explainable machine
+health monitoring systems. Section 3 presents the details about
+the proposed framework including the CNN structure with
+the spatial attention module and the adopted gradient-based
+model explanation technique: Grad-CAM. Section 4 illustrates
+a real application study which is based on a real bearing fault
+diagnosis dataset: Paderborn University dataset and a gearbox
+fault diagnosis dataset from Southeast University. In the last
+section, the summary and future works are provided.
+II. RELATED WORKS
+In this section, a brief review of attention mechanism, deep
+learning explanation techniques and the relevant applications
+on machine health monitoring systems is presented.
+A. Attention Mechanism
+In the human visual system, attention plays an impor-
+tant role in capturing information from images. Attention
+mechanism allows humans to recognize things from pictures
+by just focusing on salient parts. This process not only
+focuses on a particular area, but also interprets objects in
+that area. Therefore, attention mechanism has been used in
+neural networks in recent years to improve the classiﬁcation
+accuracy and explainability of networks. Wang et al. proposed
+a Residual Attention Network which uses residual blocks with
+attention module [15]. The bottom-up top-down feedforward
+structure of attention module is used to unfold the feedforward
+and feedback attention process into a single feedforward
+process. The attention residual learning can not only improve
+the network’s performance but is also robust against noisy
+labels. Besides this, Hu et al. proposed Squeeze-and-Excitation
+Networks which introduced a compact module to exploit the
+inter channel relationship, so that their module is applicable
+to almost all CNN architectures [16]. Their Squeeze-and-
+Excitation module adaptively recalibrates channel-wise feature
+responses by explicitly modelling interdependencies between
+channels. Based on the work of Hu et al. [16], Woo et al.
+came up with Convolutional Block Attention Module [12],
+which is adopted in our purposed network. Instead of only
+focusing on channel wise attention like Squeeze-and Exci-
+tation module, Convolutional Block Attention Module also
+focuses on spatial attention, which plays an important role
+in information extraction. Roy et al. extended the work of Hu
+et al. [16] by incorporating the effect of spatial information in
+combination with feature-map (channel) information to make
+it applicable to segmentation tasks [17]. Though attention
+mechanisms have shown excellent performance in the ﬁeld of
+image recognition, few researchers have integrated attention
+mechanism into machine health monitoring. Our framework
+introduced attention modules to improve the performance and
+explainability of the model.
+B. Explainable Machine Learning
+The raid growth applications of machine learning, especially
+deep learning models in high-stake decision areas such as
+healthcare, ﬁnance and machinery health monitoring, raises
+the requirements of understanding complex models. For deep
+learning, there are two main categories of interpretable deep
+learning techniques: perturbation-based methods and gradient-
+based methods [18], [19]. Our adopted technique Grad-CAM
+
+===== PAGE 2 =====
+belongs to the latter one: gradient-based methods.
+Perturbation-based Methods: To capture the attributions
+of input features towards model predictions, the input data
+are perturbed and fed into the model to monitor how the
+model’s predictions change. Zintgraf et al. modiﬁed the input
+image by moving a grey patch occluding part and visualized
+the locations of patches that are responsible for the correct
+predictions [20]. Most of these methods are not model-speciﬁc
+techniques so that the same technique can be applied to any
+kinds of machine learning models (not limited to deep learn-
+ing models). Local interpretable model-agnostic explanations
+(LIME) proposed by Ribeiro et al. was aimed at explaining
+the predictions of any black-box classiﬁers based on the
+assumption that complex black-box models may be linear and
+simple locally [21]. The ﬁrst step of LIME is to generate a
+new dataset containing permuted samples near the neighbor of
+the original samples and the corresponding predictions of the
+interested black-box models. Then, an intrinsic interpretable
+model such as decision tree or lasso regression model is
+trained over this new dataset. From the intrinsic interpretable
+model, the feature importance of the interested sample could
+be approximated. Except LIME, Scoped Rules (Anchors) and
+SHapley Additive exPlanations (SHAP) are other popular
+model-agnostic methods [22], [23]. Although perturbation-
+based methods have high ﬂexibility that are applicable to all
+black-box models, their efﬁciency is limited especially when
+the input data are in a high dimensionality space.
+Gradient-based Methods: Gradient-based methods are fo-
+cusing on computed gradients during backpropagation to
+understand the information ﬂow through neural networks.
+The gradients of errors with regards to each layer are used
+to update the weights of corresponding layer to make the
+predicted value closer to the ground truth. What is more,
+the gradients of the error regrading to the input features are
+related to the contributions for all input features: the larger
+the gradient, the more informative of the corresponding input
+features toward the speciﬁc output. The intuitive explanation
+lies that those gradient values describe how each input feature
+should change in order to make the model prediction closer
+to the label. As a result, the core idea behind gradient-
+based methods is that the magnitude of the gradients received
+by each input feature with regard to a data point and its
+label can be used as a proxy to measure the importance of
+the underlying feature towards the identiﬁcation of the label
+under consideration. However, these gradient values cannot
+be directly used as understandable measures of the input
+features. Different approaches corresponding to different post-
+processing and transformations of these gradients are proposed
+to turn them into meaningful attribution maps of the input
+features, which is also called salience maps [13], [24]–[26].
+In our framework, Grad-CAM is selected considering that
+it is designed for CNN architectures and able to provide
+explanation in a very efﬁcient way. In addition, our proposed
+framework is related to one recent work that also combined
+CNN and Grad-CAM to explain time series prediction [27]. In
+the application of machine health monitoring, the DEFT-CNN
+is built upon local feature extraction from time, frequency and
+time-frequency domains specialized for vibration signals.
+C. Explainable Machine Health Monitoring System
+During the recent years, various state-of-the-art deep learn-
+ing models have been applied in machine health monitoring.
+Among these previous works, some research shares simi-
+lar motivations with our works, i.e., exploring explainable
+machine health monitoring systems. Kraus et al. proposed
+a structured-effect neural network for remaining useful life
+(RUL) prediction, where model parameters are estimated
+by variational Bayesian inferences [28]. Compared to deep
+learning, Bayesian neural network is able to have a posterior
+inference that can capture uncertainty. Except Bayesian ma-
+chine learning that is good at uncertainty modelling, it cannot
+provide any explanations behind why the model makes such
+decisions. In [29], Lee et al. proposed a framework consisting
+of an autoencoder and a feedforward neural network to esti-
+mate the remaining useful life (RUL) of rotating machinery
+and the octave-band ﬁltering was adopted to compress the
+sizes of the model and features to improve the explainability
+level. However, in their proposed framework, the features are
+limited to be power spectra of vibration signals due to the
+utilization of the octave-band ﬁltering. John et al. adopted
+Layer-wise Relevance Propagation to explain the behaviour
+of CNN that takes time-frequency spectra images as inputs
+[30]. Different from their study, our proposed work is more
+ﬂexible that can utilize time domain, frequency domain and
+time-frequency domain features.
+III. DECOUPLED FEATURE-TEMPORAL CNN
+In this section, our proposed DEFT-CNN is ﬁrstly presented.
+The key characteristic of the proposed structure is that the
+feature and temporal information are captured by different
+convolutional layers. It leads to the independent application of
+Grad-CAM on these two layers to estimate the contributions
+from feature and time dynamics instead of a joint effect.
+Convolutional neural networks (CNNs) have been one of
+the most widely used deep learning models in the application
+of machine health monitoring since they are able to ﬁnd those
+hidden patterns in the input data. In the ﬁeld of computer
+vision, there were previous works focusing on saliency maps
+that highlighting the important region in the input image for
+model prediction. However, it is challenging to utilize those
+frameworks directly in machine health monitoring, considering
+the input sensory data are time series data and most of them
+have multiple variate at each time step. Even though the input
+data are usually formed in a matrix, the two axes: feature
+and temporal directions should be considered independently.
+It motivates the development of the DEFT-CNN.
+Similar to the work in [31], local feature extraction is
+applied on the sensory input. As shown in Figure 2, the
+original uni-variate time series data is transformed into a short
+sequence of feature vectors that usually consists of features in
+time, frequency and time-frequency domains. Then, the input
+data of the following CNNs are in the shape of x ∈RT ×d.
+Here, T and d denote the length of the sequence and the
+number of features at each time step. Compared to the original
+time series, the local feature sequence is much shorter and can
+convey more discriminative information compared to the noisy
+original signal [31].
+
+===== PAGE 3 =====
+As shown in the Figure 2, the DEFT-CNN learns abstract
+representations from features and temporal directions, respec-
+tively. The ﬁrst convolution layer utilizes a 2D ﬁlter whose
+ﬁlter size is k×1. By setting the second dimension of the ﬁlter
+size to 1, the convolution operation is able to capture each
+feature independently. It enables the following gradient based
+method to compute the attention value of each single feature
+and generate the feature saliency map: F ∈RT ×d×C. Here, C
+denotes the number of ﬁlters in the above convolution layer.
+After the ﬁrst 2D convolution layer, a spatial attention module
+is added, which was ﬁrstly proposed in the Convolutional
+Block Attention Module [12]. This module consists of a global
+maximum pooling layer, a global average pooling layer and a
+2D convolution layer. The channel information of the feature
+maps generated by the ﬁrst 2D convolution layer could be
+aggregated by the global maximum pooling layer and the
+average pooling layer, and two 2D maps will be generated:
+Fs
+avg ∈RT ×d×1 and Fs
+max ∈RT ×d×1. Then, those feature
+maps are concatenated as: Fs ∈RT ×d×2, and then fed into
+the second 2D convolution layer. The second convolution layer
+will produce a 2D spatial attention map. In short, the spatial
+attention is computed as:
+Ms(F) = σ (f([AvgPool(F); MaxPool(F)]))
+= σ
+ f
+ 
+Fs
+avg ; Fs
+max
+
+= σ (f (Fs))
+(1)
+where σ represents the sigmoid function which maps any
+real value to a probability, f denotes a convolution operation
+and [] is the concatenation operation. Then, the feature map
+generated by the ﬁrst 2D convolution layer will be multiplied
+by the spatial attention map. During multiplication, the spatial
+attention values are up-sampled and amplify important and
+discriminant features and temporal directions. This process can
+be summarized as:
+F′ = Mc(F) ⊗F
+(2)
+where ⊗represents element-wise multiplication and F′ de-
+notes the ﬁnal output after spatial attention module. The adop-
+tion of attention module can not only improve the classiﬁcation
+accuracy by focusing on the informative features and time
+points, but also enhance the explainability of the network by
+strengthening the important features and temporal directions.
+The attention module is followed by a 1 × 1 convolutional
+layer which was ﬁrstly proposed in the inception architecture
+[32]. By setting the number of ﬁlters to 1, the dimensionality
+of feature map space could be reduced to 1 while the spatial
+dimension space is kept unchanged. The beneﬁts are two-folds:
+ﬁrst, the 1D convolutional layer could be applied on the output
+of the 1×1 convolutional layer; second, the reduced model
+complexity could overcome the potential overﬁtting problem.
+The third convolutional layer is a 1D convolutional layer,
+sliding the ﬁlter from the beginning of the time step to its end.
+The ﬁlter will take all features in certain time steps and only
+differentiate time steps. Therefore, by computing the gradient
+ﬂow of this convolutional layer, the temporal saliency map
+can be generated which could be used to explain which time
+segments are important for model prediction. After ﬂatten, all
+Fig. 1. Illustration of the local feature extractions.
+generated feature maps are concatenated into a vector which
+can be fed into fully connected layers and a softmax layer as
+the top layers to predict targets.
+The adopted gradient-based explainability technique here
+is named gradient-weighted class activation mapping (Grad-
+CAM) [13]. Grad-CAM utilizes the gradient ﬂow from out-
+put neurons backpropagated into the convolutional layer to
+understand model predictions. Firstly, the gradients of the
+score for the predicted class yc with respect to all feature
+maps generated by a certain convolutional layer are computed.
+Here, c denotes the index of the predicted class while Ak
+represents the k-th feature map generated by the corresponding
+convolutional layer. Via global average-pooling operation over
+the spatial dimension of the feature map, which can be
+represented as, the importance score of the feature map for
+the target class could be computed as follows:
+ac
+k = 1
+Z
+X
+i
+X
+j
+∂yc
+∂Ak
+ij
+(3)
+where
+1
+Z
+P
+i
+P
+jrepresents the global average operation, and
+Z denotes the spatial dimension of the feature map. The
+weight ac
+k represents a partial linearization of the deep network
+downstream from A, and captures the “importance” of feature
+map k for a target class c.
+Then, with the computed scores ac
+k as weighting terms,
+a weighted linear combination of feature maps Ak could be
+computed and followed by the ReLU function as:
+Lc = ReLU
+ X
+k
+ac
+kAk
+!
+(4)
+The ReLU function is able to ﬁlter features that have negative
+effects on the class of interest and render better visualization.
+By checking the output matrix Lc, the values in the areas
+of the input data are positively related to the contributions
+toward the class of interest. Due to the decoupled structure
+in our proposed framework as shown in Figure 2, the Grad-
+CAM technique could be applied over the outputs of the
+ﬁrst convolutional layer and the third 1D convolutional layer
+regarding to the class of interest, respectively. Then, feature
+saliency map and temporal saliency map could be generated
+to help us understand which features and time segments are
+most useful for model predictions. Therefore, our proposed
+framework is able to achieve a good balance-off between
+precision and explainability.
+
+===== PAGE 4 =====
+Fig. 2. Illustrations of the proposed DEFT-CNN. As shown in the ﬁgure, the numbers k, s and h are hyper-parameters for the ﬁrst 2D convolutional layer.
+And the number k1, s1 and h1 are hyper-parameters for the third 1D convolutional layer.
+IV. EXPERIMENTS
+In this section, our proposed framework is validated on
+a rolling element bearing diagnosis dataset provided by the
+Paderborn University Bearing Data Center and a gearbox
+diagnosis dataset provided by the Southeast University. The
+Paderborn University Dataset [33] is a benchmark and standard
+dataset for machinery fault diagnostic algorithms. The gearbox
+dataset [34] was collected from Drivetrain Dynamic Simulator.
+A. Dataset Description
+1) Paderborn University Dataset:
+Paderborn University
+Dataset is a benchmark dataset for the purpose of bearing
+fault diagnosis provided by the Chair of Design and Drive
+Technology, Paderborn University. As shown in Figure 3, data
+were collected from a modular test that is composed of an
+electric motor, a torque-measurement shaft, a rolling bearing
+test module, a ﬂywheel and a load motor. The motor (1) is
+a 425 W Permanent Magnet Synchronous Motor (PMSM)
+with a nominal torque of T = 1.35 Nm, a nominal speed
+of n = 3000 rpm, a nominal current of I = 2.3 A and a pole
+pair number p = 4 (Type SD4CDu8S009, Hanning Elektro-
+Werke GmbH & Co. KG). It is operated by a frequency
+inverter (KEB Combivert 07F5E 1D-2B0A) with a switching
+frequency of 16 kHz. The acceleration of the bearing housing
+is measured at the adapter at the top end of the rolling
+bearing module using a piezoelectric accelerometer (Model
+No. 336C04, PCB Piezotronics, Inc.) and a charge ampliﬁer
+(Type 5015A, Kistler Group) with a low-pass ﬁlter at 30 kHz.
+The signal is digitalized and saved synchronously to the motor
+current signals (MCS) with a sampling rate of 64 kHz.
+The experiments were conducted on 6 healthy bearings and
+26 damaged bearings. In the 26 damaged bearings, 12 are
+Fig. 3.
+Experiment rig of the Paderborn dataset. (1), (2), (3), (4) and (5)
+denote an electric motor, a torque-measurement shaft, a rolling bearing test
+module, a ﬂywheel and a load motor, respectively.
+.
+artiﬁcially damaged bearings and 14 are bearings with real
+damages caused by accelerated lifetime tests. Fault types in
+the damaged bearings includes 2 types: inner ring and outer
+ring damages. In this paper, 2 undamaged bearings and 10
+realistically damaged bearings are selected. All these bear-
+ings were running under four different operating conditions
+described in Table I. This paper only focuses on the operating
+conditions A and B, where they will be studied, respectively.
+The details of datasets can be seen in Table I and Table II.
+Twenty measurements are conducted for each bearing ﬁle
+which was collected under 64 kHz sampling rate and last for
+4 seconds. Hence, the data ﬁle of each bearing has around
+256 000 time steps. To handle the lengthy data ﬁles, we
+used sliding window to extract a short sample and applied
+overlapping to increase the number of samples. For each
+measurement, we used window length of 5 120 and shifting
+size of 4 096. Finally, we had 13 860 samples for each work
+condition. Finally, we got four three-class datasets correspond-
+ing to working condition A, B, C and D. The size of each
+dataset is 13 860 and the length of each data sample is 5 120.
+
+===== PAGE 5 =====
+TABLE I
+LIST OF WORKING CONDITION IN BEARING DATASET
+Work Condition
+Rotational Speed [rpm]
+Load Torque [Nm]
+Radial Force[N]
+A
+1500
+0.7
+1000
+B
+900
+0.7
+1000
+C
+1500
+0.1
+1000
+D
+1500
+0.7
+40
+TABLE II
+NUMBER OF BEARINGS SELECTED FROM THE DATASET
+Normal Condition
+Inner Ring Damage
+Outer Ring Damage
+K001
+KI14
+KA04
+KI16
+KA15
+KI17
+KA16
+KI18
+KA22
+KI21
+KA30
+2) SEU Gearbox Dataset: SEU Gearbox Dataset is pro-
+vided by the School of Instrument Science and Engineering,
+Southeast University. The dataset was collected from the
+Drivetrain Dynamic Simulator(DDS) shown in Figure 4, which
+is composed of four units including the motor, the planetary
+gearbox, the parallel gearbox and brake. Two different working
+conditions are investigated with the rotating speed-system load
+setting to be either 20 Hz-0 V or 30 Hz-2 V. And there are
+four types of failure in this dataset, as shown in the Table III.
+The accelerometer on planetary gearbox can obtain vibration
+signals in X, Y and Z directions, which ﬁnally serve as the
+input of our model. The signals were collected with 1024 Hz
+sampling frequency and 512 s sampling window.
+TABLE III
+GEARBOX FAULT TYPE DESCRIPTION
+Fault Type
+Description
+Chipped
+Crack occurs in the gear feet
+Miss
+Missing one of the feet in the gear
+Root
+Crack occurs in the root of gear feet
+Surface
+Wear occurs in the surface of gear
+B. Implementation Details
+To preprocess the raw vibration sensory data, three kinds of
+domain analysis including time, frequency and time-frequency
+are conducted and each domain analysis contains three fea-
+tures. The length of the original input time series is 5120
+and is then, sliced into 20 windows. Each sub-window of
+time series data whose length is 256 is transformed into a
+vector of 9 features (i.e., three kinds of analysis with three
+features). Therefore, each data sample is transformed into a
+matrix whose shape is 20 by 9. Then, this matrix will be
+used as the input into the following CNN model to predict the
+fault type of a bearing. After random splitting, 80% dataset is
+used as training data while the rest 20% dataset is regarded
+as testing data.
+Our proposed framework follows a “shallow” structure to
+prevent overﬁtting, as shown in Figure 2. And the detailed
+ﬂowchart of the proposed network is shown in Figure 5. In the
+Fig. 4.
+Schematic of the experimental setup for gearbox fault diagnosis
+dataset.
+TABLE IV
+LIST OF EXTRACTED FEATURES
+Domain
+Features (symbols)
+Time
+rms (rms)
+Peak-to-Peak (p2p)
+Skewness (skew)
+Frequency
+Spectral Kurtosis (*kurt)
+Spectral Skewness (*skw)
+Spectral power (*pow)
+Time-Frequency
+db1 Wavelet Energy (db1)
+db2 Wavelet Energy (db2)
+db3 Wavelet Energy (db3)
+
+===== PAGE 6 =====
+Fig. 5. Detailed network architecture of DEFT-CNN.
+ﬁrst convolutional layer, the ﬁlter size and stride size are set to
+be l1 = (5, 1) and s1 = (1, 1). By setting the number in ﬁlter
+size and stride size along the feature axis to 1, the activation
+neuron in the generated feature map can be directly connected
+to each single feature. This unique connection enables the
+computed gradients could be used to explain the model de-
+cision inﬂuenced by each single feature. This convolutional
+layer contains 32 feature maps and adopts valid padding.
+Then, we adopt a spatial attention module in our proposed
+network. We generate a spatial attention map by utilizing the
+inter-spatial relationship of features. This module contains an
+average-pooling, a max-pooling layer and a 2D convolutional
+layer. Pooling operation along the channel axis is effective in
+highlighting informative regions for reducing dimensionality.
+Then, after the 2D convolutional layer, we can generate a
+(16, 9) spatial attention map, which can broadcast the attention
+value to each feature and time segment after multiplication.
+Then, we adopt the Network in Network technique and fed
+the output of the ﬁrst convolutional layer focusing on feature
+axis into the one by one convolutional layer with single ﬁlter.
+The output of the one by one convolutional layer will be in
+the shape of (16, 9). Then, the third convolutional layer will
+be a one-dimensional convolutional layer whose kernel size is
+l2 = 3, stride size is s2 = 1, number of feature maps is 32
+and the mode of padding is valid. This layer is focused on
+modelling the temporal information. After ﬂatten operation,
+the output of the last convolutional layer is fed into a dense
+layer whose hidden size is 64. For ﬁnal classiﬁcation, the last
+layer is set to be a dense layer with softmax activation and
+four output nodes corresponding to the number of classes. The
+non-linear activation functions of all the convolutional layer
+are set to be the ReLU function. To overcome overﬁtting, the
+ﬁrst and third convolutional layers are followed by Dropout
+layers whose dropout rate is 0.5.
+The optimization algorithm of our proposed decoupled
+frequency-temporal CNN is set to be adam with default
+parameters while the number of epoch and the batch size are
+set to be 20 and 256, respectively.
+C. Experimental Results
+In our experiment, classiﬁcation accuracy is adopted for
+performance evaluation, which can be deﬁned as
+Accuracy = Number of correctly classiﬁed samples
+Total number of samples
+(5)
+After model training, the testing accuracy on the two
+datasets and six different working conditions with all 9 features
+is shown in Table V. Compared with the network that we
+proposed in [14], the spatial attention layer is added. To
+evaluate the effectiveness of the spatial attention module, we
+compared the testing accuracy of DEFT-CNN with spatial
+attention module with the accuracy of the original DEFT-
+CNN as shown in Figure 6. In this ﬁgure, “A”, “B”, “C”, and
+“D” on the horizontal axis represent four working conditions
+in Paderborn University Bearing Dataset and “20Hz-0V”,
+“30Hz-2V” represent two working conditions in SEU Gearbox
+Dataset. From the results, we can observe that the spatial
+attention module improves testing accuracy more than one
+percent with a tiny increase of the model size as 11 more
+parameters(from 30 052 to 30 063) for both datasets. In ad-
+dition, we compared our method with benchmark methods on
+the two datasets, including local feature-based gated recurrent
+unit (LFGRU) [31], sparse ﬁltering [35] and two conventional
+machine learning methods of support vector machine (SVM)
+and k-nearest neighbors (KNN). As shown in Table V, our
+proposed model is able to achieve a higher accuracy, out-
+performing all the other methods in terms of classiﬁcation
+accuracy. In the Parderborn University Dataset, compared with
+conventional approaches of KNN and SVM, the improvements
+of our proposed method are 9.97% and 5.45% respectively.
+Furthermore, compared with deep learning method of sparse
+ﬁltering and LFGRU, our proposed method improves 1.18%
+and 3.89% on classiﬁcation accuracy. Similarly, the results
+on SEU Gearbox Dataset further verify the superiority of our
+proposed method.
+In our proposed method, we applied local feature extraction
+to convert raw vibration sensory data into short sequences
+of feature vectors. Compared to the original time series, the
+local feature sequence is much shorter and can convey more
+discriminative information compared to the noisy original
+signal. In order to verify the effectiveness of this method, we
+designed the following experiment: inputting the raw vibration
+signal instead of the feature vectors into our proposed DEFT-
+CNN, and the ﬁnal result is shown in Figure 7. It can be
+observed that the average classiﬁcation accuracy is greatly
+
+===== PAGE 7 =====
+TABLE V
+THE CLASSIFICATION ACCURACY OF DIFFERENT MODELS
+Method
+Bearing Dataset
+Gearbox Dataset
+A
+B
+C
+D
+20Hz-0V
+30Hz-2V
+KNN
+87.22%
+86.28%
+84.60%
+88.62%
+88.37%
+88.24%
+SVM
+92.92%
+92.82%
+88.26%
+90.71%
+88.49%
+87.61%
+Sparse Filtering [35]
+95.74%
+97.32%
+92.28%
+96.58%
+98.56%
+98.29%
+LFGRU [31]
+92.80%
+94.72%
+90.26%
+93.28%
+94.23%
+95.89%
+DEFT-CNN
+96.32%
+96.28%
+91.90%
+97.27%
+98.40%
+98.12%
+DEFT-CNN+Spatial Attention
+97.51%
+98.02%
+94.01%
+98.24%
+99.61%
+99.41%
+Fig. 6.
+Testing accuracy of DEFT-CNN and DEFT-CNN with Spatial
+Attention Module on all datasets.
+reduced from 96.92% to 86.90% when the original vibration
+signal is used as the input. And the average training time
+increased from 2.2 s to 122 s in the same environment using
+raw vibration signal.
+Spatial attention not only boosts the accuracy of baselines
+signiﬁcantly but also improves the performance of feature
+and temporal saliency map. Due to the decoupled structure
+of the feature and temporal modeling in the convolutional
+layers, the attributions from features and temporal directions
+could be analyzed and formed in corresponding saliency maps.
+The spatial attention module could increase the weights of
+features and temporal directions which are more important.
+From feature and temporal saliency maps, we are able to
+understand what are important features and time steps of data
+samples when predicting their fault types. In the generated
+saliency maps, light color represents a high attention value
+and dark color denotes a low attention value.
+As shown in Figures 8, 9, and 10, three training data samples
+from four classes of Paderborn University Bearing Dataset:
+normal condition, inner ring damage and out ring damage
+that have been correctly classiﬁed by our model are randomly
+selected and then visualized. Grad-CAM are then applied on
+the feature maps reﬁned by spatial attention module and the
+third convolutional layer to generate feature and temporal
+saliency maps. These ﬁgures are able to make predictions
+more explainable. In Figure 8.b, the three frequency features
+are redundant since they are shown in dark color. And from
+Figure 8.c, time steps before 6 are almost non-informative
+to the prediction of this data sample. In the Figure 9, it
+could be analyzed on which part of features and time steps
+have received more attention for its correct prediction as the
+inner ring damage fault type. As shown in Figure 9.b, it is
+easily shown that the model is very aggressive and leaves
+all attention on two frequency features: spectral kurtosis and
+spectral skewness to predict this data sample as the inner ring
+damage condition. The ﬁgure 9.c shows that the time step 13
+of the data sample contributes most to the model prediction.
+Similar analysis could be done in Figure 10 corresponding to
+the rest data sample from outer ring damage.
+Similarly, the phenomenon that different classes possess
+different important features is also present in SEU Gearbox
+Dataset. We also randomly selected ﬁve sets of data from ﬁve
+different classes for this dataset and used them to generate
+feature saliency maps and temporal saliency maps as shown in
+Figures 11, 12, 13, 14, and 15. It is interesting to note in Figure
+11.b that for a healthy gear running in normal condition, the
+time domain feature of Peak-to-Peak is much more important
+than the other features. This is probably because the vibration
+data of the healthy gear is much more stable than these of the
+abnormal gears, resulting a different pattern of peak-to-peak
+values for the healthy gear. Thus, the peak-to-peak feature can
+be a good indicator for the normal class. From Figure 12.b,
+we can observe that the features of Peak-to-Peak, Spectral
+Skewness and db2 Wavelet Energy are redundant for this
+sample with Chipped Damage. However, for the other samples
+with Root Damage, Miss Damage and Surface Damage shown
+in Figures 13, 14 and 15, Spectral Skewness and db2 Wavelet
+Energy are of great importance, although the distributions of
+the importance values of these features are distinct for samples
+with different faults. In addition, it can be seen from temporal
+saliency maps of these data samples that different data samples
+have their own important time points, which will help to screen
+out the important time points for further analysis. As discussed
+above, the generated feature and temporal saliency maps allow
+us to understand the impacts from features and time steps for
+each prediction that the model makes and obtain insights into
+why or how the model arrives at this outcome. With these
+insights, we can further improve the underlying model.
+In the following, the feature saliency maps will be con-
+ducted over all training samples that are correctly classiﬁed.
+For each training sample, the generated feature saliency map
+contains the feature importance score across feature and time
+axis, as shown in Figure 8.b, for each speciﬁc data sample.
+To capture the global attention value for each feature, the
+entries from all saliency maps are averaged along the data
+axis and time axis. At last, nine values corresponding to nine
+
+===== PAGE 8 =====
+Fig. 7.
+Testing accuracy using raw vibration signal and feature vectors on
+bearing dataset.
+Fig. 8. Features and temporal saliency maps for a data sample that is correctly
+diagnosed as Normal Condition in bearing dataset.
+Fig. 9. Features and temporal saliency maps for a data sample that is correctly
+diagnosed as Inner Ring Damage in bearing dataset.
+Fig. 10.
+Features and temporal saliency maps for a data sample that is
+correctly diagnosed as Outer Ring Damage in bearing dataset.
+Fig. 11.
+Features and temporal saliency maps for a data sample that is
+correctly diagnosed as Normal Condition in gearbox dataset.
+features could be computed in the range from zero to one.
+These scores can be regarded as feature importance scores
+for model predictions. As shown in Figure 16, two frequency
+domain features: spectral skewness and kurtosis are the top-
+2 important features. Those feature importance scores can be
+used as indicators for feature selection.
+To further validate the effectiveness of feature importance
+scores, we select the feature subset ranked by importance
+scores and re-train the model with the same hyper-parameter
+conﬁgurations. As shown in Table VI, the average classiﬁca-
+tion accuracies on Paderborn University Bearing Dataset and
+SEU Gearbox Dataset were only dropped by 1.10% and 1.13%
+respectively, when the number of features is reduced from 9 to
+6. And even when only four features are selected, the average
+classiﬁcation drop is still less than 1.5% on the two datasets.
+Therefore, it also veriﬁes the effectiveness of the computation
+of feature importance scores.
+
+===== PAGE 9 =====
+TABLE VI
+THE CLASSIFICATION ACCURACY UNDER DIFFERENT FEATURES COMBINATIONS WITH DIFFERENT METHODS
+Features Number
+Feature Selection Method
+Bearing Dataset
+Gearbox Dataset
+A
+B
+C
+D
+Average
+20Hz-0V
+30Hz-2V
+Average
+9
+All Features
+97.51%
+98.02%
+94.01%
+98.24%
+96.95%
+99.61%
+99.41%
+99.51%
+6
+Important Score
+95.74%
+97.73%
+92.09%
+97.82%
+95.85%
+98.51%
+98.24%
+98.38%
+6
+Mutual Information
+96.97%
+95.42%
+91.90%
+97.20%
+95.37%
+96.78%
+98.10%
+97.44%
+4
+Important Score
+95.41%
+97.26%
+91.42%
+97.62%
+95.42%
+98.20%
+98.02%
+98.11%
+4
+Mutual Information
+95.83%
+92.09%
+90.62%
+96.87%
+93.85%
+98.20%
+95.82%
+97.01%
+Fig. 12.
+Features and temporal saliency maps for a data sample that is
+correctly diagnosed as Chipped Damage in gearbox dataset.
+Fig. 13.
+Features and temporal saliency maps for a data sample that is
+correctly diagnosed as Miss Damage in gearbox dataset.
+Fig. 14.
+Features and temporal saliency maps for a data sample that is
+correctly diagnosed as Root Damage in gearbox dataset.
+Fig. 15.
+Features and temporal saliency maps for a data sample that is
+correctly diagnosed as Surface Damage in gearbox dataset.
+
+===== PAGE 10 =====
+Fig. 16. Features importance over all true positive training samples.
+Moreover, to rule out the possibility that random selection
+of features could have the same effect, we have designed
+another experiment to verify that the derived feature impor-
+tance scores enable better feature selection. In the experiment,
+we randomly choose 20 feature subset and then retrain the
+model for 20 times in Paderborn University Bearing Dataset.
+The results are shown in Figures 17, 18, 19 and 20. In
+these ﬁgures, the red bar represents testing accuracy using
+the feature subset selected by importance score, the blue bars
+represent testing accuracy using the feature subsets randomly
+selected and the green line denotes the average accuracy of
+the random selections. In Figure 17, we retrained the model
+in dataset under working condition A. By using 6 features
+selected by importance score, the testing accuracy is 95.74%.
+Meanwhile, the highest accuracy in the 20 experiments in
+which 6 features are randomly selected to retrain the model is
+95.53%. And the average testing accuracy is 76.68%, which
+is much lower than 95.74%. Similarly, Figure 18 shows the
+difference between selecting 4 features using important score
+and selecting 4 features at random in working condition A.
+In Figures 19 and 20, the results of repeating the above two
+experiments in working environment B are presented. The
+detailed data of these experiments are recorded in table VII.
+We can observe that the accuracy using the feature subset
+selected by importance score is always the highest in the
+two working conditions and is much higher than the average
+accuracy. Experiments with randomly selected features may
+not rule out chance to some extent. So to further verify the
+effectiveness of our selection based on importance score, we
+applied mutual information [36] for feature selection. Mutual
+information measures arbitrary dependencies between random
+variables. It is suitable for assessing the “information content”
+of features in complex classiﬁcation tasks. Using mutual
+information, we perform feature selection for each working
+condition of each dataset and the ﬁnal result is shown in Table
+VI. It is clear that the method with the features selected by
+importance score outperforms that with the features selected
+by mutual information. The features selected by importance
+score can improve the average accuracy by 0.48% and 1.57%
+under the scenarios of 6 and 4 features respectively on the
+bearing dataset. For the gearbox dataset, the improvements on
+accuracy are 0.94% and 1.1% under the scenarios of 6 and 4
+features respectively.In summary, the feature selection method
+using important score has a better performance than mutual
+information-based feature selection. Thus, the effectiveness of
+the computation of feature importance score is further veriﬁed.
+Fig. 17. Comparison of feature selection using importance score and random
+feature selection (6 features, working condition A).
+Fig. 18. Comparison of feature selection using importance score and random
+feature selection (4 features, working condition A).
+V. CONCLUSION
+This paper has illustrated the lack of explainability which
+hinders the application of deep learning models on machine
+health monitoring. To crack open black-box models, a Decou-
+pled Feature-Temporal CNN (DEFT-CNN) method combined
+with local feature extraction and attention mechanism was
+proposed. This speciﬁc structure enables the introduction of
+Grad-CAM to generate saliency maps explaining feature and
+temporal information. Experimental results veriﬁed the posi-
+tive effect of attention module on network performance and
+indicated a good balance between precision and explainability.
+It also highlights that the model structure and feature selection
+can be further optimized and improved based on the gained
+
+===== PAGE 11 =====
+TABLE VII
+THE RESULTS OF SELECTION USING IMPORTANCE SCORE AND RANDOM SELECTION
+Condition
+Accuracy
+Highest Accuracy
+Average Accuracy
+(Importance Score)
+(Random)
+(Random)
+6 features
+95.74%
+95.53%
+76.68%
+working Condition A
+4 features
+95.41%
+94.67%
+75.56%
+working Condition A
+6 features
+97.73%
+96.97%
+82.79%
+working Condition B
+4 features
+97.26%
+96.97%
+82.70%
+working Condition B
+Fig. 19. Comparison of feature selection using importance score and random
+feature selection (6 features, working condition B).
+Fig. 20. Comparison of feature selection using importance score and random
+feature selection (4 features, working condition B).
+insights. In the future, more experimental studies should be
+conducted to explore the potential edge cases. Except that,
+several limitations of our present framework are given as
+below: 1) this framework can only provide local explanation
+(i.e., why do you think this sample is diagnosed as normal one)
+instead of global one (i.e., what do you think a normal working
+condition sample looks like). 2) Local feature extraction is
+performed before DEFT-CNN. Therefore, explanations are
+limitations to the extracted features and sliced time windows.
+The above shortcomings point out our future research di-
+rections. From this paper, we hope this research direction:
+explainable machine health monitoring should receive more
+attentions from our research community.
+REFERENCES
+[1] Y. Lei, B. Yang, X. Jiang, F. Jia, N. Li, and A. K. Nandi, “Applications
+of machine learning to machine fault diagnosis: A review and roadmap,”
+Mechanical Systems and Signal Processing, vol. 138, p. 106587, 2020.
+[2] R. Zhao, R. Yan, Z. Chen, K. Mao, P. Wang, and R. X. Gao, “Deep
+learning and its applications to machine health monitoring,” Mechanical
+Systems and Signal Processing, vol. 115, pp. 213–237, 2019.
+[3] R. X. Gao, L. Wang, M. Helu, and R. Teti, “Big data analytics for smart
+factories of the future,” CIRP Annals, 2020.
+[4] R. Liu, B. Yang, E. Zio, and X. Chen, “Artiﬁcial intelligence for fault
+diagnosis of rotating machinery: A review,” Mechanical Systems and
+Signal Processing, vol. 108, pp. 33–47, 2018.
+[5] G. Helbing and M. Ritter, “Deep learning for fault detection in wind
+turbines,” Renewable and Sustainable Energy Reviews, vol. 98, pp. 189–
+198, 2018.
+[6] D. Xiao, Y. Huang, C. Qin, H. Shi, and Y. Li, “Fault diagnosis of
+induction motors using recurrence quantiﬁcation analysis and lstm with
+weighted bn,” Shock and Vibration, vol. 2019, 2019.
+[7] G. Terrazas, G. Mart´ınez-Arellano, P. Benardos, and S. Ratchev, “Online
+tool wear classiﬁcation during dry machining using real time cutting
+force measurements and a cnn approach,” Journal of Manufacturing
+and Materials Processing, vol. 2, no. 4, p. 72, 2018.
+[8] Z. Chen, M. Wu, R. Zhao, F. Guretno, R. Yan, and X. Li, “Machine
+remaining useful life prediction via an attention based deep learning
+approach,” IEEE Transactions on Industrial Electronics, pp. 1–1, 2020.
+[9] X. Li, W. Zhang, and Q. Ding, “Deep learning-based remaining useful
+life estimation of bearings using multi-scale feature extraction,” Relia-
+bility Engineering & System Safety, vol. 182, pp. 208–218, 2019.
+[10] J. Gertler, Fault detection and diagnosis in engineering systems.
+CRC
+press, 1998.
+[11] R. Yan, R. Zhao, and R. X. Gao, “Noise-assisted data processing in
+measurement science: part one part 40 in a series of tutorials on in-
+strumentation and measurement,” IEEE Instrumentation & Measurement
+Magazine, vol. 15, no. 5, pp. 41–44, 2012.
+[12] S. Woo, J. Park, J.-Y. Lee, and I. S. Kweon, “Cbam: Convolutional
+block attention module,” in Proceedings of the European Conference on
+Computer Vision (ECCV), September 2018.
+[13] R. R. Selvaraju, M. Cogswell, A. Das, R. Vedantam, D. Parikh, and
+D. Batra, “Grad-cam: Visual explanations from deep networks via
+gradient-based localization,” in Proceedings of the IEEE international
+conference on computer vision, 2017, pp. 618–626.
+[14] R. Zhao, Z. Chen, C. Zhu, Z. Chan, J. Wang, and R. Yan, “Decoupled
+feature-temporal cnn: Explaining deep learning-based machine health
+monitoring,” in 2020 International Conference on Sensing, Measurement
+Data Analytics in the era of Artiﬁcial Intelligence (ICSMD), 2020, pp.
+280–285.
+[15] F. Wang, M. Jiang, C. Qian, S. Yang, C. Li, H. Zhang, X. Wang,
+and X. Tang, “Residual attention network for image classiﬁcation,” in
+Proceedings of the IEEE conference on computer vision and pattern
+recognition, 2017, pp. 3156–3164.
+[16] J. Hu, L. Shen, S. Albanie, G. Sun, and E. Wu, “Squeeze-and-excitation
+networks,” 2019.
+
+===== PAGE 12 =====
+[17] A. G. Roy, N. Navab, and C. Wachinger, “Concurrent spatial and
+channel ‘squeeze & excitation’in fully convolutional networks,” in
+International conference on medical image computing and computer-
+assisted intervention.
+Springer, 2018, pp. 421–429.
+[18] M. Ancona, E. Ceolini, C. ¨Oztireli, and M. Gross, “Towards better
+understanding of gradient-based attribution methods for deep neural
+networks,” arXiv preprint arXiv:1711.06104, 2017.
+[19] C. Molnar, Interpretable Machine Learning.
+Lulu. com, 2020.
+[20] M. D. Zeiler and R. Fergus, “Visualizing and understanding convolu-
+tional networks,” in European conference on computer vision. Springer,
+2014, pp. 818–833.
+[21] M. T. Ribeiro, S. Singh, and C. Guestrin, “” why should i trust you?”
+explaining the predictions of any classiﬁer,” in Proceedings of the 22nd
+ACM SIGKDD international conference on knowledge discovery and
+data mining, 2016, pp. 1135–1144.
+[22] ——, “Anchors: High-precision model-agnostic explanations,” in AAAI,
+2018.
+[23] S. M. Lundberg and S.-I. Lee, “A uniﬁed approach to interpreting model
+predictions,” in Advances in neural information processing systems,
+2017, pp. 4765–4774.
+[24] J. Adebayo, J. Gilmer, M. Muelly, I. Goodfellow, M. Hardt, and B. Kim,
+“Sanity checks for saliency maps,” in Advances in Neural Information
+Processing Systems, 2018, pp. 9505–9515.
+[25] A. Shrikumar, P. Greenside, and A. Kundaje, “Learning important
+features through propagating activation differences,” arXiv preprint
+arXiv:1704.02685, 2017.
+[26] S. Bach, A. Binder, G. Montavon, F. Klauschen, K.-R. M¨uller, and
+W. Samek, “On pixel-wise explanations for non-linear classiﬁer deci-
+sions by layer-wise relevance propagation,” PloS one, vol. 10, no. 7, p.
+e0130140, 2015.
+[27] R. Assaf and A. Schumann, “Explainable deep neural networks for
+multivariate time series predictions.” in IJCAI, 2019, pp. 6488–6490.
+[28] M. Kraus and S. Feuerriegel, “Forecasting remaining useful life: In-
+terpretable deep learning approach via variational bayesian inferences,”
+Decision Support Systems, vol. 125, p. 113100, 2019.
+[29] N. Lee, M. H. Azarian, and M. G. Pecht, “An explainable deep
+learning-based prognostic model for rotating machinery,” arXiv preprint
+arXiv:2004.13608, 2020.
+[30] J. Grezmak, P. Wang, C. Sun, and R. X. Gao, “Explainable convolutional
+neural network for gearbox fault diagnosis,” Procedia CIRP, vol. 80, pp.
+476–481, 2019.
+[31] R. Zhao, D. Wang, R. Yan, K. Mao, F. Shen, and J. Wang, “Machine
+health monitoring using local feature-based gated recurrent unit net-
+works,” IEEE Transactions on Industrial Electronics, vol. 65, no. 2, pp.
+1539–1548, 2017.
+[32] M. Lin, Q. Chen, and S. Yan, “Network in network,” arXiv preprint
+arXiv:1312.4400, 2013.
+[33] C. Lessmeier, J. K. Kimotho, D. Zimmer, and W. Sextro, “Condition
+monitoring of bearing damage in electromechanical drive systems by
+using motor current signals of electric motors: A benchmark data set for
+data-driven classiﬁcation,” in Proceedings of the European conference
+of the prognostics and health management society, 2016, pp. 05–08.
+[34] S. Shao, S. McAleer, R. Yan, and P. Baldi, “Highly accurate machine
+fault diagnosis using deep transfer learning,” IEEE Transactions on
+Industrial Informatics, vol. 15, no. 4, pp. 2446–2455, 2019.
+[35] Y. Lei, F. Jia, J. Lin, S. Xing, and S. X. Ding, “An intelligent fault di-
+agnosis method using unsupervised feature learning towards mechanical
+big data,” IEEE Transactions on Industrial Electronics, vol. 63, no. 5,
+pp. 3137–3147, 2016.
+[36] R. Battiti, “Using mutual information for selecting features in supervised
+neural net learning,” IEEE Transactions on Neural Networks, vol. 5,
+no. 4, pp. 537–550, 1994.
