@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>SEU 旋转机械故障诊断 —— 工作总结</title>
+<style>
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #1a1a1a;
+    line-height: 1.75;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    font-size: 20pt;
+    color: #0f3d6e;
+    border-bottom: 3px solid #0f3d6e;
+    padding-bottom: 8px;
+    margin-top: 0;
+  }
+  h2 {
+    font-size: 14pt;
+    color: #0f3d6e;
+    border-left: 5px solid #2e7bbf;
+    padding-left: 10px;
+    margin-top: 22px;
+  }
+  h3 {
+    font-size: 12pt;
+    color: #24486b;
+    margin-top: 16px;
+  }
+  blockquote {
+    border-left: 4px solid #9ec3e6;
+    background: #f2f7fc;
+    margin: 10px 0;
+    padding: 8px 14px;
+    color: #4a5a6a;
+    font-size: 10.5pt;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12px 0;
+    font-size: 10pt;
+  }
+  th {
+    background: #0f3d6e;
+    color: #ffffff;
+    padding: 7px 9px;
+    text-align: left;
+    border: 1px solid #0f3d6e;
+  }
+  td {
+    padding: 6px 9px;
+    border: 1px solid #c8d6e3;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: #f6fafd;
+  }
+  strong {
+    color: #b5241f;
+  }
+  ol, ul {
+    padding-left: 22px;
+  }
+  li {
+    margin: 4px 0;
+  }
+  code {
+    background: #eef2f6;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-family: Consolas, monospace;
+    font-size: 9.5pt;
+  }
+</style>
+</head>
+<body>
+
+<h1>SEU 旋转机械故障诊断 —— 工作总结</h1>
+
+<blockquote>
+补充数据、文献对比与阶段结论汇总<br>
+日期：2026 年 10 月 1 日
+</blockquote>
+
+<h2>一、一句话结论</h2>
+<p>老师要的七类补充数据全部补齐，并按"只有同 SEU 数据库、同口径才可比"的规矩重做了文献对比。结论是：<strong>准确率与顶尖同源方法打平，但在"快、全、严"三条上占优。</strong></p>
+
+<h2>二、老师要的七类数据（已全部交付）</h2>
+<table>
+  <thead>
+    <tr><th style="width:6%">#</th><th style="width:34%">老师要求</th><th>完成情况</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>①</td><td>效率硬指标（参数量、模型大小、FLOPs、时间、吞吐、内存）</td><td>CNN <strong>2.5 万参数 / 104 KB / 0.38 MFLOPs</strong>，推理吞吐 3.7 万~5.3 万样本/秒，显存仅 18 MB</td></tr>
+    <tr><td>②</td><td>每类指标 + 多种子均值标准差</td><td>3 个随机种子，验证集标准差 ≤ 0.0035；每类敏感性/特异性/精确率全报</td></tr>
+    <tr><td>③</td><td>同协议结果复现（文献 1、文献 5）</td><td>文献 1 协议下齿轮 96.5%；文献 5 协议下轴承 99.9%~100%、齿轮 96.2%~98.6%</td></tr>
+    <tr><td>④</td><td>参数消融（步长、跳步、状态数、逐任务最优）</td><td>状态数 <strong>6 最优</strong>；步长越多越准；窗长 1600 + 50% 重叠最关键</td></tr>
+    <tr><td>⑤</td><td>噪声鲁棒性（SNR −4 ~ 10 dB 曲线）</td><td>SNR = 10 dB 时轴承 99.7%~99.9%、齿轮 97.2%~98.6%（与文献 1 同量级）</td></tr>
+    <tr><td>⑥</td><td>可解释性（类平均转移矩阵 + 差值热图）</td><td>8 张热图，故障"转移指纹"肉眼可分</td></tr>
+    <tr><td>⑦</td><td>文献全文级协议信息</td><td>7 篇同源文献的工况/划分/加噪/精确结果全表</td></tr>
+  </tbody>
+</table>
+
+<h2>三、文献对比（按老师口径重做）</h2>
+<p>对比采用<strong>两层结构</strong>，不是只挑好看的：</p>
+<ol>
+  <li><strong>先比最强对手</strong>：改进 Transformer 99.4%、MSRC 99.4%~99.8% —— 承认"处于同一档"。</li>
+  <li><strong>再比常见基线</strong>：同源文献自己论文里的陪衬方法普遍比我们低 <strong>3 ~ 18 个百分点</strong>（SVM 81.5%、WDCNN 90%、原版 Transformer 63%~92%、ResNet18 90.5% 等）。</li>
+</ol>
+
+<h3>与同源文献"基线方法"对照（节选）</h3>
+<table>
+  <thead>
+    <tr><th>来源文献</th><th>SEU 任务</th><th>论文中的基线方法</th><th>基线准确率</th><th>本文</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>FE-MCFormer (arXiv 2025)</td><td>齿轮 5 类</td><td>MSCNN-LSTM / WDCNN / 原版 Transformer / DenseNet / ResNet50</td><td>90.0%~97.3%</td><td>97.4%~99.2%</td></tr>
+    <tr><td>STCSE (Sage 2026)</td><td>齿轮</td><td>ResNet-18 / WDCNN / ViT / DeiT / MDSC-FSPPA</td><td>90.5%~94.1%</td><td>97.4%~99.2%</td></tr>
+    <tr><td>MGE-ResNet (Processes 2025)</td><td>轴承 10 类</td><td>SVM / TICNN / SE-ResNet152 / Ni-Net</td><td>81.5%~97.9%</td><td>99.9%~100%</td></tr>
+    <tr><td>STFT+ResNet (Machines 2022)</td><td>轴承+齿轮 20 类</td><td>CNN / LSTM / AE / AlexNet</td><td>73.2%~92.3%</td><td>97.4%~100%</td></tr>
+    <tr><td>ICEEMDAN (Appl. Sci. 2024)</td><td>齿轮 5 类</td><td>CEEMDAN-WHT / 无降噪 SE-ResNeXt18</td><td>90.2%~99.2%</td><td>97.4%~99.2%</td></tr>
+  </tbody>
+</table>
+<p><strong>结论</strong>：同样的 SEU 数据，常见基线方法普遍比本文低 3~18 个百分点；本文仅在面对各论文"自身最优那一个数"（99.4% 上下）时是持平。</p>
+
+<h2>四、本文真正能站住的三点优势</h2>
+<ol>
+  <li><strong>快 / 省</strong>：参数比 DSMC-ECA 小 8~10 倍，算量少 20~26 倍；比 MGE-ResNet 少约 3 个数量级。</li>
+  <li><strong>全</strong>：轴承 + 齿轮都做，8 个组合、每类指标全报；多数文献只做其一。</li>
+  <li><strong>严</strong>：17 篇同源文献中只有 2 篇做了交叉验证，本文是唯一"5 折时间序列 CV + 独立留出"都做的。</li>
+</ol>
+
+<h2>五、必须留的诚实边界</h2>
+<ul>
+  <li><strong>齿轮单项确实略低</strong>（96.2%~98.6% vs 文献 99.4%+），如实写明，不硬凹。</li>
+  <li>FLOPs 各家输入模态不同（本文为 21×6×6 符号矩阵，他人为原始信号/图像），因此只陈述"各自口径下同比最小"，不夸大倍数。</li>
+  <li>噪声采用"加噪训练 + 加噪测试"协议（与文献 1 一致），<strong>不同协议不可混比</strong>。</li>
+</ul>
+
+<h2>六、交付文件清单</h2>
+<table>
+  <thead>
+    <tr><th>文件</th><th>说明</th><th>路径</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>老师要求的补充数据汇总.docx</td><td>七类数据报告（带图）</td><td>doc/references/</td></tr>
+    <tr><td>与文献对比分析_突出优势.docx</td><td>十一节对比分析，含基线对照表与给导师的一句话汇报</td><td>doc/references/</td></tr>
+    <tr><td>工作总结_SEU故障诊断.docx</td><td>本文件</td><td>doc/references/</td></tr>
+    <tr><td>原始数据</td><td>各脚本产出的 JSON</td><td>datas/experiments_seu/teacher_extra/</td></tr>
+    <tr><td>图表</td><td>噪声曲线、消融、效率、可解释性热图</td><td>doc/figures/seu/</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

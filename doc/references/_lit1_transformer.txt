@@ -1,0 +1,462 @@
+
+===== PAGE 1 =====
+Fault Diagnosis of Gearbox Based on Improved Transformer
+Keming Guan
+China Academy of Machinery Science
+& Technology, China Productivity
+Center for Machinery, Beijing 100048,
+China
+Bing Du∗
+China Academy of Machinery Science
+& Technology, Yanqihu Fundamental
+Manufacturing Technology Research
+Institute (Beijing) Co., Ltd., Beijing,
+100085, China
+zuosc_fighting@163.com
+Zhe Wu
+China Academy of Machinery Science
+& Technology, China Productivity
+Center for Machinery, Beijing, 100048,
+China
+Jinfeng Li
+China Academy of Machinery Science
+& Technology, China Productivity
+Center for Machinery, Beijing, 100048,
+China
+Yan Zhang
+China Academy of Machinery Science
+& Technology, China Productivity
+Center for Machinery, Beijing, 100048,
+China
+ABSTRACT
+Health services for the gearbox are essential to ensure the safety of
+industrial production. However, gearbox fault diagnosis remains
+a challenge due to complex responses caused by multiple gears.
+In recent years, there has been an increasing number of scholars
+who have embraced deep learning techniques for gearbox fault
+diagnosis. Compared with traditional deep networks, transformers
+exhibit outstanding pattern recognition capabilities, but their ability
+to process local information is lacking. Therefore, we propose an
+improved Transformer network that applies multi-scale perception
+layers and linear embedding to enhance the ability to capture local
+feature information, analyze fault features on multiple time scales,
+and retain the position information of the original signal. The vali-
+dation was conducted on the Southeast University (SEU) gearbox
+dataset. The model’s classification accuracy can reach 99.4% when
+detecting five different fault signals with a signal-to-noise ratio of
+10. Experimental results have shown that the method has excel-
+lent diagnostic and anti-interference capabilities, which would be
+applied in engineering practice.
+CCS CONCEPTS
+• Computing methodologies → Machine learning; Machine
+learning approaches; Neural networks.
+KEYWORDS
+Gearbox, Fault Diagnosis, Deep Learning, Self-Attention, Trans-
+former
+∗Corresponding author.
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed
+for profit or commercial advantage and that copies bear this notice and the full citation
+on the first page. Copyrights for components of this work owned by others than the
+author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+republish, to post on servers or to redistribute to lists, requires prior specific permission
+and/or a fee. Request permissions from permissions@acm.org.
+AAIA 2023, November 18–20, 2023, Wuhan, China
+© 2023 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+ACM ISBN 979-8-4007-0826-8/23/11. . . $15.00
+https://doi.org/10.1145/3603273.3636498
+ACM Reference Format:
+Keming Guan, Bing Du, Zhe Wu, Jinfeng Li, and Yan Zhang. 2023. Fault
+Diagnosis of Gearbox Based on Improved Transformer. In2023 International
+Conference on Advances in Artificial Intelligence and Applications (AAIA
+2023), November 18–20, 2023, Wuhan, China. ACM, New York, NY, USA,
+7 pages. https://doi.org/10.1145/3603273.3636498
+1 INTRODUCTION
+Gearboxes are essential components that play a critical role in
+modern industrial systems. As the demand for precision, reliability,
+and durability in industrial manufacturing increases, gearboxes are
+widely used in various fields, including aerospace, machine tools,
+cars, and petrochemicals. The failure of gears during production
+can result in the destruction of the entire system, affect the accuracy
+of equipment, and increase the non-necessary stoppage time [1].
+Therefore, fault diagnosis of gearboxes is important for ensuring
+the safe and stable functioning of mechanical systems, and it is
+crucial in preventing industrial safety accidents.
+The use of vibration signals for gearbox fault diagnosis has
+gained widespread attention, and earlier methods relied heavily
+on manual feature extraction from the original signal [ 2]. How-
+ever, with the development of typical signal processing techniques
+such as Fast Fourier transform, Wavelet Transform and Empiri-
+cal Mode Decomposition, the process has become more refined.
+Although these methods can achieve some extent of fault recog-
+nition, expert knowledge still plays a dominant role. Furthermore,
+the detection process requires advanced computational skills and
+experience, making it challenging for unskilled field personnel. The
+emergence of artificial intelligence has led to the development of
+machine learning methods, which have significantly advanced fault
+diagnosis models [3]. Algorithms such as support vector machines,
+decision trees, and random forests have replaced the traditional
+manual feature extraction process, resulting in encouraging diag-
+nostic results. However, traditional machine learning methods still
+require complex feature extraction and selection processes, that
+significantly impact the accuracy of diagnosis.
+With the development of artificial intelligence technology, deep
+learning has begun to be applied in the field of gearbox fault diagno-
+sis [4]. Applying deep learning fault diagnosis methods can reduce
+manual feature extraction and achieve end-to-end problem-solving,
+312
+===== PAGE 2 =====
+AAIA 2023, November 18–20, 2023, Wuhan, China Keming Guan et al.
+reducing reliance on expert experience [5]. For example, Janssens
+et al. [6] were the first to use convolutional neural networks (CNN)
+for diagnosing faults in gearboxes, including bearings and gears.
+Their study demonstrated that deep learning algorithms can ef-
+fectively extract signal features and classify them. Gong Wenfeng
+et al. [7] conducted experiments to analyze the influence of deep
+learning skills and model hyperparameters in CNN on the fault
+diagnosis results of rolling bearings. They proved that this method
+has good operability and versatility. Talebi et al. [ 8] proposed a
+dynamic modeling approach based on RNN for wind turbine gener-
+ator fault diagnosis, which improves the accuracy of fault diagnosis
+by comparing the output results of the model and the actual sys-
+tem. The experiment shows that this scheme can quickly obtain
+fault diagnosis results and have excellent diagnostic effectiveness.
+Liu et al. [9] presented a method for fault diagnosis using an RNN
+autoencoder, which showed improved robustness in noisy environ-
+ments. This method was later improved upon with the use of CNN
+and RNN, leading to significant performance gains. Additionally,
+a short and long-term memory (LSTM) network was proposed for
+processing one-dimensional time series data while maintaining
+long-term dependence. However, these technologies have certain
+limitations, as CNN relies on convolutions to extract features and is
+influenced by kernel size, which can only extract local information.
+RNN treats the input signal as an ensemble, limiting the parallel pro-
+cessing of training samples and causing problems such as gradient
+disappearance.
+To address this issue, Vaswani et al. proposed the Transformer
+[10] model. Unlike traditional neural network structures, the Trans-
+former model primarily relies on attention mechanisms to weigh
+and average each input sequence, establishing relationships be-
+tween different sequences. It is more flexible when processing
+different-length sequences. Initially, Transformer is proposed to be
+mainly applied in the field of natural language processing (NLP),
+the model has since been widely adopted in the computer vision
+field. Specifically, the Vision Transformer (VIT) model, proposed by
+scholars, enabled networks to focus on different regions of an image
+and ultimately integrate information from the entire image. How-
+ever, the Transformer model itself still has certain limitations, due
+to the inherent inductive bias, its ability to process local information
+is lacking.
+An improved Transformer gearbox fault diagnosis method is pro-
+posed in this article by adding a Multi-Scale Perception layer before
+the Transformer layer, enriching fault information with convolu-
+tional kernels of different scales, and adding a linear mapping layer
+to improve network recognition accuracy. Finally, the effectiveness
+of the model was verified through experiments.
+2 RELATED THEORIES
+The basic unit of Transformer is its encoder. By using multiple
+encoders to stack and extract features from the raw data. This ap-
+proach enables the encoder to capture the internal dependencies
+between sequences, thus overcoming the distance effect inherent in
+input sequences. Furthermore, the encoder avoids circular process-
+ing by enabling more parallelized computations on the samples, sig-
+nificantly improving the computational efficiency. The Transformer
+Figure 1: The basic structure of self-attention mechanism in
+Transformer.
+model with attention mechanism has powerful parallel comput-
+ing and model expression capabilities, which can effectively learn
+feature information and recognize patterns from samples.
+The Transformer model’s significant improvement is due to the
+introduction of the Self-attention mechanism. Figure 1 shows the
+basic structure of this mechanism. Through self-attention, the vari-
+ous information in the sequence data can be effectively associated.
+In particular, the self-attention mechanism performs matrix multi-
+plications on the input vectors respectively and updates the weight
+matrix to obtain the correlation degree between the vectors. For
+vectors a1 and a2, the weight matrix is multiplied to obtain the Q
+matrix and K matrix, and the matrix a is obtained by dot product of
+Q and K matrix, which represents the correlation degree between
+two vectors. Divide a by the scale factor𝑘𝑑, the attention matrix
+is then processed as a normal distribution, so as to stabilize the
+gradient during training. Additionally, an optional mask is added,
+and the resulting matrix is multiplied by the weight matrix V to
+obtain the final output b1, as shown in Formula 1.
+Attention(𝑄,𝐾,𝑉 ) = sofmax
+ 
+𝑄𝐾𝑇
+√︁
+𝑑𝑘
+!
+𝑉 (1)
+The dimensions of Q and K are𝑘𝑑, and the dimensions of V are𝑣𝑑.
+After calculation, each feature vector in the output sequence can
+obtain information about all elements in the input sequence, and
+pay attention to important details through the assigned weights.
+The purpose of adding a mask in the self-attention mechanism is
+to conceal certain unimportant values to prevent them from affect-
+ing the final output. For example, when padding zeros to align the
+sequence of samples, the positions filled with zeros do not contain
+important information. The specific operation of implementing the
+mask is to add a large negative number, and the weight coefficient
+calculated after Softmax is close to 0.
+313
+===== PAGE 3 =====
+Fault Diagnosis of Gearbox Based on Improved Transformer AAIA 2023, November 18–20, 2023, Wuhan, China
+Figure 2: The basic structure of Multi-head attention block.
+Unlike the basic attention mechanism that directly maps Q, K,
+and V to high-dimensional space, the Transformer model uses the
+Multi-head self-attention (MSA) to map Q, K, and V to different
+subspaces of high-dimensional space. MSA consists of multiple
+parallel self-attention layers, and the basic structure of MSA is
+shown in figure 2. Perform different h-times linear projections on
+Q, K, and V, and then calculate the self-attention function in parallel
+for each projection version. The output values with dimensions𝑣𝑑
+are concatenated and reprojected to obtain the final value. The
+processing process can be represented as follows:
+𝑀𝑢𝑙𝑡𝑖𝐻𝑒𝑎𝑑 (𝑄,𝐾,𝑉 ) =𝐶𝑜𝑛𝑐𝑎𝑡(ℎ𝑒𝑎𝑑𝑖,...,ℎ𝑒𝑎𝑑 ℎ)𝑊𝑂
+ℎ𝑒𝑎𝑑𝑖 =𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛
+
+𝑄𝑊𝑄
+𝑖 ,𝐾𝑊 𝐾
+𝑖 ,𝑉𝑊 𝑉
+𝑖
+ (2)
+In which𝑊𝑄
+𝑖 ∈ 𝑅𝑑model×𝑑𝑘 、𝑊𝐾
+𝑖 ∈ 𝑅𝑑model×𝑑𝑘 、𝑊𝑉
+𝑖 ∈ 𝑅𝑑model×𝑑𝑘
+and𝑊𝑂
+𝑖 ∈𝑅𝑑model×𝑑𝑘 can be learned in backpropagation. In general,
+the size of each head in MSA is 𝑑𝑘 = 𝑑𝑣 = 𝑑model/ℎ. Essentially,
+MSA is a combination of multiple self-attention mechanisms that
+discover relationships between sequences from different perspec-
+tives. This enables the model to enhance the expressive ability of
+each attention layer without increasing the total number of model
+parameters and extends the Transformer model’s ability to focus
+on different positions.
+Transformer structure is effective in acquiring global informa-
+tion and improving the expressive power of algorithms. However,
+applying Transformer solely to extract features of gearbox leads
+to the loss of the ability to capture local features and positional in-
+formation, which prompts us to develop a better model to improve
+Transformer.
+3 PROPOSED METHOD
+In response to the shortcomings of Transformer, an improved deep
+learning model is proposed for gearbox fault diagnosis. The struc-
+ture diagram is shown in Figure 3, where the input signal is first
+passed through a multi-scale perception layer, which utilizes three
+different-sized convolutional kernels to enhance the ability to cap-
+ture local feature information. After passing through the multi-scale
+perception layer, the signal enters the linear embedding for linear
+mapping, and a position information matrix is added to the linear
+embedding layer to solve the problem of Transformer losing posi-
+tion features. The final representation is obtained by sending the
+generated sequence signal to the Transformer encoder, which is
+then used to classify and diagnose faults.
+The parameters settings for improved Transformer are shown
+in table 1. Here are the details of this experimental method:
+3.1 Multi-scale Perception Layer
+The multi-scale perception layer is designed with various convo-
+lutional kernels of different scales, which effectively improves the
+network’s feature extraction capability. Let the input signal be rep-
+resented by𝑋 ∈ 𝑅𝑊×1×1, where W is the length of each sample.
+The multi-scale perception layer executes several convolution op-
+erations on the raw signal using various kernel size (101, 201, and
+301, which are used in this study). The output of each convolutional
+kernel is considered as a channel output, and the features from each
+branch are added together to obtain the multi-scale features, which
+can be expressed as:
+𝑋′ =[𝜎(𝑓𝑛1×1;𝐶(𝑋));𝜎(𝑓𝑛2×1;𝐶(𝑋));𝜎(𝑓𝑛3×1;𝐶(𝑋))]∈ 𝑅𝑊×1×3𝐶
+(3)
+Where𝑓𝑛𝑖×1;𝐶(𝑋) represents the size of the convolutional kernel
+in the convolutional process as𝑛𝑖× 1, and the filter number is C.
+𝜎() indicates that ReLU activation function is used.
+3.2 Linear Embedding
+Divide multi-scale features into dimensions 𝑃× 1× 3𝐶 to form
+m signal sequences, where𝑚 = 𝑊/𝑃, and perform linear map-
+ping through a linear embedding layer. A self-learning matrix𝐸∈
+𝑅3𝑃𝐶×𝐷 is used to flatten the existing feature signals into dimen-
+sion D. To improve the subsequent classification work, the matrix
+is labeled with 𝑋𝑐𝑙𝑎𝑠𝑠 , and the self-learning label is added to the
+flattened matrix for better subsequent classification work.
+Since the position information of the sequence signal needs to be
+captured in the attention mechanism, the signal processed by the
+linear embedding layer still needs to retain the spatial information
+in the original signal. Add the position information matrix𝐸𝑝𝑜𝑠∈
+𝑅(𝑚+1)×𝐷 to the signal sequence𝑥 to obtain the final result𝑧0 of
+the linear embedding layer. The generated signal sequence with
+markers can be expressed as:
+𝑧0 =[𝑥𝑐𝑙𝑎𝑠𝑠 ;𝑥1𝐸;... ;𝑥𝑚𝐸]+ 𝐸𝑝𝑜𝑠 (4)
+The added position information is also used as parameters in the
+backpropagation process for training, which effectively improves
+the stability of the model. Subsequently, the signal enters the Trans-
+former encoder and passes the results of the head classifier to the
+classifier module to complete the final classification.
+3.3 Classifier
+The head classifier is comprised of a normalization layer and a
+fully connected layer that utilizes softmax regression to generate
+probability classification for each health state of the gearbox. This
+classification can be represented as:
+𝑦 =𝐹𝐶(LN(𝑥)) (5)
+314
+===== PAGE 4 =====
+AAIA 2023, November 18–20, 2023, Wuhan, China Keming Guan et al.
+Figure 3: Improved Transformer structure diagram.
+Table 1: Parameters of Improved Transformer
+Number Type Parameters Output
+1 Input signal - 1*1024
+2 MSP layer Kernel size Stride Channel 12*1024
+101/201/301 1 4
+3 Linear
+Embedding
+Patch size Input_dim Output_dim 16*64*1
+64*1 768*16 64
+4 Transformer
+Encoder
+Depth Head Mlp_dim 16*64*1
+6 16 128
+5 Classifier Splicing dimensions 5
+64*1
+Table 2: Labeling rules for gearbox data
+Health status description
+Category Label Fault type Working conditions
+1 S1 Normal 20Hz-0V 、30Hz-2V
+2 S2 Chipped 20Hz-0V 、30Hz-2V
+3 S3 Miss 20Hz-0V 、30Hz-2V
+4 S4 Root 20Hz-0V 、30Hz-2V
+5 S5 Surface 20Hz-0V 、30Hz-2V
+4 EXPERIMENTS AND RESULTS
+4.1 Dataset Description
+The SEU gearbox dataset is provided by Southeast University [11]
+for the purpose of gearbox fault diagnosis. The dataset was collected
+using the Drivetrain Dynamics Simulator (DDS). Experimental de-
+vice is shown in figure 4, which consists of brake, planet gearboxes,
+parallel gearboxes, and driving motors. In addition, two three-axis
+accelerometers (x, y, z) were installed on the parallel gearbox and
+planet gearbox to collect vibration signals. The gearbox faults in-
+cluded Chipped, Miss, Crack in the root of gear feet, and wear in
+the surface of gear.
+Two different working conditions are investigated with the ro-
+tating speed system load set to be either 20 HZ-0V or 30 HZ-2V.
+The dataset contains four fault labels and one normal label, making
+a total of five status data. Table 2 lists the fault data labeling rules
+at different speeds and loads.
+315
+===== PAGE 5 =====
+Fault Diagnosis of Gearbox Based on Improved Transformer AAIA 2023, November 18–20, 2023, Wuhan, China
+Figure 4: Experimental system for gearbox dataset.
+4.2 Experiment Result and Analysis
+To evaluate the fault diagnosis ability of a model on the SEU dataset,
+80% of the dataset was used for training and the remaining 20%
+for testing. The k-fold cross-validation method was used to assist
+in model assessment, with k set to five to reduce random error.
+After approximately 50 epochs, the accuracy reached almost 99.5%.
+This indicates that the improved Transformer has good feature
+extraction ability and diagnostic accuracy.
+In order to simulate the actual working conditions, noise is added
+to the signal to increase the difficulty of classification. Gaussian
+white noise based on the signal-to-noise ratio (SNR) is added. The
+energy relationship between signal and noise is shown in Formula
+(6).𝑃𝑠𝑖𝑔𝑛𝑎𝑙 and𝑃𝑛𝑜𝑖𝑠𝑒 represent the energy of the original signal
+and noise respectively. The SNR determines the amount of noise
+added, with SNR equal to zero indicating that the signal and noise
+have equal energy.
+𝑆𝑁𝑅𝑑𝐵 = 10log10
+𝑃𝑠𝑖𝑔𝑛𝑎𝑙
+𝑃𝑛𝑜𝑖𝑠𝑒
+
+(6)
+Figure 5 displays a comparison of the diagnostic capabilities of the
+proposed model, as well as the basic models CNN and Transformer,
+under conditions of noise. The model exhibits a significant improve-
+ment compared to the baseline, with higher diagnostic accuracy
+than the original CNN and Transformer models across various noise
+levels. Notably, the model can achieve an impressive diagnostic ac-
+curacy of 95% when the SNR is greater than 4, demonstrating its
+robustness to noise. At an SNR of 10, the model’s final accuracy
+reaches 99.4%, indicating the effectiveness and excellence of the
+proposed model for fault diagnosis of gearboxes.
+We utilize the T-SNE algorithm to visualize the training process
+in two dimensions by clustering the outputs of each layer to visual-
+ize the learning process of the model. Figure 6 shows the detailed
+process of network training, where different colors represent differ-
+ent categories. It can be observed that as the network progresses,
+similar features continue to gather and eventually form distinct
+Figure 5: Diagnostic result of experimental model and base-
+line under different noise levels.
+cluster structures. The T-SNE algorithm thus demonstrates the pow-
+erful feature learning ability of the improved model in detecting
+fault patterns.
+Figure 7 displays the confusion matrix for each algorithm in
+the absence of noise. For CNN, the overall accuracy is ordinary,
+with some misclassifications in each class. The Transformer model
+exhibits low discrimination between miss teeth and wear occur-
+ring in the surface of gear., with all false positives classified as
+surface cracks. In contrast, the improved Transformer model ex-
+hibits the lowest error rate, indicating that the proposed model has
+good classification ability and has great application value in fault
+diagnosis.
+316
+===== PAGE 6 =====
+AAIA 2023, November 18–20, 2023, Wuhan, China Keming Guan et al.
+Figure 6: Display of t-SNE results for each layer of the experimental: (a) MCF, (b) Linear embed, (c) Transformer, (d) Classifier.
+Figure 7: Confusion matrix of proposed method and baseline: (a) CNN, (b) Transformer, (c) Improved Transformer.
+5 CONCLUSION
+This article presents an enhanced Transformer model for intelli-
+gent fault diagnosis of gearboxes. The input signal passed through
+a multi-scale perception layer, linear embedding and Transformer
+encoder to finally get the classification result. The SEU gearbox
+dataset was utilized for testing, and the results of the experiments
+demonstrate that the improved Transformer model is capable of
+317
+===== PAGE 7 =====
+Fault Diagnosis of Gearbox Based on Improved Transformer AAIA 2023, November 18–20, 2023, Wuhan, China
+effectively capturing local feature information through the integra-
+tion of multi-scale perception layers and linear embedding layers.
+The proposed model has the ability to analyze fault features at
+various time scales while retaining the position information of the
+original signal. During the experiment, the model outperformed
+other basic models in terms of diagnostic capabilities. The model’s
+classification accuracy can reach 99.4% when detecting five differ-
+ent fault signals with a signal-to-noise ratio of 10. Even with a
+signal-to-noise ratio of 2, the model can still maintain a diagnostic
+accuracy of 95%. These results demonstrate the model’s exceptional
+anti-interference ability, suggesting that the proposed method could
+be effective in real-world engineering fault diagnosis tasks.
+In the future, we plan to use more advanced models to improve
+the proposed method. For example, using the recent RetNet, which
+has faster speed and accuracy than Transformer. We will also collect
+more data for different gearbox faults to evaluate the performance
+of the proposed method.
+REFERENCES
+[1] Liu R, Yang B, Zio E,et al. 2018 Artificial intelligence for fault diagnosis of rotating
+machinery: A review Mechanical Systems and Signal Processing 108: 33-47.
+[2] Li J N, Luo W G and Chen W G 2022 A review of rolling bearing fault diagnosis
+algorithms for vibration signals Journal of Xi’an University of Technology 42(02):
+105-122.
+[3] Xiao Q H 2021 Overview of mechanical fault diagnosis methods based on machine
+learning theory Modern Manufacturing Engineering 490 (07): 148-161.
+[4] Lei Y G, Jia F, Zhou X,et al. 2015 Big data health monitoring method for mechani-
+cal equipment based on deep learning theory Journal of Mechanical Engineering
+51(21): 49-56.
+[5] Lei Y, Yang B, Jiang X, Jia F, Li N and Nandi A K 2020 Applications of machine
+learning to machine fault diagnosis: A re-view and roadmap Mech. Syst. Signal
+Process 138 106587.
+[6] Janssens O, Slavkovikj V, Vervisch B,et al. 2016 Convolutional neural network
+based fault detection for rotating machinery Journal of Sound and Vibration 377:
+331-345.
+[7] Gong We F, Chen H, Zhang Z H,et al. 2020 Research on intelligent fault diagnosis
+of rolling bearings based on improved convolutional neural network Journal of
+Vibration Engineering 33(2): 400-413.
+[8] Talebi N, Sadrnia M A and Darabi A 2014 Robust fault detection of wind energy
+conversion systems based on dynamic neural network Comput Intell Neurosci
+580972.
+[9] Liu H, Zhou J Z, Zheng Y, Jiang W and Zhang Y C 2018 Fault diagnosis of rolling
+bearings with recurrent neural network-based autoencoders ISA Transactions
+77: 167-178.
+[10] Vaswani A, Shazeer N, Parmar N, et al. 2017 Attention is all you need Advances
+in Neural Information Processing Systems 30
+[11] Shao S, McAleer S, Yan R, et al. 2018 Highly accurate machine fault diagnosis
+using deep transfer learning IEEE Transactions on Industrial Informatics 15(4):
+2446-2455.
+318

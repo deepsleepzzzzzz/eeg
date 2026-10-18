@@ -5,12 +5,14 @@ method:
   rhythm_filter: false
   rhythm_band: delta
   quality_assess: false
-  normalize: none
+  normalize: zscore
   sampling_rate: 5120
   symbol_bins: 6
   symbol_strategy: uniform
   bin_scope: train_global
-  transition_steps: [1, 2, 3]
+  bin_edges_mode: quantile
+  state_stats: none
+  transition_steps: [1, 2, 3, 4, 5, 6, 7]
   transition_weight: probability
   transition_multichannel: stack
   include_self_transition: true
@@ -30,12 +32,12 @@ data:
   raw_root: "./datas/seu"
   output_root: "./datas/experiments_seu/representations"
   conditions: ["20_0", "30_2"]
-  epoch_samples: 800
+  epoch_samples: 1600
   window_stride: 800
   max_windows_per_class: null
   train_ratio: 0.70
-  val_ratio: 0.15
-  test_ratio: 0.15
+  val_ratio: 0.20
+  test_ratio: 0.10
   split_seed: 42
 
 train:

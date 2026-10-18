@@ -9,6 +9,6 @@
 - [x] 轴承/齿轮两套流程已接，CNN/GCN 配置可切。冒烟通。见 `doc/method.md`
 - [x] 正式第一版已训完（种子 42，test 封闭）。见 `doc/results.md`
 - [x] 验证集混淆矩阵和 t-SNE 已接到训练；论文图在 `doc/figures/seu/`。见 `doc/results.md`
-- [ ] 四条线 val 扫 lr / dropout（CNN/GCN × 关/开注意力）。见 `doc/method.md`
+- [x] 四条线 val 扫 lr / dropout。见 `doc/results.md`
 - [ ] 打开测试集
 - [ ] 手选指标仍是对照行

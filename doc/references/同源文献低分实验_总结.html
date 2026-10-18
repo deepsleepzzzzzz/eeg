@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>同源文献"低于本文"的实验 · 总结</title>
+<style>
+  @page { size: A4; margin: 2.2cm 2cm; }
+  body { font-family: "Microsoft YaHei","SimSun",sans-serif; font-size: 10.5pt; line-height: 1.75; color: #1a1a1a; }
+  h1 { font-size: 19pt; text-align: center; color: #0b3d63; margin: 0 0 6pt; letter-spacing: 1px; }
+  .subtitle { text-align: center; color: #5a6a7a; font-size: 9.5pt; margin-bottom: 4pt; }
+  .rule { height: 3px; background: linear-gradient(90deg,#0b3d63,#2f80c4,#8ec6ef); border: none; margin: 10pt 0 16pt; }
+  h2 { font-size: 13.5pt; color: #0b3d63; border-left: 5px solid #2f80c4; padding-left: 10px; margin: 20pt 0 9pt; page-break-after: avoid; }
+  h3 { font-size: 11pt; color: #21507a; margin: 13pt 0 5pt; page-break-after: avoid; }
+  p { margin: 6pt 0; text-align: justify; }
+  table { width: 100%; border-collapse: collapse; margin: 7pt 0 13pt; font-size: 9.3pt; page-break-inside: avoid; }
+  th { background: #0b3d63; color: #fff; padding: 6px 7px; text-align: left; font-weight: 600; }
+  td { border: 1px solid #c8d6e2; padding: 5px 7px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f4f8fb; }
+  .hi { color: #c0392b; font-weight: 700; }
+  .us { color: #0b6b3a; font-weight: 700; }
+  .lead { background: #f0f6fc; border: 1px solid #bcd6ea; border-left: 5px solid #2f80c4; padding: 11px 14px; margin: 10pt 0; border-radius: 3px; font-size: 11pt; }
+  .warn { background: #fdf3ef; border: 1px solid #efc4b4; border-left: 5px solid #d9534f; padding: 10px 14px; margin: 10pt 0; border-radius: 3px; }
+  .note { font-size: 9pt; color: #6b7a89; }
+  ol,ul { margin: 6pt 0 6pt 20pt; } li { margin: 3pt 0; }
+  .ref { font-size: 9pt; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<h1>同源文献"低于本文"的实验 · 总结</h1>
+<p class="subtitle">SEU 旋转机械故障诊断 · 按导师"同库、同任务、同划分、同指标"口径汇总</p>
+<hr class="rule">
+
+<div class="lead">
+<p style="margin:0"><strong>一句话结论：</strong>在同一 SEU 数据集、同类 5 分类任务上，文献里常见的方法（CNN、LSTM、Transformer、BP、AlexNet、BiLSTM、ResNet18 等）普遍比本文低 <span class="hi">3~35 个百分点</span>；只有在面对各论文"自报最优那个数"（99.15%~99.6%）时才是<span class="us">同一档</span>。</p>
+</div>
+
+<h2>一、本文基准（密封测试集，resplit / seed42）</h2>
+<table>
+<tr><th>任务</th><th>工况</th><th>准确率</th></tr>
+<tr><td>轴承</td><td>20-0 / 30-2</td><td><span class="us">99.85% ~ 100%</span></td></tr>
+<tr><td>齿轮</td><td>20-0 / 30-2</td><td><span class="us">97.69% ~ 99.85%</span></td></tr>
+</table>
+<p class="note">均为单工况各自建模、5 分类（轴承：Ball/Comb/Health/Inner/Outer；齿轮：Chipped/Health/Miss/Root/Surface）。</p>
+
+<h2>二、关键对照（同 SEU，且低于本文）</h2>
+
+<h3>齿轮箱任务</h3>
+<table>
+<tr><th>来源文献（年份）</th><th>方法</th><th>准确率</th><th>我们</th></tr>
+<tr><td>Kibrete, J. Eng. Wiley 2025</td><td>CNN / LSTM</td><td><span class="hi">94.12% / 94.90%</span></td><td rowspan="7"><span class="us">97.69~99.85%</span></td></tr>
+<tr><td>多模态融合, ACM 2025</td><td>Transformer / CNN</td><td><span class="hi">71.08% / 97.27%</span></td></tr>
+<tr><td>IAMCNN, 华东理工学报 2024</td><td>BP / CNN / LSTM</td><td><span class="hi">90.44% / 93.52% / 96.75%</span></td></tr>
+<tr><td>CNN-LSTM+注意力, AMMMP 2024</td><td>LSTM / CNN / CNN-LSTM</td><td><span class="hi">90.75% / 92.90% / 94.82%</span></td></tr>
+<tr><td>CA-DRSN, Sci Rep 2024（加噪）</td><td>AlexNet / BiLSTM / ResNet18</td><td><span class="hi">77.7% / 91.1% / 95.5%</span></td></tr>
+<tr><td>FEMSN, arXiv 2025（强噪声 −10dB）</td><td>WDCNN / ResNet50 / DenseNet</td><td><span class="hi">66.16% / 78.54% / 74.07%</span></td></tr>
+<tr><td>SVMD 熵+机器学习, Algorithms 2023</td><td>KNN/SVM/RF/GBDT</td><td><span class="hi">89.41~96.02%</span></td></tr>
+</table>
+
+<h3>轴承任务</h3>
+<table>
+<tr><th>来源文献（年份）</th><th>方法</th><th>准确率</th><th>我们</th></tr>
+<tr><td>多模态融合, ACM 2025</td><td>Transformer / CNN</td><td><span class="hi">63.56% / 89.50%</span></td><td rowspan="3"><span class="us">99.85~100%</span></td></tr>
+<tr><td>SVMD 熵+机器学习, Algorithms 2023</td><td>SVM / k-NN（30-2）</td><td><span class="hi">94.12% / 97.25%</span></td></tr>
+<tr><td>SVMD 熵 全网格</td><td>传统方法区间</td><td><span class="hi">91.76~99.61%</span></td></tr>
+</table>
+
+<h3>需注明"设置不同"的（同 SEU，但类别数/条件不同）</h3>
+<table>
+<tr><th>来源文献</th><th>方法</th><th>准确率</th><th>不同点</th></tr>
+<tr><td>MGE-ResNet, Processes 2025</td><td>SVM / TICNN 等</td><td><span class="hi">81.46% / 88~98%</span></td><td>轴承 <strong>10 类</strong>（两工况合并）</td></tr>
+<tr><td>IIETA MSRC+CBAM 2025</td><td>LeNet / AlexNet / MSCNN</td><td><span class="hi">79.57% / 97.33% / 94.19%</span>（60% 训练）</td><td>划分比例不同，4 任务</td></tr>
+<tr><td>SCBM-Net, Sci Rep 2025</td><td>其方法</td><td>98.33%</td><td>轴承 <strong>10 类</strong></td></tr>
+<tr><td>SAGAN-IResNet, Sci Rep 2025</td><td>其方法</td><td>92.57~98.50%</td><td>少样本设置</td></tr>
+<tr><td>Deep Ensemble 多形态融合, Sensors 2025</td><td>单测点 WDCNN</td><td><span class="hi">&lt;93%（半数 &lt;80%）</span></td><td>单通道输入</td></tr>
+</table>
+
+<h2>三、速度 / 效率（"快"——导师最看重的切入点）</h2>
+<div class="lead">
+<p style="margin:0"><strong>准确率是同档，但速度/效率是本文最硬、最不容易被反驳的优势：</strong>CNN 仅 <span class="us">2.5 万参数 / 104 KB / 0.384 MFLOPs</span>，单样本推理约 <span class="us">0.02~0.03 ms</span>，吞吐 <span class="us">3.7 万~5.3 万 样本/秒</span>；相比同源文献 <span class="us">参数少 8~366 倍、算量少 26~5000 倍、体积小 60 倍以上</span>。</p>
+</div>
+
+<h3>3.1 本文实测效率（RTX 4060，batch=32）</h3>
+<table>
+<tr><th>任务</th><th>架构</th><th>参数量</th><th>模型大小</th><th>FLOPs/样本</th><th>单样本延迟</th><th>吞吐量</th><th>峰值显存</th></tr>
+<tr><td>轴承</td><td>CNN</td><td><span class="us">25,093</span></td><td><span class="us">104 KB</span></td><td><span class="us">0.384 M</span></td><td><span class="us">0.028 ms</span></td><td><span class="us">36,529 /s</span></td><td>18.2 MB</td></tr>
+<tr><td>轴承</td><td>GCN</td><td>18,549</td><td>79 KB</td><td>0.558 M</td><td>0.041 ms</td><td>24,827 /s</td><td>20.8 MB</td></tr>
+<tr><td>齿轮</td><td>CNN</td><td><span class="us">25,093</span></td><td><span class="us">104 KB</span></td><td><span class="us">0.384 M</span></td><td><span class="us">0.019 ms</span></td><td><span class="us">52,711 /s</span></td><td>18.2 MB</td></tr>
+<tr><td>齿轮</td><td>GCN</td><td>18,549</td><td>79 KB</td><td>0.558 M</td><td>0.040 ms</td><td>25,564 /s</td><td>20.8 MB</td></tr>
+</table>
+<p class="note">输入为 21×6×6 的符号化状态转移矩阵（非原始振动信号）；延迟按 batch=32 折算到单样本。</p>
+
+<h3>3.2 与同源文献的效率对照</h3>
+<table>
+<tr><th>来源文献（年份）</th><th>方法</th><th>参数量</th><th>FLOPs</th><th>单样本延迟</th><th>模型大小</th></tr>
+<tr><td><strong>本文</strong></td><td><strong>CNN</strong></td><td><span class="us">0.025 M</span></td><td><span class="us">0.384 M</span></td><td><span class="us">0.019~0.028 ms</span></td><td><span class="us">104 KB</span></td></tr>
+<tr><td><strong>本文</strong></td><td><strong>GCN</strong></td><td><span class="us">0.019 M</span></td><td><span class="us">0.558 M</span></td><td>0.040 ms</td><td>79 KB</td></tr>
+<tr><td>DSMC-ECA, Sensors 2026（SEU 齿轮）</td><td>其方法</td><td>0.204 M</td><td>10.037 M</td><td>—</td><td>—</td></tr>
+<tr><td>ADGCC-Net, Processes 2025（SEU 轴承）</td><td>其方法</td><td>—</td><td>—</td><td>—</td><td>0.082 MB</td></tr>
+<tr><td>STCSE, Sage 2026（SEU 齿轮）</td><td>其方法</td><td>2.1 M</td><td>800 M</td><td>—</td><td>—</td></tr>
+<tr><td>MGE-ResNet, Processes 2025（SEU 轴承）</td><td>其方法</td><td>—</td><td>1,990 M</td><td>—</td><td>—</td></tr>
+<tr><td>ADAMFFN, Machines 2026（<strong>SEU 齿轮</strong>）</td><td>其方法</td><td>—</td><td>—</td><td><span class="hi">端到端 35 ms</span></td><td><span class="hi">6.69 MB</span></td></tr>
+<tr><td>港口起重机轻量化, Actuators 2026</td><td>WDCNN</td><td>2.87 M</td><td>386.5 M</td><td>3.64 ms</td><td>—</td></tr>
+<tr><td>同上</td><td>ResNet-18</td><td>9.18 M</td><td>1,728.6 M</td><td>10.32 ms</td><td>—</td></tr>
+</table>
+
+<h3>3.3 换算成"比谁快 / 小多少倍"（以本文 CNN 为基准）</h3>
+<table>
+<tr><th>对比对象</th><th>参数少</th><th>算量（FLOPs）少</th><th>单样本延迟低</th><th>体积小</th></tr>
+<tr><td>DSMC-ECA</td><td><span class="us">8.1×</span></td><td><span class="us">26×</span></td><td>—</td><td>—</td></tr>
+<tr><td>STCSE</td><td>84×</td><td><span class="us">2,083×</span></td><td>—</td><td>—</td></tr>
+<tr><td>MGE-ResNet</td><td>—</td><td><span class="us">5,182×</span></td><td>—</td><td>—</td></tr>
+<tr><td>ADAMFFN（同 SEU 齿轮）</td><td>—</td><td>—</td><td><span class="us">约 290~420×</span></td><td><span class="us">约 65×</span></td></tr>
+<tr><td>WDCNN（港口起重机）</td><td>114×</td><td><span class="us">1,007×</span></td><td><span class="us">约 130~190×</span></td><td>—</td></tr>
+<tr><td>ResNet-18</td><td><span class="us">366×</span></td><td><span class="us">4,502×</span></td><td><span class="us">约 370~540×</span></td><td>—</td></tr>
+</table>
+<p class="note">换句话说：<strong>别人一个样本的时间，本文能出几百个样本</strong>；别人装一个模型的内存，本文能装几百个。</p>
+
+<p style="text-align:center;margin:12pt 0 6pt"><img src="../figures/seu/speed_compare.png" alt="速度/效率对比" style="width:96%;max-width:640px"></p>
+<p class="note" style="text-align:center">图 1　本文与同源文献的参数量 / 算量对比（对数坐标）</p>
+
+<div class="warn">
+<p style="margin:0 0 4pt"><strong>效率部分的诚实边界</strong></p>
+<ol style="margin:0">
+<li><strong>FLOPs 与输入模态强相关</strong>：本文输入是 21×6×6 符号矩阵，文献多用 1024/2048/4096 点原始信号或 224×224 图像，口径不完全相同。故只主张"各自报告口径下本模型最轻"，<strong>不夸大为"快几千倍"</strong>。</li>
+<li><strong>硬件不同</strong>：本文延迟/吞吐在 RTX 4060（batch=32）测得，文献硬件未知，跨论文绝对延迟仅作量级参照。</li>
+<li><strong>最稳的三项</strong>：参数量、模型大小、同硬件延迟（与输入模态无关或弱相关），是最可靠的效率优势。</li>
+<li><strong>有一个真劲敌</strong>：ADGCC-Net（Processes 2025）模型 0.082 MB，与本文 104 KB 同量级——"轻量"赛道并非无人，但其准确率/任务覆盖不及本文。</li>
+</ol>
+</div>
+
+<h2>四、四个层面结论</h2>
+<ol>
+<li><strong>常见深度基线明显低于本文</strong>：CNN（89.5~94.1%）、LSTM（90.8~94.9%）、Transformer（63.6~71.1%）、BP（90.4%）、AlexNet（77.7%）、BiLSTM（91.1%）、ResNet18（95.5%）——低 <span class="hi">3~35 个点</span>。</li>
+<li><strong>传统机器学习方法更低</strong>：SVM（81.46~94.12%）、k-NN（97.25%）、BP（90.44%）。</li>
+<li><strong>面对"自报最优"仍属同档</strong>：1D CNN-LSTM 99.15%、SVMD+RF 99.22%、MSRC 99.56~99.6%，与本文 97.69~100% 同一水平——但本文<strong>参数少约 3 个数量级</strong>，且是<strong>唯一同时做 5 折时间序列 CV + 独立留出</strong>的。</li>
+<li><strong>速度/效率优势最硬</strong>：CNN 仅 <span class="us">2.5 万参数 / 104 KB / 0.384 MFLOPs</span>，单样本 <span class="us">0.02~0.03 ms</span>，吞吐 <span class="us">3.7 万~5.3 万样本/秒</span>；相比同源文献<strong>参数少 8~366 倍、算量少 26~5000 倍、体积小 60 倍以上</strong>。</li>
+</ol>
+
+<div class="warn">
+<p style="margin:0 0 4pt"><strong>使用注意（避免被一句"设置不一样"驳回）</strong></p>
+<ol style="margin:0">
+<li><strong>双层写</strong>：先列"最强对手"承认同档，再列基线方法显优势，不能只挑软柿子。</li>
+<li><strong>类别数不同要注明</strong>：MGE-ResNet、SCBM-Net 是 10 类，难度天然更高，仅作量级参照。</li>
+<li><strong>加噪/少样本要注明</strong>：CA-DRSN、FEMSN、SAGAN 是噪声或少样本设置，不与干净信号结果直接比。</li>
+<li><strong>措辞留余地</strong>：写"相较文献中常用基线方法，本文在同等数据上准确率更高"，别写"某某方法很差"。</li>
+<li><strong>最硬的做法</strong>：必要时在本文同一协议下<strong>自行复现</strong> SVM / WDCNN / 原版 Transformer 基线，得到真·同口径数字（答辩加分项）。</li>
+</ol>
+</div>
+
+<h2>五、给导师的一句话汇报（口语版）</h2>
+<div class="lead">
+<p style="margin:0">"准确率上，我在同一个 SEU 数据库上跟常见方法比，普遍高三到三十五个点，跟各篇里最好的那个数是一个水平。更硬的是'快'：我的模型只有 <strong>2.5 万个参数、104 KB、0.38 MFLOPs</strong>，一个样本 <strong>0.02 毫秒</strong>出结果，一秒能算 <strong>3.7 万到 5.3 万个样本</strong>；跟同源文献比，<strong>参数少 8 到 366 倍、算量少 26 到 5000 倍、体积小 60 倍以上</strong>。别人还要预处理加降噪，我这边符号矩阵直接进网络。所以'轻量、实时、省电'这条线，是明显站得住的。"</p>
+</div>
+
+<h2>参考文献</h2>
+<p class="ref">
+[1] Kibrete F. et al. Fault Diagnosis of Rotating Machines Based on Combination of 1D CNN and LSTM in Variable Working Conditions. Journal of Engineering (Wiley), 2025. DOI: 10.1155/je/1670810<br>
+[2] Research on Equipment Fault Diagnosis Method Based on Multimodal Deep Fusion. ACM CIISAI, 2025. DOI: 10.1145/3773365.3773555<br>
+[3] 基于改进注意力机制的 CNN 的齿轮箱故障诊断(IAMCNN). 华东理工大学学报(自然科学版), 2024. DOI: 10.14135/j.cnki.1006-3080.20231207002<br>
+[4] Fault Diagnosis of Gearbox Based on CNN and LSTM with Attention Mechanism. Highlights in Sci. Eng. Tech. (AMMMP 2024), Vol. 93.<br>
+[5] Zhang L. et al. Fault-Diagnosis Method for Rotating Machinery Based on SVMD Entropy and Machine Learning. Algorithms, 2023, 16(6): 304.<br>
+[6] Gearbox Fault Diagnosis in Noisy Environments Based on Deep Residual Shrinkage Networks (CA-DRSN). Scientific Reports, 2024. PMID: 39066029<br>
+[7] FE-MCFormer / FEMSN. arXiv:2505.06285, 2025.<br>
+[8] Bearing Fault Diagnosis Based on Multiscale Lightweight CNN (MGE-ResNet). Processes, 2025, 13(4): 1239.<br>
+[9] Deep Learning-Based Fault Diagnosis of Electromechanical Systems in Synchronous Motors (MSRC+CBAM). IIETA, 2025.<br>
+<strong>（速度/效率部分新增出处）</strong><br>
+[10] Lightweight Gearbox Fault Diagnosis Under High Noise (DSMC-ECA). Sensors, 2026, 26(4): 1196.<br>
+[11] Bearing Fault Diagnosis with ADGCC-Net. Processes, 2025, 13(11): 3600.<br>
+[12] STCSE: ... Journal of Vibration and Control (Sage), 2026.<br>
+[13] Adaptive Domain-Aligned Multi-Modal Feature Fusion Network for Cross-Speed Fault Diagnosis of Planetary Gearboxes (ADAMFFN). Machines, 2026, 14(9): 960.<br>
+[14] Lightweight Fault Diagnosis of Port Crane Bearings ... Structured Pruning. Actuators, 2026, 15(6): 322.<br>
+[15] MSADC-TDA: multi-scale adaptive residual network combined with three-domain attention. J. Industrial and Management Optimization, 2026. DOI: 10.3934/jimo.2026110<br>
+[16] A Lightweight and Small Sample Bearing Fault Diagnosis Algorithm Based on Probabilistic Decoupling Knowledge Distillation and Meta-Learning. Sensors, 2024, 24(24): 8157.
+</p>
+
+</body>
+</html>

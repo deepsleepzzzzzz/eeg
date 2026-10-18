@@ -1,7 +1,12 @@
 # Changelog
 
+## 2026-09-22
+
+- 去掉交接压缩包。给老师看 `doc/handoff/seu_stage_report.docx`，图在 `doc/figures/seu/`。
+
 ## 2026-09-21
 
+- 给导师的 Word 按概要、流程、细节与引用重写。见 `doc/handoff/seu_stage_report.docx`
 - 四条线（CNN/GCN × 关/开注意力）在验证集扫学习率和 dropout。见 `doc/method.md`
 - 验证集混淆矩阵和 t-SNE 接到 SEU 训练，论文图在 `doc/figures/seu/`。见 `doc/results.md`
 - `feat/rotating-fault` 去掉脑电分类入口，只留旋转机械。脑电在标签 `eeg-cnn`、`eeg-gcn`。

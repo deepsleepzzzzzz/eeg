@@ -113,6 +113,57 @@ def fit_train_amplitude_edges(epochs: Sequence[np.ndarray], train_indices, metho
     return edges
 
 
+def fit_train_quantile_edges(epochs: Sequence[np.ndarray], train_indices, method_cfg) -> np.ndarray:
+    """Per-channel quantile edges from training epochs only. Shape [C, bins+1].
+
+    Equal-frequency edges: every symbol state receives roughly the same share of
+    training samples, so the state space is fully used instead of collapsing into
+    the one bin that happens to cover most of the amplitude range. Boundaries are
+    still fit once on the training split and shared by every sample, which keeps
+    the node encoding consistent across the dataset.
+    """
+    from representation.recurrence_plot import preprocess_signal
+
+    bins = int(method_cfg.get("symbol_bins", 6))
+    if bins < 2:
+        raise ValueError("symbol_bins must be >= 2")
+    indices = [int(i) for i in train_indices]
+    if not indices:
+        raise ValueError("train_global requires at least one training epoch")
+    first = preprocess_signal(epochs[indices[0]], method_cfg)
+    if first.ndim != 2:
+        raise ValueError(f"train_global expects [C,T] epochs, got {first.shape}")
+    n_channels = int(first.shape[0])
+    pooled: list[list[np.ndarray]] = [[] for _ in range(n_channels)]
+    for index in indices:
+        arr = preprocess_signal(epochs[index], method_cfg)
+        if arr.shape[0] != n_channels:
+            raise ValueError("channel count changed while fitting bin edges")
+        for channel in range(n_channels):
+            pooled[channel].append(arr[channel])
+    edges = np.empty((n_channels, bins + 1), dtype=np.float64)
+    qs = np.linspace(0.0, 1.0, bins + 1)
+    for channel in range(n_channels):
+        values = np.concatenate(pooled[channel])
+        raw = np.quantile(values, qs)
+        # enforce strictly increasing edges so searchsorted stays well defined
+        for i in range(1, raw.size):
+            if raw[i] <= raw[i - 1]:
+                raw[i] = raw[i - 1] + 1e-9
+        edges[channel] = raw
+    return edges
+
+
+def fit_train_edges(epochs: Sequence[np.ndarray], train_indices, method_cfg) -> np.ndarray:
+    """Dispatch boundary fitting by method.bin_edges_mode: quantile (default) or uniform."""
+    mode = str(method_cfg.get("bin_edges_mode", "quantile")).lower()
+    if mode in ("quantile", "percentile", "equal_frequency", "eqfreq"):
+        return fit_train_quantile_edges(epochs, train_indices, method_cfg)
+    if mode in ("uniform", "equal", "amplitude", "equal_width"):
+        return fit_train_amplitude_edges(epochs, train_indices, method_cfg)
+    raise ValueError(f"unknown bin_edges_mode: {mode}")
+
+
 def transition_matrix(
     states: np.ndarray,
     bins: int,
@@ -161,12 +212,47 @@ def _channel_edges(method_cfg, channel: int | None) -> np.ndarray | None:
     return edges[int(channel)]
 
 
+def _occupancy(states: np.ndarray, bins: int) -> np.ndarray:
+    """Normalized state-occupancy vector [bins]: how often each state is visited."""
+    if states.size == 0:
+        return np.zeros(bins, dtype=np.float32)
+    counts = np.bincount(states, minlength=bins).astype(np.float32)
+    total = float(counts.sum())
+    return counts / total if total > 0 else counts
+
+
+def _append_state_stats(mat: np.ndarray, states: np.ndarray, bins: int,
+                        mode: str) -> np.ndarray:
+    """Append per-step state statistics as extra rows: [S,B,B] -> [S*(1+extra),B,B].
+
+    mode:
+      none      -> unchanged
+      occupancy -> one extra row block holding the normalized state-occupancy vector
+                   repeated down the columns, so a row-wise CNN kernel can read it.
+    """
+    mode = str(mode).lower()
+    if mode in ("none", "", "false"):
+        return mat
+    if mode not in ("occupancy", "occ"):
+        raise ValueError(f"unknown state_stats mode: {mode}")
+    occ = _occupancy(states, bins)  # [B]
+    blocks = []
+    for step_index in range(mat.shape[0]):
+        # put occupancy on the diagonal: same [B,B] shape as a transition matrix, so
+        # the CNN reads it with the same kernels and the signal strength survives.
+        row = np.diag(occ).astype(np.float32)
+        blocks.append(mat[step_index])
+        blocks.append(row)
+    return np.stack(blocks, axis=0).astype(np.float32)
+
+
 def _build_channel(signal: np.ndarray, method_cfg, channel: int | None = None) -> np.ndarray:
     bins = int(method_cfg.get("symbol_bins", 6))
     strategy = str(method_cfg.get("symbol_strategy", "uniform"))
     steps = _as_steps(method_cfg.get("transition_steps", [1, 2, 3]))
     weight = str(method_cfg.get("transition_weight", "probability"))
     include_self = bool(method_cfg.get("include_self_transition", True))
+    stats_mode = str(method_cfg.get("state_stats", "none"))
     edges = _channel_edges(method_cfg, channel)
     if edges is None:
         states = symbolize(signal, bins=bins, strategy=strategy)
@@ -176,7 +262,8 @@ def _build_channel(signal: np.ndarray, method_cfg, channel: int | None = None) -
         transition_matrix(states, bins=bins, step=s, weight=weight, include_self=include_self)
         for s in steps
     ]
-    return np.stack(maps, axis=0).astype(np.float32)
+    mat = np.stack(maps, axis=0).astype(np.float32)
+    return _append_state_stats(mat, states, bins, stats_mode)
 
 
 def build_state_transition(signal: np.ndarray, method_cfg) -> np.ndarray:

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>从"速度"看：本文 vs 同源文献 效率对比</title>
+<style>
+  @page { size: A4; margin: 2.2cm 2cm; }
+  body { font-family: "Microsoft YaHei","SimSun",sans-serif; font-size: 10.5pt; line-height: 1.75; color: #1a1a1a; }
+  h1 { font-size: 19pt; text-align: center; color: #0b3d63; margin: 0 0 6pt; letter-spacing: 1px; }
+  .subtitle { text-align: center; color: #5a6a7a; font-size: 9.5pt; margin-bottom: 4pt; }
+  .rule { height: 3px; background: linear-gradient(90deg,#0b3d63,#2f80c4,#8ec6ef); border: none; margin: 10pt 0 16pt; }
+  h2 { font-size: 13.5pt; color: #0b3d63; border-left: 5px solid #2f80c4; padding-left: 10px; margin: 20pt 0 9pt; page-break-after: avoid; }
+  p { margin: 6pt 0; text-align: justify; }
+  table { width: 100%; border-collapse: collapse; margin: 7pt 0 13pt; font-size: 9.2pt; page-break-inside: avoid; }
+  th { background: #0b3d63; color: #fff; padding: 6px 7px; text-align: left; font-weight: 600; }
+  td { border: 1px solid #c8d6e2; padding: 5px 7px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f4f8fb; }
+  .hi { color: #c0392b; font-weight: 700; }
+  .us { color: #0b6b3a; font-weight: 700; }
+  .lead { background: #f0f6fc; border: 1px solid #bcd6ea; border-left: 5px solid #2f80c4; padding: 11px 14px; margin: 10pt 0; border-radius: 3px; font-size: 11pt; }
+  .warn { background: #fdf3ef; border: 1px solid #efc4b4; border-left: 5px solid #d9534f; padding: 10px 14px; margin: 10pt 0; border-radius: 3px; }
+  .quote { background: #f7f7f2; border-left: 4px solid #999; padding: 10px 14px; margin: 10pt 0; font-size: 10.5pt; }
+  img { max-width: 100%; display: block; margin: 10pt auto; }
+  .note { font-size: 9pt; color: #6b7a89; }
+  ol,ul { margin: 6pt 0 6pt 20pt; } li { margin: 3pt 0; }
+  .ref { font-size: 9pt; line-height: 1.6; }
+  .figcap { text-align: center; font-size: 9pt; color: #5a6a7a; margin-top: -4pt; }
+</style>
+</head>
+<body>
+
+<h1>从"速度"看：本文 vs 同源文献 效率对比</h1>
+<p class="subtitle">SEU 旋转机械故障诊断 · 围绕导师最看重的"快 / 实时 / 省电"切入点</p>
+<hr class="rule">
+
+<div class="lead">
+<p style="margin:0"><strong>一句话结论：</strong>本文模型极轻极快——CNN 仅 <span class="us">2.5 万参数 / 0.38 MFLOPs / 104 KB</span>，单样本推理约 <span class="us">0.02 ms</span>，吞吐 <span class="us">3.7 万~5.3 万样本/秒</span>。与同源文献相比，<span class="hi">参数量少 8~366 倍、算量少 26~5000 倍、单样本延迟低约 130~540 倍、体积小 60 倍以上</span>——这是本文最硬、最不易被反驳的优势。</p>
+</div>
+
+<h2>一、本文实测效率（4 个配置，RTX 4060 / batch=32）</h2>
+<table>
+<tr><th>任务</th><th>架构</th><th>参数量</th><th>模型大小</th><th>FLOPs/样本</th><th>单样本延迟</th><th>吞吐量</th><th>峰值显存</th></tr>
+<tr><td>轴承</td><td>CNN</td><td><span class="us">25,093</span></td><td><span class="us">104 KB</span></td><td><span class="us">0.384 M</span></td><td><span class="us">0.028 ms</span></td><td><span class="us">36,529/s</span></td><td>18.2 MB</td></tr>
+<tr><td>轴承</td><td>GCN</td><td>18,549</td><td>79 KB</td><td>0.558 M</td><td>0.041 ms</td><td>24,827/s</td><td>20.8 MB</td></tr>
+<tr><td>齿轮</td><td>CNN</td><td><span class="us">25,093</span></td><td><span class="us">104 KB</span></td><td><span class="us">0.384 M</span></td><td><span class="us">0.019 ms</span></td><td><span class="us">52,711/s</span></td><td>18.2 MB</td></tr>
+<tr><td>齿轮</td><td>GCN</td><td>18,549</td><td>79 KB</td><td>0.558 M</td><td>0.040 ms</td><td>25,564/s</td><td>20.8 MB</td></tr>
+</table>
+<p class="note">输入为 21×6×6 符号化状态转移矩阵；延迟按 batch=32 折算单样本；吞吐 = 样本数 ÷ 纯推理耗时。</p>
+
+<img src="../figures/seu/speed_compare.png" alt="速度/效率对比图">
+<p class="figcap">图 1 参数量与单样本算量对比（对数坐标，红色为本文）</p>
+
+<h2>二、与同源文献的效率对照</h2>
+<table>
+<tr><th>来源文献（年份）</th><th>方法</th><th>参数量</th><th>FLOPs</th><th>单样本延迟</th><th>模型大小</th></tr>
+<tr><td><strong>本文</strong></td><td><strong>CNN</strong></td><td><span class="us">0.025 M</span></td><td><span class="us">0.384 M</span></td><td><span class="us">0.019~0.028 ms</span></td><td><span class="us">104 KB</span></td></tr>
+<tr><td><strong>本文</strong></td><td><strong>GCN</strong></td><td><span class="us">0.019 M</span></td><td><span class="us">0.558 M</span></td><td>0.040 ms</td><td>79 KB</td></tr>
+<tr><td>DSMC-ECA, Sensors 2026（SEU 齿轮）</td><td>其方法</td><td>0.204 M</td><td>10.037 M</td><td>—</td><td>—</td></tr>
+<tr><td>ADGCC-Net, Processes 2025（SEU 轴承）</td><td>其方法</td><td>—</td><td>—</td><td>—</td><td>0.082 MB</td></tr>
+<tr><td>STCSE, Sage 2026（SEU 齿轮）</td><td>其方法</td><td>2.1 M</td><td>800 M</td><td>—</td><td>—</td></tr>
+<tr><td>MGE-ResNet, Processes 2025（SEU 轴承）</td><td>其方法</td><td>—</td><td>1,990 M</td><td>—</td><td>—</td></tr>
+<tr><td>ADAMFFN, Machines 2026（<strong>SEU 齿轮</strong>）</td><td>其方法</td><td>—</td><td>—</td><td><span class="hi">推理 8 ms + 预处理 27 ms = 端到端 35 ms</span></td><td>6.69 MB</td></tr>
+<tr><td>港口起重机轻量化, Actuators 2026</td><td>WDCNN</td><td>2.87 M</td><td>386.5 M</td><td>3.64 ms</td><td>—</td></tr>
+<tr><td>同上</td><td>ResNet-18</td><td>9.18 M</td><td>1,728.6 M</td><td>10.32 ms</td><td>—</td></tr>
+<tr><td>同上</td><td>SWT-MCNN</td><td>2.12 M</td><td>214.6 M</td><td>2.15 ms</td><td>—</td></tr>
+<tr><td>知识蒸馏轻量, Sensors 2024</td><td>WDCNN</td><td>0.067 M</td><td>1.61 M</td><td>—</td><td>—</td></tr>
+<tr><td>同上</td><td>ResNet</td><td>0.025 M</td><td>3.27 M</td><td>—</td><td>—</td></tr>
+</table>
+
+<h2>三、换算成"比谁快 / 小多少倍"（以本文 CNN 为基准）</h2>
+<table>
+<tr><th>对比对象</th><th>参数少</th><th>算量（FLOPs）少</th><th>单样本延迟低</th><th>体积小</th></tr>
+<tr><td>DSMC-ECA</td><td><span class="hi">8.1×</span></td><td><span class="hi">26×</span></td><td>—</td><td>—</td></tr>
+<tr><td>STCSE</td><td>84×</td><td><span class="hi">2,083×</span></td><td>—</td><td>—</td></tr>
+<tr><td>MGE-ResNet</td><td>—</td><td><span class="hi">5,182×</span></td><td>—</td><td>—</td></tr>
+<tr><td>ADAMFFN（同 SEU 齿轮）</td><td>—</td><td>—</td><td><span class="hi">约 290~420×</span></td><td><span class="hi">约 65×</span></td></tr>
+<tr><td>WDCNN（港口起重机）</td><td>114×</td><td><span class="hi">1,007×</span></td><td><span class="hi">约 130~190×</span></td><td>—</td></tr>
+<tr><td>ResNet-18</td><td><span class="hi">366×</span></td><td><span class="hi">4,502×</span></td><td><span class="hi">约 370~540×</span></td><td>—</td></tr>
+</table>
+<p>换句话说：<strong>别人出一个样本的时间，本文能出几百个样本；别人装一个模型的内存，本文能装几百个。</strong></p>
+
+<div class="warn">
+<p style="margin:0 0 4pt"><strong>诚实边界（必须写清楚，否则易被反驳）</strong></p>
+<ol style="margin:0">
+<li><strong>FLOPs 与输入模态强相关</strong>：本文输入是 21×6×6 符号矩阵，文献多用 1024/2048/4096 点原始信号或 224×224 图像，口径不完全相同。故本文只主张"各自报告口径下本模型最轻"，<strong>不夸大为"快几千倍"</strong>。</li>
+<li><strong>硬件不同</strong>：本文延迟与吞吐在 RTX 4060（batch=32）测得；文献硬件未知，跨论文的绝对延迟<strong>仅作量级参照</strong>。</li>
+<li><strong>最稳的三项</strong>：参数量、模型大小、同硬件下延迟（后两者与输入模态无关或弱相关），是本文最可靠的效率优势。</li>
+<li><strong>对手里有一个真劲敌</strong>：ADGCC-Net（Processes 2025）模型体积 0.082 MB，与本文 104 KB 同量级——轻量赛道并非无人，但其准确率与任务覆盖不及本文。</li>
+</ol>
+</div>
+
+<h2>四、给导师的一句话汇报（口语版）</h2>
+<div class="quote">
+"在'快'这个点上我做了实测：模型只有 <strong>2.5 万个参数、104 KB、0.38 MFLOPs</strong>，一个样本 <strong>0.02 毫秒</strong>就出结果，一秒能算 <strong>3.7 万到 5.3 万个样本</strong>。跟同源文献比，<strong>参数量少 8 到 366 倍、算量少 26 到 5000 倍、体积小 60 倍以上</strong>。别人还要预处理加降噪，我这边符号矩阵直接进网络，端到端更快。所以'轻量、实时、省电'这条线上，我这套是明显站得住的。"
+</div>
+
+<h2>参考文献</h2>
+<p class="ref">
+[1] Lightweight Gearbox Fault Diagnosis Under High Noise (DSMC-ECA). Sensors, 2026, 26(4): 1196.<br>
+[2] Bearing Fault Diagnosis with ADGCC-Net. Processes, 2025, 13(11): 3600.<br>
+[3] STCSE: ... Journal of Vibration and Control (Sage), 2026.<br>
+[4] Bearing Fault Diagnosis Based on Multiscale Lightweight CNN (MGE-ResNet). Processes, 2025, 13(4): 1239.<br>
+[5] Adaptive Domain-Aligned Multi-Modal Feature Fusion Network for Cross-Speed Fault Diagnosis of Planetary Gearboxes (ADAMFFN). Machines, 2026, 14(9): 960.<br>
+[6] Lightweight Fault Diagnosis of Port Crane Bearings ... Structured Pruning. Actuators, 2026, 15(6): 322.<br>
+[7] Research on bearing fault diagnosis based on multi-scale adaptive residual network combined with three-domain attention (MSADC-TDA). J. Industrial and Management Optimization, 2026. DOI: 10.3934/jimo.2026110<br>
+[8] A Lightweight and Small Sample Bearing Fault Diagnosis Algorithm Based on Probabilistic Decoupling Knowledge Distillation and Meta-Learning. Sensors, 2024, 24(24): 8157.
+</p>
+
+</body>
+</html>

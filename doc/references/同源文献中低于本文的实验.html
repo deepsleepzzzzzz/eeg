@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>同源文献中低于本文的实验对照</title>
+<style>
+  body { font-family: "Microsoft YaHei","PingFang SC",sans-serif; color:#1a1a1a; line-height:1.75; font-size:11pt; }
+  h1 { font-size:19pt; color:#0f3d6e; border-bottom:3px solid #0f3d6e; padding-bottom:8px; margin-top:0; }
+  h2 { font-size:14pt; color:#0f3d6e; border-left:5px solid #2e7bbf; padding-left:10px; margin-top:22px; }
+  h3 { font-size:12pt; color:#24486b; margin-top:16px; }
+  blockquote { border-left:4px solid #9ec3e6; background:#f2f7fc; margin:10px 0; padding:8px 14px; color:#4a5a6a; font-size:10.5pt; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:10pt; }
+  th { background:#0f3d6e; color:#fff; padding:7px 9px; text-align:left; border:1px solid #0f3d6e; }
+  td { padding:6px 9px; border:1px solid #c8d6e3; vertical-align:top; }
+  tr:nth-child(even) td { background:#f6fafd; }
+  strong { color:#b5241f; }
+  ol,ul { padding-left:22px; }
+  li { margin:4px 0; }
+</style>
+</head>
+<body>
+
+<h1>同源文献中"低于本文"的实验对照（SEU 同库）</h1>
+<blockquote>
+检索目的：找出<strong>别人论文里在 SEU 数据集上、与本文同任务同指标、但准确率低于本文</strong>的实验，作为"本文更优"的直接依据。<br>
+整理日期：2026-10-01
+</blockquote>
+
+<h2>一、对比口径（先立标尺）</h2>
+<table>
+  <thead><tr><th style="width:22%">维度</th><th>本文</th></tr></thead>
+  <tbody>
+    <tr><td>数据库</td><td>SEU DDS（东南大学传动系统动态模拟器）</td></tr>
+    <tr><td>任务</td><td>轴承 <strong>5 类</strong> / 齿轮 <strong>5 类</strong>（分开建模）</td></tr>
+    <tr><td>工况</td><td>20-0 与 30-2，<strong>两工况各自独立建模</strong></td></tr>
+    <tr><td>任务性质</td><td>同工况内分类</td></tr>
+    <tr><td>指标</td><td>准确率</td></tr>
+    <tr><td>本文最终测试结果</td><td>轴承 <strong>99.85% ~ 100%</strong>；齿轮 <strong>97.69% ~ 99.85%</strong>；8 组合 <strong>97.69% ~ 100%</strong></td></tr>
+  </tbody>
+</table>
+<p><strong>"可比"的三条硬标准</strong>：同一个 SEU 数据库 + 同类任务（同工况内 5 分类）+ 同一个指标（准确率）。三条都满足才列进"表 A"。</p>
+
+<h2>二、表 A：同库同任务，且低于本文（可直接引用）</h2>
+
+<h3>A-1 传统机器学习方法（VMD / SVMD 熵 + SVM / k-NN / RF / GBDT）</h3>
+<p><strong>出处</strong>：Zhang L., Zhang Y., Li G. <em>Fault-Diagnosis Method for Rotating Machinery Based on SVMD Entropy and Machine Learning.</em> Algorithms, 2023, 16(6): 304（表 6）。</p>
+<p>该文用的是 <strong>SEU 轴承 5 类（Ball / Comb / Health / Inner / Outer）与齿轮 5 类（Chipped / Health / Miss / Root / Surface）</strong>，20-0 与 30-2 两工况独立建模，每类 1,048,560 点——<strong>与本文任务完全一致</strong>。</p>
+<table>
+  <thead><tr><th>文献中的方法</th><th>轴承 20-0</th><th>轴承 30-2</th><th>齿轮 20-0</th><th>齿轮 30-2</th></tr></thead>
+  <tbody>
+    <tr><td>SVMD 模糊熵 + k-NN</td><td>99.22%</td><td>97.25%</td><td>94.42%</td><td>90.98%</td></tr>
+    <tr><td>SVMD 能量熵 + SVM</td><td>97.25%</td><td>94.12%</td><td>91.27%</td><td>90.20%</td></tr>
+    <tr><td>SVMD 模糊熵 + RF</td><td>99.22%</td><td>95.69%</td><td>96.02%</td><td>93.33%</td></tr>
+    <tr><td>SVMD 模糊熵 + GBDT</td><td>99.22%</td><td>95.29%</td><td>95.22%</td><td>89.41%</td></tr>
+    <tr><td><strong>本文（同任务）</strong></td><td><strong>99.85%</strong></td><td><strong>100%</strong></td><td><strong>99.54~99.85%</strong></td><td><strong>97.69~98.15%</strong></td></tr>
+  </tbody>
+</table>
+<p><strong>差距</strong>：齿轮任务上，文献传统方法最高 96.02%，本文最低 97.69%——<strong>本文高出 1.7 ~ 8.3 个百分点</strong>；轴承 30-2 上文献 94.12~97.25%，本文 100%——<strong>高出 2.8 ~ 5.9 个百分点</strong>。</p>
+
+<h3>A-2 该文自己给出的完整方法网格（表 5，SEU 轴承）</h3>
+<table>
+  <thead><tr><th>特征</th><th>工况</th><th>SVM</th><th>k-NN</th><th>RF</th><th>GBDT</th></tr></thead>
+  <tbody>
+    <tr><td>VMD 能量熵</td><td>I (20-0)</td><td>97.57%</td><td>97.34%</td><td>98.04%</td><td>98.04%</td></tr>
+    <tr><td>SVMD 能量熵</td><td>I (20-0)</td><td>97.25%</td><td>96.86%</td><td>96.47%</td><td>97.25%</td></tr>
+    <tr><td>VMD 模糊熵</td><td>I (20-0)</td><td>99.13%</td><td>98.98%</td><td>99.22%</td><td>99.22%</td></tr>
+    <tr><td>SVMD 模糊熵</td><td>I (20-0)</td><td>93.96%</td><td>99.22%</td><td>99.22%</td><td>99.22%</td></tr>
+    <tr><td>VMD 能量熵</td><td>II (30-2)</td><td>97.25%</td><td>96.86%</td><td>96.08%</td><td>97.25%</td></tr>
+    <tr><td>SVMD 能量熵</td><td>II (30-2)</td><td>94.12%</td><td>93.33%</td><td>91.76%</td><td>94.51%</td></tr>
+    <tr><td>VMD 模糊熵</td><td>II (30-2)</td><td>99.61%</td><td>92.16%</td><td>99.61%</td><td>99.22%</td></tr>
+    <tr><td>SVMD 模糊熵</td><td>II (30-2)</td><td>94.90%</td><td>97.25%</td><td>95.69%</td><td>95.29%</td></tr>
+  </tbody>
+</table>
+<p>整体区间 <strong>91.76% ~ 99.61%</strong>，其中多数低于本文的 99.85%~100%。</p>
+
+<h2>三、表 B：同库，"局部/设置不同"的较低结果（可作量级参照，须注明）</h2>
+<table>
+  <thead><tr><th>来源</th><th>SEU 任务</th><th>设置</th><th>准确率</th><th>与本文关系</th></tr></thead>
+  <tbody>
+    <tr><td>SVMD 熵论文 引文（K-NN / SVM）</td><td>轴承 5 类 / 齿轮 5 类</td><td>20-0 / 30-2</td><td>轴承 <strong>80.80~88.60%</strong>；齿轮 <strong>89.20~94.40%</strong></td><td>更低，但为<strong>转引</strong>，出处标注存疑</td></tr>
+    <tr><td>SCBM-Net, Sci. Rep. 2025</td><td>轴承 <strong>10 类</strong>（两工况合并）</td><td>70:30</td><td><strong>98.33%</strong></td><td>类别数不同（10 vs 5），仅作量级参照</td></tr>
+    <tr><td>SAGAN-IResNet, Sci. Rep. 2025</td><td>轴承 5 类</td><td>少样本 / 以生成样本训练（表 3）</td><td><strong>92.57% ~ 98.50%</strong></td><td>少样本设置，非标准设置</td></tr>
+    <tr><td>ADAMFFN, Machines 2025</td><td>齿轮<strong>跨工况</strong> C1→C2</td><td>迁移</td><td>平均 94.54%</td><td>任务不同（跨工况更难）</td></tr>
+    <tr><td>WDATL, Wiley 2021</td><td>轴承+齿轮 <strong>0→1 迁移</strong></td><td>迁移</td><td>平均 76.17%（CNN 基线 33.65%）</td><td>任务不同（跨工况更难）</td></tr>
+  </tbody>
+</table>
+
+<h2>四、本文基准（8 组合最终测试，密封测试集）</h2>
+<table>
+  <thead><tr><th>对象</th><th>网络</th><th>20-0</th><th>30-2</th></tr></thead>
+  <tbody>
+    <tr><td>轴承</td><td>CNN</td><td>99.85%</td><td>100%</td></tr>
+    <tr><td>轴承</td><td>GCN</td><td>99.85%</td><td>100%</td></tr>
+    <tr><td>齿轮</td><td>CNN</td><td>99.54%</td><td>98.15%</td></tr>
+    <tr><td>齿轮</td><td>GCN</td><td>99.85%</td><td>97.69%</td></tr>
+  </tbody>
+</table>
+
+<h2>五、写作建议与诚实边界</h2>
+<p><strong>推荐写法</strong>：</p>
+<blockquote>
+在同一个 SEU 数据集、同一 5 分类任务、同一准确率指标下，文献中传统信号分解 + 机器学习方法（VMD/SVMD 熵 + SVM/k-NN/RF/GBDT）在齿轮任务上为 89.41%~96.02%、轴承 30-2 工况为 94.12%~97.25%；本文在完全相同的数据集与任务上分别为 97.69%~99.85% 与 99.85%~100%，<strong>在同等任务上高出 1.7~8.3 个百分点</strong>，且模型参数量仅 2.5 万（比主流深度网络小 2~3 个数量级）。
+</blockquote>
+<p><strong>必须注明的话</strong>：</p>
+<ol>
+  <li>上述对照对象是<strong>传统信号分解 + 传统机器学习</strong>，不是最先进的深度网络，引用时明确写"相较文献中的传统方法"；</li>
+  <li>该文<strong>划分方式可能为随机划分</strong>（传统机器学习常用），本文为时间有序划分，两者含金量不同，引用需说明；</li>
+  <li>跨工况迁移类结果（ADAMFFN、WDATL）属<strong>更难的另一种任务</strong>，只能作背景，不并入主表；</li>
+  <li>SCBM-Net 为 10 类任务、SAGAN 为少样本设置，<strong>类别数/设置不同</strong>，仅作量级参照。</li>
+</ol>
+
+<h2>六、出处登记</h2>
+<ol>
+  <li>Zhang L., Zhang Y., Li G. <em>Fault-Diagnosis Method for Rotating Machinery Based on SVMD Entropy and Machine Learning.</em> <strong>Algorithms</strong>, 2023, 16(6): 304. DOI: 10.3390/a16060304.（表 5、表 6；SEU 轴承 5 类 + 齿轮 5 类，20-0/30-2 独立建模）</li>
+  <li><em>SCBM-Net: a multimodal feature fusion-based dual-channel method for bearing fault diagnosis.</em> <strong>Scientific Reports</strong>, 2025.</li>
+  <li>Wang G., Shi N., Yang X., Liu Z., Liu Z. <em>Bearing fault diagnosis method based on SAGAN and improved ResNet.</em> <strong>Scientific Reports</strong>, 2025, 15. DOI: 10.1038/s41598-025-16771-2.（表 3）</li>
+  <li><em>Design of a transfer learning fault identification model based on a Markov field and an improved DarkNet.</em> <strong>Frontiers in Mechanical Engineering</strong>, 2026.（ADAMFFN，跨工况）</li>
+  <li><em>Wide-deep adversarial transfer learning...</em> <strong>Wiley</strong>, 2021.（WDATL，跨工况）</li>
+</ol>
+
+</body>
+</html>

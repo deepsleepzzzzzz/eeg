@@ -6,6 +6,8 @@
 
 协议和命令：`doc/method.md`。数字：`doc/results.md`。配置键：`doc/config.md`。老师原话：`doc/teacher_improvement_directions.md`。
 
+给老师：`doc/handoff/seu_stage_report.docx`。图在 `doc/figures/seu/`。源码在本仓库。
+
 ## v2（2026-10-17）
 
 新版工程放在 `v2/`，自包含（`src/`、`configs/`、`tests/`、`scripts/`），不依赖本目录的旧实现，旧代码保持不动：

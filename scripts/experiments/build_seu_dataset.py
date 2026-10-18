@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import sys
 from pathlib import Path
 
@@ -25,10 +24,11 @@ from data.seu_dds import (
     vibration_xyz,
     window_starts,
 )
+from data.seu_cache import CACHE_VERSION, cache_identity, cache_spec, digest, file_digest, validate_cache
 from experiments.train_runtime import resolve_path
 from representation.recurrence_plot import build_representation
-from representation.state_transition import fit_train_amplitude_edges, uses_train_edges
-from utils.io_utils import ensure_dir, save_json
+from representation.state_transition import fit_train_edges, uses_train_edges
+from utils.io_utils import ensure_dir, load_json, save_json
 
 
 def class_count_dict(labels: np.ndarray, names: tuple[str, ...]) -> dict[str, int]:
@@ -49,8 +49,7 @@ def encode_windows(windows: list[np.ndarray], method_cfg) -> np.ndarray:
     return X
 
 
-def split_windows(xyz: np.ndarray, cfg) -> dict[str, list[np.ndarray]]:
-    n = int(xyz.shape[1])
+def split_starts(n: int, cfg) -> dict[str, np.ndarray]:
     length = int(cfg.data.epoch_samples)
     stride = int(cfg.data.get("window_stride", length))
     train_end, val_end = time_split_bounds(n, cfg.data.train_ratio, cfg.data.val_ratio)
@@ -65,8 +64,13 @@ def split_windows(xyz: np.ndarray, cfg) -> dict[str, list[np.ndarray]]:
         starts = window_starts(lo, hi, length, stride)
         if max_per is not None:
             starts = starts[: int(max_per)]
-        out[name] = cut_windows(xyz, starts, length)
+        out[name] = starts
     return out
+
+
+def split_windows(xyz: np.ndarray, cfg) -> dict[str, list[np.ndarray]]:
+    return {name: cut_windows(xyz, starts, int(cfg.data.epoch_samples))
+            for name, starts in split_starts(int(xyz.shape[1]), cfg).items()}
 
 
 def build_condition(task: str, condition: str, cfg, force: bool) -> dict:
@@ -76,13 +80,20 @@ def build_condition(task: str, condition: str, cfg, force: bool) -> dict:
     condition = normalize_condition(condition)
     out_dir = resolve_path(cfg.data.output_root) / task / condition
     meta_path = out_dir / "meta.json"
+    spec = cache_spec(task, condition, cfg)
+    sources = {name: {"file": class_file(task, name, condition),
+                      "sha256": file_digest(folder / class_file(task, name, condition))}
+               for name in names}
     if meta_path.exists() and not force:
-        print(f"{task} {condition}: exists, skip (use --force to rebuild)")
+        validate_cache(load_json(str(meta_path)), cfg, task, condition, out_dir,
+                       splits=("train", "val", "test"), source_files=sources)
+        print(f"{task} {condition}: verified cache, skip")
         return {"task": task, "condition": condition, "skipped": True}
 
     method = cfg.method
-    if str(method.get("normalize", "none")).lower() in ("zscore", "z", "std"):
-        raise RuntimeError("SEU train_global bins need method.normalize=none")
+    # normalize=zscore is allowed: it is a per-window deterministic transform, so the
+    # train_global bin edges (fit after preprocessing) still map every sample to the
+    # same fixed state space. It only removes per-sample amplitude scale differences.
 
     by_split: dict[str, list[np.ndarray]] = {"train": [], "val": [], "test": []}
     y_split: dict[str, list[int]] = {"train": [], "val": [], "test": []}
@@ -104,23 +115,37 @@ def build_condition(task: str, condition: str, cfg, force: bool) -> dict:
         )
 
     train_windows = by_split["train"]
-    edges = fit_train_amplitude_edges(train_windows, range(len(train_windows)), method)
+    edges = fit_train_edges(train_windows, range(len(train_windows)), method)
     enc_cfg = OmegaConf.merge(cfg, {"method": {"bin_edges": edges.tolist()}})
 
     ensure_dir(str(out_dir))
+    # A failed rebuild must not leave an old completion marker over mixed arrays.
+    meta_path.unlink(missing_ok=True)
     arrays = {}
+    array_hashes = {}
     for split_name in ("train", "val", "test"):
         X = encode_windows(by_split[split_name], enc_cfg.method)
         y = np.asarray(y_split[split_name], dtype=np.int64)
         np.save(out_dir / f"X_{split_name}.npy", X)
         np.save(out_dir / f"y_{split_name}.npy", y)
+        for kind in ("X", "y"):
+            name = f"{kind}_{split_name}.npy"
+            array_hashes[name] = file_digest(out_dir / name)
         arrays[split_name] = {"n": int(len(y)), "X_shape": list(X.shape), "y_shape": list(y.shape)}
         print(f"{task} {condition} {split_name}: {X.shape}", flush=True)
 
-    fingerprint_src = "|".join(
-        f"{k}:{file_rows[k]}" for k in names
-    ) + f"|{condition}|{cfg.data.epoch_samples}|{cfg.data.get('window_stride', cfg.data.epoch_samples)}"
+    sample_identity = {
+        "task": str(task).lower(), "condition": condition, "channels": [2, 3, 4],
+        "class_names": list(names), "sources": sources,
+        "length": int(cfg.data.epoch_samples),
+        "starts": {name: {split: starts.tolist() for split, starts in split_starts(file_rows[name], cfg).items()}
+                   for name in names},
+    }
     meta = {
+        "cache_version": CACHE_VERSION,
+        "cache_spec": spec,
+        "source_files": sources,
+        "array_hashes": array_hashes,
         "task": task,
         "condition": condition,
         "protocol": "seu_time_split",
@@ -128,21 +153,24 @@ def build_condition(task: str, condition: str, cfg, force: bool) -> dict:
         "channels": [2, 3, 4],
         "epoch_samples": int(cfg.data.epoch_samples),
         "window_stride": int(cfg.data.get("window_stride", cfg.data.epoch_samples)),
-        "overlap": False,
+        "overlap": int(cfg.data.get("window_stride", cfg.data.epoch_samples)) < int(cfg.data.epoch_samples),
         "train_ratio": float(cfg.data.train_ratio),
         "val_ratio": float(cfg.data.val_ratio),
         "test_ratio": float(cfg.data.test_ratio),
         "split_seed": int(cfg.data.split_seed),
         "split_kind": "time_contiguous",
         "file_length": file_rows,
-        "split_sample_id_fingerprint": hashlib.sha256(fingerprint_src.encode("utf-8")).hexdigest(),
+        "split_sample_id_fingerprint": digest(sample_identity),
         "bin_scope": str(method.get("bin_scope", "train_global")),
+        "bin_edges_mode": str(method.get("bin_edges_mode", "quantile")),
+        "normalize": str(method.get("normalize", "none")),
         "bin_edges": edges.tolist(),
         "arrays": arrays,
         "train_class_counts": class_count_dict(np.asarray(y_split["train"]), names),
         "val_class_counts": class_count_dict(np.asarray(y_split["val"]), names),
         "test_class_counts": class_count_dict(np.asarray(y_split["test"]), names),
     }
+    meta["cache_fingerprint"] = cache_identity(meta)
     save_json(meta, str(meta_path))
     return meta
 
